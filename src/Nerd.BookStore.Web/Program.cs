@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Nerd.Abp.DynamicPlugin.Extensions;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace Nerd.BookStore.Web;
 
@@ -29,12 +29,19 @@ public class Program
         {
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac()
-                .UseSerilog();
-            await builder.AddApplicationAsync<BookStoreWebModule>();
             var app = builder.Build();
-            await app.InitializeApplicationAsync();
+
+            app.Run(async contex =>
+            {
+                await app.UseDynamicPlugins<BookStoreWebModule>(contex, () =>
+                {
+                    var appBuilder = WebApplication.CreateBuilder(args);
+                    appBuilder.Host.AddAppSettingsSecretsJson()
+                                   .UseAutofac()
+                                   .UseSerilog();
+                    return appBuilder;
+                });
+            });
             await app.RunAsync();
             return 0;
         }
