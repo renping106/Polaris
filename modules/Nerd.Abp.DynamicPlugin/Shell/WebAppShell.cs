@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +51,6 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             });
 
             var shellApp = shellAppBuilder.Build();
-            var startupFilters = shellApp.Services.GetRequiredService<IEnumerable<IStartupFilter>>();
             var applicationBuilderFactory = shellApp.Services.GetRequiredService<IApplicationBuilderFactory>();
             var moduleAppBuilder = applicationBuilderFactory.CreateBuilder(context.Features);
 
@@ -60,10 +58,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             {
                 await moduleAppBuilder.InitializeApplicationAsync();
             };
-            foreach (var filter in startupFilters.Reverse())
-            {
-                configure = filter.Configure(configure);
-            }
+
             configure(moduleAppBuilder);
 
             // Build the request pipeline.
