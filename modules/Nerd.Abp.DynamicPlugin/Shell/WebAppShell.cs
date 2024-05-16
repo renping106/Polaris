@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
@@ -13,9 +11,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
         private static readonly object instanceLock = new object();
         public static List<string> Plugins { get; private set; } = new List<string>();
 
-        public static ShellHost GetShell<TStartupModule>(
-            HttpContext context,
-            Func<WebApplicationBuilder> builderInit)
+        public static ShellHost GetShell<TStartupModule>(Func<WebApplicationBuilder> builderInit)
             where TStartupModule : IAbpModule
         {
             if (_shellHost == null)
@@ -24,7 +20,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
                 {
                     if (_shellHost == null)
                     {
-                        _shellHost = InitShellHost(typeof(TStartupModule), context, builderInit).GetAwaiter().GetResult();
+                        _shellHost = InitShellHost(typeof(TStartupModule), builderInit).GetAwaiter().GetResult();
                     }
                 }
             }
@@ -32,10 +28,10 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             return _shellHost!;
         }
 
-        public static async Task UpdateShellHost(HttpContext context)
+        public static async Task UpdateShellHost()
         {
             var builderInit = _shellHost!.BuilderInit;
-            var newShell = await InitShellHost(_shellHost!.StartupModuleType, context, builderInit);
+            var newShell = await InitShellHost(_shellHost!.StartupModuleType, builderInit);
             if (newShell != null)
             {
                 _shellHost = newShell;
@@ -44,7 +40,6 @@ namespace Nerd.Abp.DynamicPlugin.Shell
 
         private static async Task<ShellHost> InitShellHost(
             Type startupModuleType,
-            HttpContext context,
             Func<WebApplicationBuilder> builderInit)
         {
             var shellAppBuilder = builderInit();
@@ -66,18 +61,16 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             });
 
             var shellApp = shellAppBuilder.Build();
-            var applicationBuilderFactory = shellApp.Services.GetRequiredService<IApplicationBuilderFactory>();
-            var moduleAppBuilder = applicationBuilderFactory.CreateBuilder(context.Features);
 
             Action<IApplicationBuilder> configure = async (builder) =>
             {
-                await moduleAppBuilder.InitializeApplicationAsync();
+                await shellApp.InitializeApplicationAsync();
             };
 
-            configure(moduleAppBuilder);
+            configure(shellApp);
 
             // Build the request pipeline.
-            var requestDelegate = moduleAppBuilder.Build();
+            var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
             return new ShellHost(shellApp.Services, requestDelegate, builderInit, startupModuleType);
         }

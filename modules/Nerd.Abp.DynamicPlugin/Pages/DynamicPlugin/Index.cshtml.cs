@@ -14,7 +14,7 @@ namespace Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
 
         public async Task<IActionResult> OnPostInstallAsync()
         {
-            await WebAppShell.UpdateShellHost(HttpContext);
+            await WebAppShell.UpdateShellHost();
             return RedirectToPage();
         }
     }
