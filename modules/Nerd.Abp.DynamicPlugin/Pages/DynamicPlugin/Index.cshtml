@@ -1,0 +1,18 @@
+﻿@page
+@using Microsoft.Extensions.Localization
+@using Nerd.Abp.DynamicPlugin.Localization
+@using Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
+@model Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin.IndexModel
+
+<h1>DynamicPlugin</h1>
+
+Plugins:
+
+@foreach (var item in Model.Plugins)
+{
+    <div>@item</div>
+}
+
+<form method="post">
+    <button type="submit" asp-page-handler="install">install</button>
+</form>

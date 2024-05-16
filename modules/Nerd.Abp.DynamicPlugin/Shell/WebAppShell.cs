@@ -11,6 +11,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
     {
         private static ShellHost? _shellHost;
         private static readonly object instanceLock = new object();
+        public static List<string> Plugins { get; private set; } = new List<string>();
 
         public static ShellHost GetShell<TStartupModule>(
             HttpContext context,
@@ -23,7 +24,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
                 {
                     if (_shellHost == null)
                     {
-                        InitShellHost<TStartupModule>(context, builderInit).GetAwaiter().GetResult();
+                        _shellHost = InitShellHost(typeof(TStartupModule), context, builderInit).GetAwaiter().GetResult();
                     }
                 }
             }
@@ -31,21 +32,35 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             return _shellHost!;
         }
 
-        private static async Task InitShellHost<TStartupModule>(
+        public static async Task UpdateShellHost(HttpContext context)
+        {
+            var builderInit = _shellHost!.BuilderInit;
+            var newShell = await InitShellHost(_shellHost!.StartupModuleType, context, builderInit);
+            if (newShell != null)
+            {
+                _shellHost = newShell;
+            }
+        }
+
+        private static async Task<ShellHost> InitShellHost(
+            Type startupModuleType,
             HttpContext context,
             Func<WebApplicationBuilder> builderInit)
-            where TStartupModule : IAbpModule
         {
             var shellAppBuilder = builderInit();
 
             var pluginPath = Path.Combine(AppContext.BaseDirectory, "PlugIns");
-            await shellAppBuilder.AddApplicationAsync<TStartupModule>(options =>
+            await shellAppBuilder.AddApplicationAsync(startupModuleType, options =>
             {
                 if (Path.Exists(pluginPath))
                 {
                     foreach (var plugin in Directory.GetDirectories(pluginPath))
                     {
-                        options.PlugInSources.AddFolder(plugin);
+                        if (!Plugins.Contains(plugin))
+                        {
+                            options.PlugInSources.AddFolder(plugin);
+                            Plugins.Add(plugin);
+                        }
                     }
                 }
             });
@@ -64,7 +79,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             // Build the request pipeline.
             var requestDelegate = moduleAppBuilder.Build();
 
-            _shellHost = new ShellHost(shellApp, requestDelegate);
+            return new ShellHost(shellApp.Services, requestDelegate, builderInit, startupModuleType);
         }
     }
 }

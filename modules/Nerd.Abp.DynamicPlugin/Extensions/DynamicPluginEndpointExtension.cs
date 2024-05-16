@@ -17,7 +17,7 @@ namespace Nerd.Abp.DynamicPlugin.Extensions
             var webAppShell = WebAppShell.GetShell<TStartupModule>(context, builderInit);
 
             // Workaround to fix asp-page tag helpers in plugin.
-            var scope = webAppShell.WebApp.Services.CreateScope();
+            var scope = webAppShell.Services.CreateScope();
             context.RequestServices = scope.ServiceProvider;
 
             // Workacound to fix null httpcontext
