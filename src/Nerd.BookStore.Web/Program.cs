@@ -31,9 +31,9 @@ public class Program
             var builder = WebApplication.CreateBuilder(args);
             var app = builder.Build();
 
-            app.Run(async contex =>
+            app.Run(async context =>
             {
-                await app.UseDynamicPlugins<BookStoreWebModule>(contex, () =>
+                await app.UseDynamicPlugins<BookStoreWebModule>(context, () =>
                 {
                     var appBuilder = WebApplication.CreateBuilder(args);
                     appBuilder.Host.AddAppSettingsSecretsJson()
