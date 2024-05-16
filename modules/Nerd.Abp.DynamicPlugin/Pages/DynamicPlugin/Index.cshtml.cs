@@ -6,6 +6,7 @@ namespace Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
     public class IndexModel : DynamicPluginPageModel
     {
         public List<string> Plugins { get; set; } = new List<string>();
+        public string Message { get; set; } = string.Empty;
 
         public void OnGet()
         {
@@ -14,7 +15,15 @@ namespace Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
 
         public async Task<IActionResult> OnPostInstallAsync()
         {
-            await WebAppShell.UpdateShellHost();
+            var (success, message) = await WebAppShell.UpdateShellHostAsync();
+            if (!success)
+            {
+                Message = message;
+            }
+            else
+            {
+                Message = "Succeed";
+            }
             return RedirectToPage();
         }
     }

@@ -20,7 +20,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
                 {
                     if (_shellHost == null)
                     {
-                        _shellHost = InitShellHost(typeof(TStartupModule), builderInit).GetAwaiter().GetResult();
+                        _shellHost = InitShellHostAsync(typeof(TStartupModule), builderInit).GetAwaiter().GetResult();
                     }
                 }
             }
@@ -28,26 +28,35 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             return _shellHost!;
         }
 
-        public static async Task UpdateShellHost()
+        public static async ValueTask<(bool Success, string Message)> UpdateShellHostAsync()
         {
-            var builderInit = _shellHost!.BuilderInit;
-            var newShell = await InitShellHost(_shellHost!.StartupModuleType, builderInit);
-            if (newShell != null)
+            try
             {
-                _shellHost = newShell;
+                var builderInit = _shellHost!.BuilderInit;
+                var newShell = await InitShellHostAsync(_shellHost!.StartupModuleType, builderInit, true);
+                if (newShell != null)
+                {
+                    _shellHost = newShell;
+                }
             }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+            return (true, string.Empty);
         }
 
-        private static async Task<ShellHost> InitShellHost(
+        private static async ValueTask<ShellHost> InitShellHostAsync(
             Type startupModuleType,
-            Func<WebApplicationBuilder> builderInit)
+            Func<WebApplicationBuilder> builderInit,
+            bool loadPlugin = false)
         {
             var shellAppBuilder = builderInit();
 
             var pluginPath = Path.Combine(AppContext.BaseDirectory, "PlugIns");
             await shellAppBuilder.AddApplicationAsync(startupModuleType, options =>
             {
-                if (Path.Exists(pluginPath))
+                if (loadPlugin && Path.Exists(pluginPath))
                 {
                     foreach (var plugin in Directory.GetDirectories(pluginPath))
                     {

@@ -42,6 +42,7 @@ public class Program
                     return appBuilder;
                 });
             });
+
             await app.RunAsync();
             return 0;
         }
