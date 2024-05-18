@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Nerd.Abp.DynamicPlugin.Shell
 {
-    internal record class ShellHost(
+    internal record class WebAppCache(
             IServiceProvider Services,
             RequestDelegate RequestDelegate,
-            Func<WebApplicationBuilder> BuilderInit,
-            Type StartupModuleType
-        );
+            Func<bool, ValueTask<WebApplicationBuilder>> BuilderInit);
 }

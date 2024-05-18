@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nerd.Abp.DynamicPlugin.Extensions;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.BookStore.Web;
 
@@ -33,13 +36,25 @@ public class Program
 
             app.Run(async context =>
             {
-                await app.UseDynamicPlugins<BookStoreWebModule>(context, () =>
+                await app.UseDynamicPlugins(context, async (loadPlugins) =>
                 {
-                    var appBuilder = WebApplication.CreateBuilder(args);
-                    appBuilder.Host.AddAppSettingsSecretsJson()
+                    var subAppBuilder = WebApplication.CreateBuilder(args);
+                    subAppBuilder.Host.AddAppSettingsSecretsJson()
                                    .UseAutofac()
                                    .UseSerilog();
-                    return appBuilder;
+
+                    var pluginPath = Path.Combine(AppContext.BaseDirectory, "PlugIns");
+                    await subAppBuilder.AddApplicationAsync<BookStoreWebModule>(options =>
+                    {
+                        if (loadPlugins && Path.Exists(pluginPath))
+                        {
+                            foreach (var plugin in Directory.GetDirectories(pluginPath))
+                            {
+                                options.PlugInSources.AddFolder(plugin);
+                            }
+                        }
+                    });
+                    return subAppBuilder;
                 });
             });
 
