@@ -10,9 +10,10 @@ namespace Nerd.Abp.DynamicPlugin.Extensions
         public static async ValueTask UseDynamicPlugins(
             this IApplicationBuilder app,
             HttpContext context,
-            Func<bool, ValueTask<WebApplicationBuilder>> builderInit)
+            Type startupModuleType,
+            Func<WebApplicationBuilder> builderInit)
         {
-            var webAppShell = WebAppShell.GetShell(builderInit);
+            var webAppShell = WebAppShell.Instance.GetShell(startupModuleType, builderInit);
 
             // Workaround to fix asp-page tag helpers in plugin
             var scope = webAppShell.Services.CreateScope();

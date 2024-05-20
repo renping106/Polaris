@@ -1,4 +1,5 @@
-﻿using Nerd.Abp.DynamicPlugin.Permissions;
+﻿using Nerd.Abp.DynamicPlugin.Localization;
+using Nerd.Abp.DynamicPlugin.Permissions;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.UI.Navigation;
 
@@ -16,13 +17,16 @@ public class DynamicPluginMenuContributor : IMenuContributor
 
     private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
+        var l = context.GetLocalizer<DynamicPluginResource>();
+
+        var administrationMenu = context.Menu.GetAdministration();
         //Add main menu items.
-        context.Menu.AddItem(
-            new ApplicationMenuItem(DynamicPluginMenus.Prefix, 
-            displayName: DynamicPluginMenus.Prefix, 
-            "~/DynamicPlugin", 
+        administrationMenu.AddItem(
+            new ApplicationMenuItem(DynamicPluginMenus.Prefix,
+            displayName: l["Menu:" + DynamicPluginMenus.Prefix],
+            "~/DynamicPlugin",
             icon: "fa fa-globe")
-             .RequirePermissions(DynamicPluginPermissions.List));
+             .RequirePermissions(DynamicPluginPermissions.GroupName));
 
         return Task.CompletedTask;
     }

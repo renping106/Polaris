@@ -9,10 +9,9 @@ public class DynamicPluginPermissionDefinitionProvider : PermissionDefinitionPro
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(DynamicPluginPermissions.GroupName, L("Permission:DynamicPlugin"));
-        myGroup.AddPermission(DynamicPluginPermissions.List, multiTenancySide: MultiTenancySides.Host);
-        myGroup.AddPermission(DynamicPluginPermissions.Edit, multiTenancySide: MultiTenancySides.Host);
-        myGroup.AddPermission(DynamicPluginPermissions.Install, multiTenancySide: MultiTenancySides.Host);
+        var myGroup = context.AddGroup(DynamicPluginPermissions.GroupName, L("Permission:" + DynamicPluginPermissions.GroupName));
+        myGroup.AddPermission(DynamicPluginPermissions.GroupName, L("Permission:" + DynamicPluginPermissions.GroupName), multiTenancySide: MultiTenancySides.Host)
+            .AddChild(DynamicPluginPermissions.Edit, L("Permission:" + DynamicPluginPermissions.Edit), multiTenancySide: MultiTenancySides.Host);
     }
 
     private static LocalizableString L(string name)

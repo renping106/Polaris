@@ -1,3 +1,8 @@
 {
-
+  "culture": "en",
+  "texts": {
+    "Menu:DynamicPlugin": "PlugIn management",
+    "Permission:DynamicPlugin": "PlugIn management",
+    "Permission:DynamicPlugin.Edit": "Edit plugin"
+  }
 }

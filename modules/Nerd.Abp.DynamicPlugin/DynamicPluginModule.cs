@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DynamicPlugin.Localization;
 using Nerd.Abp.DynamicPlugin.Menus;
+using Nerd.Abp.DynamicPlugin.Permissions;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
@@ -44,7 +46,7 @@ namespace Nerd.Abp.DynamicPlugin
 
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.AddEmbedded<DynamicPluginModule>();
+                options.FileSets.AddEmbedded<DynamicPluginModule>("Nerd.Abp.DynamicPlugin");
             });
 
             context.Services.AddAutoMapperObjectMapper<DynamicPluginModule>();
@@ -53,9 +55,17 @@ namespace Nerd.Abp.DynamicPlugin
                 options.AddMaps<DynamicPluginModule>(validate: true);
             });
 
+            Configure<AbpLocalizationOptions>(options =>
+            {
+                options.Resources
+                    .Add<DynamicPluginResource>("en")
+                    .AddVirtualJson("/Localization/DynamicPlugin");
+            });
+
             Configure<RazorPagesOptions>(options =>
             {
                 //Configure authorization.
+                options.Conventions.AuthorizePage("/DynamicPlugIn", DynamicPluginPermissions.GroupName);
             });
         }
     }

@@ -6,5 +6,6 @@ namespace Nerd.Abp.DynamicPlugin.Shell
     internal record class WebAppCache(
             IServiceProvider Services,
             RequestDelegate RequestDelegate,
-            Func<bool, ValueTask<WebApplicationBuilder>> BuilderInit);
+            Type StartupModuleTyp,
+            Func<WebApplicationBuilder> BuilderInit);
 }

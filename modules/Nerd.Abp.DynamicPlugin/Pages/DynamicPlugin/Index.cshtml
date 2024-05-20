@@ -1,20 +1,62 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @using Nerd.Abp.DynamicPlugin.Localization
+@using Nerd.Abp.DynamicPlugin.Menus
 @using Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using Nerd.Abp.DynamicPlugin.Permissions
 @model Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin.IndexModel
-
-<h1>DynamicPlugin</h1>
-
-Plugins:
-
-@foreach (var item in Model.Plugins)
-{
-    <div>@item</div>
+@inject IHtmlLocalizer<DynamicPluginResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Menu:" + DynamicPluginMenus.Prefix].Value;
+    PageLayout.Content.BreadCrumb.Add(L["Menu:" + DynamicPluginMenus.Prefix].Value);
+    PageLayout.Content.MenuItemName = DynamicPluginMenus.List;
 }
 
-<form method="post">
-    <button type="submit" asp-page-handler="install">install</button>
-</form>
-
-@Model.Message
+<abp-card id="PlugInList">
+    <abp-card-body>
+        <abp-table class="nowrap">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Enabled</th>
+                    @if (Model.HasEditPermission)
+                    {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Plugins)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td><abp-input asp-for="@item.IsEnabled" suppress-label disabled="true" /></td>
+                        @if (Model.HasEditPermission)
+                    {
+                    <td>
+                        @if (item.IsEnabled)
+                            {
+                                <form asp-page-handler="Disable" asp-route-name="@item.Name" method="post">
+                                    <button class="btn btn-primary">Disable</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-page-handler="Enable" asp-route-name="@item.Name" method="post">
+                                    <button class="btn btn-primary">Enable</button>
+                                </form>
+                            }
+                        </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </abp-table>
+    </abp-card-body>
+</abp-card>

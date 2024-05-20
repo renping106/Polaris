@@ -3,7 +3,7 @@
 namespace Nerd.Abp.DynamicPlugin.Localization
 {
     [LocalizationResourceName("DynamicPlugin")]
-    internal class DynamicPluginResource
+    public class DynamicPluginResource
     {
     }
 }

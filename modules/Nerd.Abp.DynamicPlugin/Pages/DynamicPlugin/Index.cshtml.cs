@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nerd.Abp.DynamicPlugin.Permissions;
 using Nerd.Abp.DynamicPlugin.Shell;
 using Volo.Abp;
 
@@ -6,25 +8,53 @@ namespace Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
 {
     public class IndexModel : DynamicPluginPageModel
     {
-        public List<string> Plugins { get; set; } = new List<string>();
+        public List<IPlugInDescriptor> Plugins { get; set; }
         public string Message { get; set; } = string.Empty;
-        private readonly IAbpApplication _abpApplication;
+        public bool HasEditPermission { get; set; }
 
-        public IndexModel(IAbpApplication abpApplication)
+        private readonly IPlugInManager _plugInManager;
+
+        public IndexModel(IPlugInManager plugInManager)
         {
-            _abpApplication = abpApplication;
+            _plugInManager = plugInManager;
+            Plugins =  _plugInManager.GetAllPlugIns().ToList();
+            HasEditPermission = AuthorizationService.IsGrantedAsync(DynamicPluginPermissions.Edit).GetAwaiter().GetResult();
         }
 
-        public void OnGet()
+        public async void OnGet()
         {
-            Plugins = _abpApplication.Modules.Where(t => t.IsLoadedAsPlugIn)
-                .Select(t => t.Assembly.FullName ?? "")
-                .ToList();
+            
         }
 
-        public async Task<IActionResult> OnPostInstallAsync()
+        public async Task<IActionResult> OnPostEnableAsync(string name)
         {
-            var (success, message) = await WebAppShell.UpdateShellHostAsync();
+            var target = Plugins.Find(x => x.Name == name);
+            if (target != null)
+            {
+                _plugInManager.EnablePlugIn(target);
+            }
+
+            var (success, message) = await WebAppShell.Instance.UpdateShellAsync();
+            if (!success)
+            {
+                Message = message;
+            }
+            else
+            {
+                Message = "Succeed";
+            }
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDisableAsync(string name)
+        {
+            var target = Plugins.Find(x => x.Name == name);
+            if (target != null)
+            {
+                _plugInManager.DisablePlugIn(target);
+            }
+
+            var (success, message) = await WebAppShell.Instance.UpdateShellAsync();
             if (!success)
             {
                 Message = message;
