@@ -43,7 +43,7 @@
                         @if (item.IsEnabled)
                             {
                                 <form asp-page-handler="Disable" asp-route-name="@item.Name" method="post">
-                                    <button class="btn btn-primary">Disable</button>
+                                    <button class="btn btn-danger">Disable</button>
                                 </form>
                             }
                             else

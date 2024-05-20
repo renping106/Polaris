@@ -40,8 +40,6 @@ namespace Nerd.Abp.DynamicPlugin
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddSingleton<IPlugInManager, PlugInManager>();
-
             Configure<AbpNavigationOptions>(options =>
             {
                 options.MenuContributors.Add(new DynamicPluginMenuContributor());

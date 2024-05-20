@@ -52,6 +52,7 @@ namespace Nerd.Abp.DynamicPlugin.Shell
             Func<WebApplicationBuilder> builderInit)
         {
             var shellAppBuilder = builderInit();
+            shellAppBuilder.Services.AddSingleton<IPlugInManager, PlugInManager>();
 
             await shellAppBuilder.AddApplicationAsync(startupModuleTyp, options =>
             {
