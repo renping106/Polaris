@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nerd.Abp.DynamicPlugin.Extensions;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.BookStore.Web;
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DynamicPlugin.Localization;
 using Nerd.Abp.DynamicPlugin.Menus;
 using Nerd.Abp.DynamicPlugin.Permissions;
+using Nerd.Abp.DynamicPlugin.Shell;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AutoMapper;
@@ -39,6 +40,8 @@ namespace Nerd.Abp.DynamicPlugin
 
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            context.Services.AddSingleton<IPlugInManager, PlugInManager>();
+
             Configure<AbpNavigationOptions>(options =>
             {
                 options.MenuContributors.Add(new DynamicPluginMenuContributor());
