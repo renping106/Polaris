@@ -4,10 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DynamicPlugin.Localization;
 using Nerd.Abp.DynamicPlugin.Menus;
 using Nerd.Abp.DynamicPlugin.Permissions;
+using Nerd.Abp.DynamicPlugin.Services;
 using Nerd.Abp.DynamicPlugin.Shell;
+using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Http.ProxyScripting.Generators.JQuery;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
@@ -23,6 +26,13 @@ namespace Nerd.Abp.DynamicPlugin
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
         {
+            PreConfigure<AbpAspNetCoreMvcOptions>(options =>
+            {
+                options
+                    .ConventionalControllers
+                    .Create(typeof(DynamicPluginModule).Assembly);
+            });
+
             context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
             {
                 options.AddAssemblyResource(typeof(DynamicPluginResource), typeof(DynamicPluginModule).Assembly);
@@ -61,6 +71,12 @@ namespace Nerd.Abp.DynamicPlugin
                 options.Resources
                     .Add<DynamicPluginResource>("en")
                     .AddVirtualJson("/Localization/DynamicPlugin");
+            });
+
+            context.Services.AddAutoMapperObjectMapper<DynamicPluginModule>();
+            Configure<AbpAutoMapperOptions>(options =>
+            {
+                options.AddProfile<DynamicPluginAutoMapperProfile>(validate: true);
             });
 
             Configure<RazorPagesOptions>(options =>

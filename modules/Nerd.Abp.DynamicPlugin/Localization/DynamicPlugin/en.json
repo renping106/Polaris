@@ -3,6 +3,10 @@
   "texts": {
     "Menu:DynamicPlugin": "PlugIn management",
     "Permission:DynamicPlugin": "PlugIn management",
-    "Permission:DynamicPlugin.Edit": "Edit plugin"
+    "Permission:DynamicPlugin.Edit": "Edit plugin",
+    "PlugInEnableConfirm": "Plugin '{0}' will be enabled. Do you confirm that?",
+    "PlugInDisableConfirm": "Plugin '{0}' will be disabled. Do you confirm that?",
+    "SuccessfullyEnabled": "Plugin is successully enabled.",
+    "SuccessfullyDisabled": "Plugin is successully disabled."
   }
 }

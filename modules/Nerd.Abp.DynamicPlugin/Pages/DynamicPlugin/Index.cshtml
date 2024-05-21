@@ -16,47 +16,15 @@
     PageLayout.Content.MenuItemName = DynamicPluginMenus.List;
 }
 
+@section scripts {
+    <abp-script-bundle name="@typeof(IndexModel).FullName">
+        <abp-script src="/Pages/DynamicPlugin/Index.js" />
+    </abp-script-bundle>
+}
+
 <abp-card id="PlugInList">
     <abp-card-body>
-        <abp-table class="nowrap">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Enabled</th>
-                    @if (Model.HasEditPermission)
-                    {
-                        <th></th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Plugins)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Description</td>
-                        <td><abp-input asp-for="@item.IsEnabled" suppress-label disabled="true" /></td>
-                        @if (Model.HasEditPermission)
-                    {
-                    <td>
-                        @if (item.IsEnabled)
-                            {
-                                <form asp-page-handler="Disable" asp-route-name="@item.Name" method="post">
-                                    <button class="btn btn-danger">Disable</button>
-                                </form>
-                            }
-                            else
-                            {
-                                <form asp-page-handler="Enable" asp-route-name="@item.Name" method="post">
-                                    <button class="btn btn-primary">Enable</button>
-                                </form>
-                            }
-                        </td>
-                        }
-                    </tr>
-                }
-            </tbody>
+        <abp-table class="nowrap">            
         </abp-table>
     </abp-card-body>
 </abp-card>
