@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Nerd.Abp.DynamicPlugin.Domain.Plugin;
+using Nerd.Abp.DynamicPlugin.Domain.Shell;
 using Nerd.Abp.DynamicPlugin.Permissions;
 using Nerd.Abp.DynamicPlugin.Services.Dtos;
-using Nerd.Abp.DynamicPlugin.Shell;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.ObjectMapping;
 
 namespace Nerd.Abp.DynamicPlugin.Services
 {
@@ -20,18 +20,18 @@ namespace Nerd.Abp.DynamicPlugin.Services
         [Authorize(DynamicPluginPermissions.Edit)]
         public async Task Disable(string plugInName)
         {
-            _plugInManager.DisablePlugIn(GetInDescriptor(plugInName));
+            _plugInManager.DisablePlugIn(GetDescriptor(plugInName));
             await WebAppShell.Instance.UpdateShellAsync();
         }
 
         [Authorize(DynamicPluginPermissions.Edit)]
         public async Task Enable(string plugInName)
         {
-            _plugInManager.EnablePlugIn(GetInDescriptor(plugInName));
+            _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
             await WebAppShell.Instance.UpdateShellAsync();
         }
 
-        public PagedResultDto<PlugInDescriptorDto> GetList(GetPluginsInputDto input)
+        public PagedResultDto<PlugInDescriptorDto> GetList()
         {
             var plugins = _plugInManager.GetAllPlugIns();
             return new PagedResultDto<PlugInDescriptorDto>(
@@ -40,7 +40,7 @@ namespace Nerd.Abp.DynamicPlugin.Services
                 );
         }
 
-        private IPlugInDescriptor GetInDescriptor(string name)
+        private IPlugInDescriptor GetDescriptor(string name)
         {
             var plugins = _plugInManager.GetAllPlugIns();
             return plugins.First(p => p.Name == name);

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Nerd.Abp.DynamicPlugin.Shell;
+using Nerd.Abp.DynamicPlugin.Domain.Shell;
 
 namespace Nerd.Abp.DynamicPlugin.Extensions
 {

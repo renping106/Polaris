@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Nerd.Abp.DynamicPlugin.Shell
+namespace Nerd.Abp.DynamicPlugin.Domain.Shell
 {
     internal record class WebAppCache(
             IServiceProvider Services,

@@ -1,8 +1,9 @@
 ﻿using Autofac.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Nerd.Abp.DynamicPlugin.Domain.Plugin;
 
-namespace Nerd.Abp.DynamicPlugin.Shell
+namespace Nerd.Abp.DynamicPlugin.Domain.Shell
 {
     internal sealed class WebAppShell
     {

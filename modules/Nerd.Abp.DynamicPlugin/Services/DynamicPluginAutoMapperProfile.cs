@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Nerd.Abp.DynamicPlugin.Domain.Plugin;
 using Nerd.Abp.DynamicPlugin.Services.Dtos;
-using Nerd.Abp.DynamicPlugin.Shell;
 
 namespace Nerd.Abp.DynamicPlugin.Services
 {

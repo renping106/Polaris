@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.DynamicPlugin.Shell
+namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
 {
     internal class PlugInManager : IPlugInManager
     {

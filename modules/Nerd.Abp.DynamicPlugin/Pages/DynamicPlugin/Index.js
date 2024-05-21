@@ -71,8 +71,17 @@
                         data: 'description',
                     },
                     {
+                        title: "EnabledValue",
+                        data: 'isEnabled',
+                        visible: false,
+                        render: function (isEnabled) {
+                            return isEnabled ? 'enabled' : 'disabled';
+                        },
+                    },
+                    {
                         title: l("Enabled"),
                         data: 'isEnabled',
+                        orderData: [3],
                         render: function (isEnabled) {
                             return '<input type="checkbox" disabled ' + (isEnabled ? 'checked' : '') + ' />';
                         },
@@ -92,7 +101,7 @@
                 processing: true,
                 paging: true,
                 scrollX: true,
-                serverSide: true,
+                serverSide: false,
                 ajax: abp.libs.datatables.createAjax(_pluginAppService.getList), 
                 columnDefs: abp.ui.extensions.tableColumns.get('plugin').columns.toArray(),
             })
