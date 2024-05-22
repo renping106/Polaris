@@ -71,6 +71,10 @@
                         data: 'description',
                     },
                     {
+                        title: l("Version"),
+                        data: 'version',
+                    },
+                    {
                         title: "EnabledValue",
                         data: 'isEnabled',
                         visible: false,

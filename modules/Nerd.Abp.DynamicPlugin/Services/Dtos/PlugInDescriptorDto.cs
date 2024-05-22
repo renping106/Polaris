@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
+﻿using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.DynamicPlugin.Services.Dtos
 {
@@ -12,5 +7,7 @@ namespace Nerd.Abp.DynamicPlugin.Services.Dtos
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public bool IsEnabled { get; set; }
+        public string Version { get; set; } = string.Empty;
+        public string AbpVersion { get; set; } = string.Empty;
     }
 }

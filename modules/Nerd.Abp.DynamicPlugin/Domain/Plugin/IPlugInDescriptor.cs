@@ -7,6 +7,8 @@ namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
         string Name { get; set; }
         string Description { get; set; }
         bool IsEnabled { get; set; }
+        string Version { get; set; }
+        string AbpVersion { get; set; }
         IPlugInSource PlugInSource { get; set; }
     }
 }
