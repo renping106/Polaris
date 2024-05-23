@@ -1,13 +1,15 @@
-﻿
+﻿using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
+namespace Nerd.Abp.DynamicPlugin.Domain
 {
     internal class PlugInManager : IPlugInManager
     {
         private readonly string folderName = "PlugIns";
+        private readonly string settingFileName = "plugInSettings.json";
         private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
 
         public PlugInManager()
@@ -52,35 +54,40 @@ namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
 
         private void LoadFromFolder()
         {
-            var plugInStates = LoadState();
             var pluginPath = Path.Combine(AppContext.BaseDirectory, folderName);
             if (Path.Exists(pluginPath))
             {
+                var previousStates = LoadState();
                 foreach (var plugin in Directory.GetDirectories(pluginPath))
                 {
-                    var plugInInfoFile = Path.Combine(plugin, "plugin.json");
-                    if (Path.Exists(plugInInfoFile))
+                    var nuspecFile = Directory.GetFiles(plugin).FirstOrDefault(t => t.EndsWith(".nuspec"));
+                    if (nuspecFile != null)
                     {
-                        using StreamReader reader = new(plugInInfoFile);
-                        var json = reader.ReadToEnd();
-                        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-                        var plugInDescriptor = JsonSerializer.Deserialize<PlugInDescriptor>(json, options);
-                        if (plugInDescriptor != null)
+                        using StreamReader reader = new(nuspecFile);
+                        var nuspec = XDocument.Load(reader);
+                        var name = NuGetUtil.GetMetaValue(nuspec, "id");
+                        var version = NuGetUtil.GetMetaValue(nuspec, "version");
+                        var description = NuGetUtil.GetMetaValue(nuspec, "description");
+
+                        var plugInDescriptor = new PlugInDescriptor()
                         {
-                            var stateInConfig = plugInStates.FirstOrDefault(t => t.Name == plugInDescriptor.Name);
-                            plugInDescriptor.IsEnabled = stateInConfig?.IsEnabled ?? false;
-                            plugInDescriptor.PlugInSource = new FolderPlugInSource(plugin);
-                            _plugInDescriptors.Add(plugInDescriptor);
-                        }
+                            Name = name,
+                            Description = description,
+                            Version = version,
+                        };
+                        var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugInDescriptor.Name);
+                        plugInDescriptor.IsEnabled = stateInConfig?.IsEnabled ?? false;
+                        plugInDescriptor.PlugInSource = new FolderPlugInSource(plugin);
+                        _plugInDescriptors.Add(plugInDescriptor);
                     }
                 }
             }
+            SaveState();
         }
 
         private void SaveState()
         {
-            var fileName = "plugInSettings.json";
-            var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 WriteIndented = true
@@ -91,8 +98,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
 
         private IReadOnlyList<IPlugInDescriptor> LoadState()
         {
-            var fileName = "plugInSettings.json";
-            var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var plugInStates = new List<PlugInDescriptor>();
             if (File.Exists(filePath))
             {

@@ -1,4 +1,4 @@
-﻿namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
+﻿namespace Nerd.Abp.DynamicPlugin.Domain.Interfaces
 {
     public interface IPlugInManager
     {

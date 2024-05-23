@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Nerd.Abp.DynamicPlugin.Domain.Plugin;
+using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using Nerd.Abp.DynamicPlugin.Services.Dtos;
 
 namespace Nerd.Abp.DynamicPlugin.Services

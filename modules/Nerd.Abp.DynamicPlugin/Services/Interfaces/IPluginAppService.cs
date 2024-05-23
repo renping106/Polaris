@@ -2,12 +2,12 @@
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace Nerd.Abp.DynamicPlugin.Services
+namespace Nerd.Abp.DynamicPlugin.Services.Interfaces
 {
     public interface IPluginAppService : IApplicationService
     {
         PagedResultDto<PlugInDescriptorDto> GetList();
-        Task Enable(string plugInName);
+        Task<PluginStateDto> Enable(string plugInName);
         Task Disable(string plugInName);
     }
 }

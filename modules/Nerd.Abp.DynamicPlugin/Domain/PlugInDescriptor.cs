@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
+namespace Nerd.Abp.DynamicPlugin.Domain
 {
     internal class PlugInDescriptor : IPlugInDescriptor
     {

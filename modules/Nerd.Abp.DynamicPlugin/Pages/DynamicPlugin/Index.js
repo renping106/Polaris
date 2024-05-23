@@ -1,6 +1,11 @@
 ﻿(function () {
     var l = abp.localization.getResource('DynamicPlugin');
     var _pluginAppService = nerd.abp.dynamicPlugin.services.plugin;
+
+    var _uploadModal = new abp.ModalManager(
+        abp.appPath + 'DynamicPlugin/Upload'
+    );
+
     var _dataTable = null;
 
     abp.ui.extensions.entityActions.get('plugin').addContributor(
@@ -21,9 +26,14 @@
                         action: function (data) {
                             _pluginAppService
                                 .enable(data.record.name)
-                                .then(function () {
-                                    _dataTable.ajax.reloadEx();
-                                    abp.notify.success(l('SuccessfullyEnabled'));
+                                .then(function (data) {
+                                    if (data.success) {
+                                        _dataTable.ajax.reloadEx();
+                                        abp.notify.success(l('SuccessfullyEnabled'));
+                                    }
+                                    else {
+                                        abp.notify.error(data.message, l('FailedToEnable'));
+                                    }
                                 });
                         },
                     },
@@ -98,7 +108,6 @@
 
     $(function () {
         var _$wrapper = $('#PlugInList');
-
         _dataTable = _$wrapper.find('table').DataTable(
             abp.libs.datatables.normalizeConfiguration({
                 order: [[1, 'asc']],
@@ -106,9 +115,18 @@
                 paging: true,
                 scrollX: true,
                 serverSide: false,
-                ajax: abp.libs.datatables.createAjax(_pluginAppService.getList), 
+                ajax: abp.libs.datatables.createAjax(_pluginAppService.getList),
                 columnDefs: abp.ui.extensions.tableColumns.get('plugin').columns.toArray(),
             })
         );
+
+        _uploadModal.onResult(function () {
+            _dataTable.ajax.reloadEx();
+        });
+
+        $('#AbpContentToolbar button[name=Upload]').click(function (e) {
+            e.preventDefault();
+            _uploadModal.open();
+        });
     });
 })();
