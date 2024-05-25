@@ -41,7 +41,6 @@ namespace Nerd.Abp.DynamicPlugin.Domain
         {
             if (refresh)
             {
-                _plugInDescriptors.Clear();
                 LoadFromFolder();
             }
             return _plugInDescriptors.AsReadOnly();
@@ -69,16 +68,25 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                         var version = NuGetUtil.GetMetaValue(nuspec, "version");
                         var description = NuGetUtil.GetMetaValue(nuspec, "description");
 
-                        var plugInDescriptor = new PlugInDescriptor()
+                        var stateInConfig = previousStates.FirstOrDefault(t => t.Name == name);
+                        var exist = _plugInDescriptors.Find(t => t.Name == name);
+                        if (exist != null)
                         {
-                            Name = name,
-                            Description = description,
-                            Version = version,
-                        };
-                        var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugInDescriptor.Name);
-                        plugInDescriptor.IsEnabled = stateInConfig?.IsEnabled ?? false;
-                        plugInDescriptor.PlugInSource = new FolderPlugInSource(plugin);
-                        _plugInDescriptors.Add(plugInDescriptor);
+                            exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
+                            exist.Version = version;
+                            exist.Description = description;
+                        }
+                        else
+                        {
+                            _plugInDescriptors.Add(new PlugInDescriptor()
+                            {
+                                Name = name,
+                                Description = description,
+                                Version = version,
+                                IsEnabled = stateInConfig?.IsEnabled ?? false,
+                                PlugInSource = new FolderPlugInSource(plugin)
+                            });
+                        }
                     }
                 }
             }
