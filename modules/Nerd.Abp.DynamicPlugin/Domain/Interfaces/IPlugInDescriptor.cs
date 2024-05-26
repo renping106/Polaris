@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.DynamicPlugin.Domain.Plugin
+namespace Nerd.Abp.DynamicPlugin.Domain.Interfaces
 {
     public interface IPlugInDescriptor
     {

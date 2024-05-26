@@ -8,7 +8,10 @@ using Nerd.Abp.DynamicPlugin.Services;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.PageToolbars;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
@@ -18,7 +21,8 @@ namespace Nerd.Abp.DynamicPlugin
 {
     [DependsOn(
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule)
+        typeof(AbpAutoMapperModule),
+        typeof(AbpBlobStoringFileSystemModule)
         )]
     public class DynamicPluginModule : AbpModule
     {
@@ -81,6 +85,34 @@ namespace Nerd.Abp.DynamicPlugin
             {
                 //Configure authorization.
                 options.Conventions.AuthorizePage("/DynamicPlugIn", DynamicPluginPermissions.GroupName);
+                options.Conventions.AuthorizePage("/DynamicPlugIn/Upload", DynamicPluginPermissions.Upload);
+            });
+
+            Configure<AbpPageToolbarOptions>(options =>
+            {
+                options.Configure<Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin.IndexModel>(
+                    toolbar =>
+                    {
+                        toolbar.AddButton(
+                            LocalizableString.Create<DynamicPluginResource>("Upload"),
+                            icon: "plus",
+                            name: "Upload",
+                            requiredPolicyName: DynamicPluginPermissions.Upload
+                        );
+                    }
+                );
+            });
+
+            var packageFolder = Path.Combine(AppContext.BaseDirectory, "Packages");
+            Configure<AbpBlobStoringOptions>(options =>
+            {
+                options.Containers.ConfigureDefault(container =>
+                {
+                    container.UseFileSystem(fileSystem =>
+                    {
+                        fileSystem.BasePath = packageFolder;
+                    });
+                });
             });
         }
     }

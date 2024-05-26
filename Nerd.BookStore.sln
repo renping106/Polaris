@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{3EAA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "themes", "themes", "{176911B4-9C27-4FFC-A0EC-7941FF04A0BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DynamicPlugin", "modules\Nerd.Abp.DynamicPlugin\Nerd.Abp.DynamicPlugin.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DynamicPlugin", "modules\Nerd.Abp.DynamicPlugin\Nerd.Abp.DynamicPlugin.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Nerd.Abp.DynamicPlugin.Domain.Plugin;
-using Nerd.Abp.DynamicPlugin.Domain.Shell;
+using Nerd.Abp.DynamicPlugin.Domain;
+using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using Nerd.Abp.DynamicPlugin.Permissions;
 using Nerd.Abp.DynamicPlugin.Services.Dtos;
+using Nerd.Abp.DynamicPlugin.Services.Interfaces;
 using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.DynamicPlugin.Services
@@ -25,15 +26,26 @@ namespace Nerd.Abp.DynamicPlugin.Services
         }
 
         [Authorize(DynamicPluginPermissions.Edit)]
-        public async Task Enable(string plugInName)
+        public async Task<PluginStateDto> Enable(string plugInName)
         {
-            _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
-            await WebAppShell.Instance.UpdateShellAsync();
+            var pluginDescriptor = GetDescriptor(plugInName);
+            var tryAddResult = await WebAppShell.Instance.TestShellAsync(pluginDescriptor);
+
+            if (tryAddResult.Success)
+            {
+                _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
+                await WebAppShell.Instance.UpdateShellAsync();
+            }
+            return new PluginStateDto()
+            {
+                Success = tryAddResult.Success,
+                Message = tryAddResult.Message
+            };
         }
 
         public PagedResultDto<PlugInDescriptorDto> GetList()
         {
-            var plugins = _plugInManager.GetAllPlugIns();
+            var plugins = _plugInManager.GetAllPlugIns(true);
             return new PagedResultDto<PlugInDescriptorDto>(
                    plugins.Count,
                    ObjectMapper.Map<IReadOnlyList<IPlugInDescriptor>, List<PlugInDescriptorDto>>(plugins)
