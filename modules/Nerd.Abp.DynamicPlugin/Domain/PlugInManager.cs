@@ -40,6 +40,18 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             }
         }
 
+        public void RemovePlugIn(IPlugInDescriptor plugIn)
+        {
+            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            if (target != null)
+            {
+                _plugInDescriptors.Remove(target);
+                var pluginFolder = Path.Combine(AppContext.BaseDirectory, folderName, plugIn.Name);
+                Directory.Delete(pluginFolder, true);
+                SaveState();
+            }
+        }
+
         public IReadOnlyList<IPlugInDescriptor> GetAllPlugIns(bool refresh = false)
         {
             if (refresh)

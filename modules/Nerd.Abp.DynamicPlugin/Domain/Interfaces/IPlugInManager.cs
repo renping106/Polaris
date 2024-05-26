@@ -6,5 +6,6 @@
         IReadOnlyList<IPlugInDescriptor> GetEnabledPlugIns();
         void EnablePlugIn(IPlugInDescriptor plugIn);
         void DisablePlugIn(IPlugInDescriptor plugIn);
+        void RemovePlugIn(IPlugInDescriptor plugIn);
     }
 }

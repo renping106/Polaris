@@ -56,7 +56,27 @@
                                     abp.notify.success(l('SuccessfullyDisabled'));
                                 });
                         },
-                    }
+                    },
+                    {
+                        text: l('Remove'),
+                        visible: function (data) {
+                            return (!data.isEnabled && abp.auth.isGranted('DynamicPlugin.Edit'));
+                        },
+                        confirmMessage: function (data) {
+                            return l(
+                                'PlugInRemoveConfirm',
+                                data.record.name
+                            );
+                        },
+                        action: function (data) {
+                            _pluginAppService
+                                .remove(data.record.name)
+                                .then(function () {
+                                    _dataTable.ajax.reloadEx();
+                                    abp.notify.success(l('SuccessfullyRemoved'));
+                                });
+                        },
+                    },
                 ]
             );
         }

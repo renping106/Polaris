@@ -1,6 +1,7 @@
 ﻿using Nerd.Abp.DynamicPlugin.Services.Dtos;
 using Nerd.Abp.DynamicPlugin.Services.Interfaces;
 using System.IO.Compression;
+using Volo.Abp;
 using Volo.Abp.BlobStoring;
 
 namespace Nerd.Abp.DynamicPlugin.Services
@@ -51,7 +52,7 @@ namespace Nerd.Abp.DynamicPlugin.Services
                         }
                         else
                         {
-                            throw new Exception("Remove the old one first.");
+                            throw new UserFriendlyException("Remove the old one first.");
                         }
 
                         // extract nuspec

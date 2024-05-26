@@ -29,36 +29,21 @@ namespace Nerd.Abp.DynamicPlugin.Pages.DynamicPlugin
         {
             ValidateModel();
 
-            try
+            using (var memoryStream = new MemoryStream())
             {
-                using (var memoryStream = new MemoryStream())
+                if (UploadFileDto.File != null)
                 {
-                    if (UploadFileDto.File != null)
-                    {
-                        await UploadFileDto.File.CopyToAsync(memoryStream);
+                    await UploadFileDto.File.CopyToAsync(memoryStream);
 
-                        await _fileAppService.SaveBlobAsync(
-                            new SaveBlobInputDto
-                            {
-                                Name = UploadFileDto.Name,
-                                Content = memoryStream.ToArray()
-                            }
-                        );
-                    }
+                    await _fileAppService.SaveBlobAsync(
+                        new SaveBlobInputDto
+                        {
+                            Name = UploadFileDto.Name,
+                            Content = memoryStream.ToArray()
+                        }
+                    );
                 }
             }
-            catch (Exception ex)
-            {
-                Alerts.Danger(
-                    text: ex.Message,
-                    title: "Failed to install."
-                );
-                return Page();
-            }
-
-            Alerts.Success(
-                text: "Uploaded sucessfully."
-            );
             return Page();
         }
     }

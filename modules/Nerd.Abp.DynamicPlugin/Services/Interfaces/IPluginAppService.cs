@@ -9,5 +9,6 @@ namespace Nerd.Abp.DynamicPlugin.Services.Interfaces
         PagedResultDto<PlugInDescriptorDto> GetList();
         Task<PluginStateDto> Enable(string plugInName);
         Task Disable(string plugInName);
+        Task Remove(string plugInName);
     }
 }

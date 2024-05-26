@@ -78,29 +78,29 @@ public static class AbpAutofacHostBuilderExtensions
             context.Unload();
         }
 
-        var path = Path.Combine(AppContext.BaseDirectory, "Autofac.dll");
+        var path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Autofac.dll");
         var assemblyLoadContext = new TestAssemblyLoadContext(path);
         var assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
         var ContainerBuilder = assembly.GetTypes().FirstOrDefault(t => t.Name == "ContainerBuilder");
         var containerBuilder = Activator.CreateInstance(ContainerBuilder);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Autofac.Extensions.DependencyInjection.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Autofac.Extensions.DependencyInjection.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Autofac.Extras.DynamicProxy.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Autofac.Extras.DynamicProxy.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Volo.Abp.Castle.Core.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Volo.Abp.Castle.Core.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Castle.Core.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Castle.Core.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Castle.Core.AsyncInterceptor.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Castle.Core.AsyncInterceptor.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
 
-        path = Path.Combine(AppContext.BaseDirectory, "Volo.Abp.Autofac.dll");
+        path = Path.Combine(AppContext.BaseDirectory, "Dynamic\\Volo.Abp.Autofac.dll");
         assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
         var AbpAutofacServiceProviderFactory = assembly.GetTypes().FirstOrDefault(t => t.Name == "AbpAutofacServiceProviderFactory");
 

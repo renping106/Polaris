@@ -4,6 +4,7 @@ using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using Nerd.Abp.DynamicPlugin.Permissions;
 using Nerd.Abp.DynamicPlugin.Services.Dtos;
 using Nerd.Abp.DynamicPlugin.Services.Interfaces;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.DynamicPlugin.Services
@@ -41,6 +42,17 @@ namespace Nerd.Abp.DynamicPlugin.Services
                 Success = tryAddResult.Success,
                 Message = tryAddResult.Message
             };
+        }
+
+        [Authorize(DynamicPluginPermissions.Edit)]
+        public async Task Remove(string plugInName)
+        {
+            var plugin = GetDescriptor(plugInName);
+            if (plugin.IsEnabled)
+            {
+                throw new UserFriendlyException("Cannot remove an active plugin");
+            }
+            _plugInManager.RemovePlugIn(GetDescriptor(plugInName));
         }
 
         public PagedResultDto<PlugInDescriptorDto> GetList()
