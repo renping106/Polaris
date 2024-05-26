@@ -30,13 +30,24 @@ namespace Nerd.Abp.DynamicPlugin.Services
         public async Task<PluginStateDto> Enable(string plugInName)
         {
             var pluginDescriptor = GetDescriptor(plugInName);
-            var tryAddResult = await WebAppShell.Instance.TestShellAsync(pluginDescriptor);
+            var folderSource = new FolderSource(((FolderSource)pluginDescriptor.PlugInSource).Folder);
+            var testPlugin = new PlugInDescriptor()
+            {
+                Name = pluginDescriptor.Name,
+                Version = pluginDescriptor.Version,
+                PlugInSource = folderSource
+            };
+
+            var tryAddResult = await WebAppShell.Instance.TestShellAsync(testPlugin);
 
             if (tryAddResult.Success)
             {
                 _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
                 await WebAppShell.Instance.UpdateShellAsync();
             }
+
+            folderSource.Context.Unload(); //unload test context
+
             return new PluginStateDto()
             {
                 Success = tryAddResult.Success,

@@ -77,8 +77,6 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             }
 
             return results;
-
-            //return assemblyFiles.Select(Context.LoadFromAssemblyPath).ToList();
         }
 
         private static IEnumerable<string> GetAssemblyFiles(string folderPath, SearchOption searchOption)

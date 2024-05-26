@@ -54,9 +54,9 @@ namespace Nerd.Abp.DynamicPlugin.Domain
         {
             try
             {
-                //var builderInit = _webAppCache!.BuilderInit;
-                //var startupModuleTyp = _webAppCache!.StartupModuleTyp;
-                //_ = await InitShellAsync(startupModuleTyp, builderInit, plugInDescriptor);                
+                var builderInit = _webAppCache!.BuilderInit;
+                var startupModuleTyp = _webAppCache!.StartupModuleTyp;
+                _ = await InitShellAsync(startupModuleTyp, builderInit, plugInDescriptor);
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             await shellAppBuilder.AddApplicationAsync(startupModuleTyp, options =>
             {
                 // Core modules for dynamic
-                var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == "TestAssemblyLoadContext");
+                var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
                 if (context != null)
                 {
                     foreach (var item in context.Assemblies)
@@ -114,8 +114,6 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             };
 
             configure(shellApp);
-
-            var aa = AssemblyLoadContext.All;
 
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
