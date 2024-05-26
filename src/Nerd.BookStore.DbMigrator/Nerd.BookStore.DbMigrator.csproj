@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Autofac" Version="8.1.3" />
     <ProjectReference Include="..\Nerd.BookStore.Application.Contracts\Nerd.BookStore.Application.Contracts.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
+using System.Runtime.Loader;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -8,11 +9,11 @@ namespace Nerd.Abp.DynamicPlugin.Domain
 {
     internal class PlugInManager : IPlugInManager
     {
-        private readonly string folderName = "PlugIns";
-        private readonly string settingFileName = "plugInSettings.json";
-        private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
+        private static readonly string folderName = "PlugIns";
+        private static readonly string settingFileName = "plugInSettings.json";
+        private static readonly List<IPlugInDescriptor> _plugInDescriptors = new();
 
-        public PlugInManager()
+        static PlugInManager()
         {
             LoadFromFolder();
         }
@@ -23,6 +24,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             if (target != null)
             {
                 target.IsEnabled = false;
+                ((FolderSource)target.PlugInSource).Context.Unload();
                 SaveState();
             }
         }
@@ -33,6 +35,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             if (target != null)
             {
                 target.IsEnabled = true;
+                ((FolderSource)target.PlugInSource).Context = new AssemblyLoadContext("plugin", true);
                 SaveState();
             }
         }
@@ -51,7 +54,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             return _plugInDescriptors.Where(t => t.IsEnabled).ToList().AsReadOnly();
         }
 
-        private void LoadFromFolder()
+        private static void LoadFromFolder()
         {
             var pluginPath = Path.Combine(AppContext.BaseDirectory, folderName);
             if (Path.Exists(pluginPath))
@@ -84,7 +87,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                                 Description = description,
                                 Version = version,
                                 IsEnabled = stateInConfig?.IsEnabled ?? false,
-                                PlugInSource = new FolderPlugInSource(plugin)
+                                PlugInSource = new FolderSource(plugin)
                             });
                         }
                     }
@@ -93,7 +96,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             SaveState();
         }
 
-        private void SaveState()
+        private static void SaveState()
         {
             var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
@@ -104,7 +107,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             File.WriteAllText(filePath, jsonString, Encoding.UTF8);
         }
 
-        private IReadOnlyList<IPlugInDescriptor> LoadState()
+        private static IReadOnlyList<IPlugInDescriptor> LoadState()
         {
             var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var plugInStates = new List<PlugInDescriptor>();

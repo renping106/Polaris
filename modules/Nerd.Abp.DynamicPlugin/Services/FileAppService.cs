@@ -49,6 +49,10 @@ namespace Nerd.Abp.DynamicPlugin.Services
                         {
                             Directory.CreateDirectory(pluginFolder);
                         }
+                        else
+                        {
+                            throw new Exception("Remove the old one first.");
+                        }
 
                         // extract nuspec
                         ExtractFile(nuspec, pluginFolder, 0);

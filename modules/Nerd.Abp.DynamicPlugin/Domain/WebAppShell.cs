@@ -1,7 +1,9 @@
-﻿using Autofac.Core;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
+using System.Runtime.Loader;
+using Volo.Abp.Modularity;
+using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.Abp.DynamicPlugin.Domain
 {
@@ -52,9 +54,9 @@ namespace Nerd.Abp.DynamicPlugin.Domain
         {
             try
             {
-                var builderInit = _webAppCache!.BuilderInit;
-                var startupModuleTyp = _webAppCache!.StartupModuleTyp;
-                _ = await InitShellAsync(startupModuleTyp, builderInit, plugInDescriptor);                
+                //var builderInit = _webAppCache!.BuilderInit;
+                //var startupModuleTyp = _webAppCache!.StartupModuleTyp;
+                //_ = await InitShellAsync(startupModuleTyp, builderInit, plugInDescriptor);                
             }
             catch (Exception ex)
             {
@@ -73,6 +75,21 @@ namespace Nerd.Abp.DynamicPlugin.Domain
 
             await shellAppBuilder.AddApplicationAsync(startupModuleTyp, options =>
             {
+                // Core modules for dynamic
+                var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == "TestAssemblyLoadContext");
+                if (context != null)
+                {
+                    foreach (var item in context.Assemblies)
+                    {
+                        var moduleTypes = item.GetTypes().Where(t => t.IsAssignableTo(typeof(AbpModule)));
+                        if (moduleTypes.Any())
+                        {
+                            options.PlugInSources.AddTypes(moduleTypes.ToArray());
+                        }
+                    }
+                }
+
+                // Enabled plugins
                 var serviceProvider = shellAppBuilder.Services.BuildServiceProvider();
                 var plugInManager = serviceProvider.GetRequiredService<IPlugInManager>();
 
@@ -82,6 +99,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                     options.PlugInSources.Add(enabledPlug.PlugInSource);
                 }
 
+                // Test plugin
                 if (externalPlugin != null)
                 {
                     options.PlugInSources.Add(externalPlugin.PlugInSource);
@@ -96,6 +114,8 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             };
 
             configure(shellApp);
+
+            var aa = AssemblyLoadContext.All;
 
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();

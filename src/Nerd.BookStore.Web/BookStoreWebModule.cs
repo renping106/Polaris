@@ -21,7 +21,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
-using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.Modularity;
@@ -40,7 +39,6 @@ namespace Nerd.BookStore.Web;
     typeof(BookStoreHttpApiModule),
     typeof(BookStoreApplicationModule),
     typeof(BookStoreEntityFrameworkCoreModule),
-    typeof(AbpAutofacModule),
     typeof(AbpIdentityWebModule),
     typeof(AbpSettingManagementWebModule),
     typeof(AbpAccountWebOpenIddictModule),
