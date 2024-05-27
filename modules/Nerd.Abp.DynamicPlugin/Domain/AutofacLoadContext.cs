@@ -10,7 +10,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
         {
         }
 
-        protected override Assembly? Load(AssemblyName name)
+        protected override Assembly? Load(AssemblyName assemblyName)
         {
             return null;
         }

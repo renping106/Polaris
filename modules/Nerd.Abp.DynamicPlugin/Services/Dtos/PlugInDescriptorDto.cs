@@ -8,6 +8,5 @@ namespace Nerd.Abp.DynamicPlugin.Services.Dtos
         public string Description { get; set; } = string.Empty;
         public bool IsEnabled { get; set; }
         public string Version { get; set; } = string.Empty;
-        public string AbpVersion { get; set; } = string.Empty;
     }
 }

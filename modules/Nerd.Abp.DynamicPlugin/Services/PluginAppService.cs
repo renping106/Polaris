@@ -13,17 +13,19 @@ namespace Nerd.Abp.DynamicPlugin.Services
     public class PluginAppService : DynamicPluginAppServiceBase, IPluginAppService
     {
         private readonly IPlugInManager _plugInManager;
+        private readonly IWebAppShell _webAppShell;
 
-        public PluginAppService(IPlugInManager plugInManager)
+        public PluginAppService(IPlugInManager plugInManager, IWebAppShell webAppShell)
         {
             _plugInManager = plugInManager;
+            _webAppShell = webAppShell;
         }
 
         [Authorize(DynamicPluginPermissions.Edit)]
         public async Task Disable(string plugInName)
         {
             _plugInManager.DisablePlugIn(GetDescriptor(plugInName));
-            await WebAppShell.Instance.UpdateShellAsync();
+            await _webAppShell.ResetWebApp();
         }
 
         [Authorize(DynamicPluginPermissions.Edit)]
@@ -38,12 +40,12 @@ namespace Nerd.Abp.DynamicPlugin.Services
                 PlugInSource = folderSource
             };
 
-            var tryAddResult = await WebAppShell.Instance.TestShellAsync(testPlugin);
+            var tryAddResult = await _webAppShell.TestWebApp(testPlugin);
 
             if (tryAddResult.Success)
             {
                 _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
-                await WebAppShell.Instance.UpdateShellAsync();
+                await _webAppShell.ResetWebApp();
             }
 
             folderSource.Context.Unload(); //unload test context

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Nerd.Abp.DynamicPlugin.Domain.Interfaces;
 using System.Runtime.Loader;
 using Volo.Abp.Modularity;
@@ -7,15 +8,20 @@ using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.Abp.DynamicPlugin.Domain
 {
-    internal sealed class WebAppShell
+    internal class WebAppShell : IWebAppShell
     {
         private WebAppCache? _webAppCache;
         private readonly object instanceLock = new object();
-        private static readonly Lazy<WebAppShell> instance = new(() => new WebAppShell());
+        private readonly WebShellOptions _options;
+        private readonly IServiceProvider _hostServiceProvider;
 
-        public static WebAppShell Instance => instance.Value;
+        public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
+        {
+            _options = webShellOptions.Value;
+            _hostServiceProvider = hostServiceProvider;
+        }
 
-        public WebAppCache GetShell(Type startupModuleTyp, Func<WebApplicationBuilder> builderInit)
+        public WebAppCache GetWebApp()
         {
             if (_webAppCache == null)
             {
@@ -23,21 +29,18 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                 {
                     if (_webAppCache == null)
                     {
-                        _webAppCache = InitShellAsync(startupModuleTyp, builderInit).GetAwaiter().GetResult();
+                        _webAppCache = InitShellAsync().GetAwaiter().GetResult();
                     }
                 }
             }
-
             return _webAppCache!;
         }
 
-        public async ValueTask<(bool Success, string Message)> UpdateShellAsync()
+        public async ValueTask<(bool Success, string Message)> ResetWebApp()
         {
             try
             {
-                var builderInit = _webAppCache!.BuilderInit;
-                var startupModuleTyp = _webAppCache!.StartupModuleTyp;
-                var newShell = await InitShellAsync(startupModuleTyp, builderInit);
+                var newShell = await InitShellAsync();
                 if (newShell != null)
                 {
                     _webAppCache = newShell;
@@ -50,13 +53,11 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             return (true, string.Empty);
         }
 
-        public async ValueTask<(bool Success, string Message)> TestShellAsync(IPlugInDescriptor plugInDescriptor)
+        public async ValueTask<(bool Success, string Message)> TestWebApp(IPlugInDescriptor plugInDescriptor)
         {
             try
             {
-                var builderInit = _webAppCache!.BuilderInit;
-                var startupModuleTyp = _webAppCache!.StartupModuleTyp;
-                _ = await InitShellAsync(startupModuleTyp, builderInit, plugInDescriptor);
+                _ = await InitShellAsync(plugInDescriptor);
             }
             catch (Exception ex)
             {
@@ -65,15 +66,13 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             return (true, string.Empty);
         }
 
-        private static async ValueTask<WebAppCache> InitShellAsync(
-            Type startupModuleTyp,
-            Func<WebApplicationBuilder> builderInit,
-            IPlugInDescriptor? externalPlugin = null)
+        private async ValueTask<WebAppCache> InitShellAsync(IPlugInDescriptor? externalPlugin = null)
         {
-            var shellAppBuilder = builderInit();
-            shellAppBuilder.Services.AddSingleton<IPlugInManager, PlugInManager>();
+            var shellAppBuilder = _options.BuilderInit();
 
-            await shellAppBuilder.AddApplicationAsync(startupModuleTyp, options =>
+            RegisterSharedServices(shellAppBuilder);
+
+            await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
             {
                 // Core modules for dynamic
                 var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
@@ -118,7 +117,18 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
-            return new WebAppCache(shellApp.Services, requestDelegate, startupModuleTyp, builderInit);
+            return new WebAppCache(shellApp.Services, requestDelegate);
+        }
+
+        private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
+        {
+            foreach (var item in _options.SharedServices)
+            {
+                shellAppBuilder.Services.AddSingleton(item, provider =>
+                {
+                    return _hostServiceProvider.GetRequiredService(item);
+                });
+            }
         }
     }
 }

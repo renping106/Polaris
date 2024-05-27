@@ -1,61 +1,73 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Nerd.Abp.DynamicPlugin.Domain;
+using System.Reflection;
 using System.Runtime.Loader;
 
 namespace Nerd.Abp.DynamicPlugin.Extensions
 {
     public static class AutofacHostBuilderExtension
     {
+        /// <summary>
+        /// We need to load Volo.Abp.Autofac and Castle.Core into a different AssemblyLoadContext.
+        /// Make sure to remove DependsOn to them.
+        /// </summary>
+        /// <param name="hostBuilder"></param>
+        /// <returns></returns>
         public static IHostBuilder UseDynamicAutofac(this IHostBuilder hostBuilder)
         {
-            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == "AutofacLoadContext");
-            if (context != null)
+            try
             {
-                context.Unload();
+                var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
+                if (context != null)
+                {
+                    context.Unload();
+                }
+
+                // Dynamic load them to make the generated proxies are in a collectable AssemblyLoadContext
+                var autofacContext = new AutofacLoadContext();
+
+                var assembly = LoadAssembly(autofacContext, "Autofac.dll");
+                // Find ContainerBuilder
+                var ContainerBuilder = Array.Find(assembly.GetTypes(), t => t.Name == "ContainerBuilder");
+                var containerBuilder = Activator.CreateInstance(ContainerBuilder!);
+
+                LoadAssembly(autofacContext, "Autofac.Extensions.DependencyInjection.dll");
+                LoadAssembly(autofacContext, "Autofac.Extras.DynamicProxy.dll");
+                LoadAssembly(autofacContext, "Volo.Abp.Castle.Core.dll");
+                LoadAssembly(autofacContext, "Castle.Core.dll");
+                LoadAssembly(autofacContext, "Castle.Core.AsyncInterceptor.dll");
+
+                assembly = LoadAssembly(autofacContext, "Volo.Abp.Autofac.dll");
+                // Find AbpAutofacServiceProviderFactory
+                var AbpAutofacServiceProviderFactory = Array.Find(assembly.GetTypes(), t => t.Name == "AbpAutofacServiceProviderFactory");
+                var methods = AbpAutofacServiceProviderFactory!.GetConstructors();
+                var factory = methods[0].Invoke([containerBuilder]);
+
+                var host = hostBuilder.ConfigureServices((_, services) =>
+                {
+                    services.AddObjectAccessor(containerBuilder);
+                });
+
+                // Dynamically call IHostBuilder.UseServiceProviderFactory
+                var methodInfos = typeof(IHostBuilder).GetMethods();
+                var methodInfo = Array.Find(methodInfos, t => t.GetParameters().Count() == 1 && t.Name == "UseServiceProviderFactory");
+
+                methodInfo = methodInfo!.MakeGenericMethod(ContainerBuilder!);
+
+                return (IHostBuilder)methodInfo.Invoke(host, [factory]);
             }
-
-            // Dynamic load them to make the generated proxies are in a collectable AssemblyLoadContext
-            var path = Path.Combine(AppContext.BaseDirectory, "Autofac.dll");
-            var assemblyLoadContext = new AutofacLoadContext();
-            var assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            var ContainerBuilder = assembly.GetTypes().FirstOrDefault(t => t.Name == "ContainerBuilder");
-            var containerBuilder = Activator.CreateInstance(ContainerBuilder);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Autofac.Extensions.DependencyInjection.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Autofac.Extras.DynamicProxy.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Volo.Abp.Castle.Core.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Castle.Core.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Castle.Core.AsyncInterceptor.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-
-            path = Path.Combine(AppContext.BaseDirectory, "Volo.Abp.Autofac.dll");
-            assembly = assemblyLoadContext.LoadFromAssemblyPath(path);
-            var AbpAutofacServiceProviderFactory = assembly.GetTypes().FirstOrDefault(t => t.Name == "AbpAutofacServiceProviderFactory");
-
-            var methods = AbpAutofacServiceProviderFactory.GetConstructors();
-            var factory = methods[0].Invoke([containerBuilder]);
-
-            var host = hostBuilder.ConfigureServices((_, services) =>
+            catch (Exception)
             {
-                services.AddObjectAccessor(containerBuilder);
-            });
+            }
+            return hostBuilder;
+        }
 
-            var methodInfos = typeof(IHostBuilder).GetMethods(); //"UseServiceProviderFactory"
-            var methodInfo = methodInfos.FirstOrDefault(t => t.GetParameters().Count() == 1 && t.Name == "UseServiceProviderFactory");
-
-            methodInfo = methodInfo.MakeGenericMethod(ContainerBuilder);
-
-            return (IHostBuilder)methodInfo.Invoke(host, [factory]);
+        private static Assembly LoadAssembly(AssemblyLoadContext context, string dllName)
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, dllName);
+            return context.LoadFromAssemblyPath(path);
         }
     }
 }

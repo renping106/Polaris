@@ -3,17 +3,16 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
-using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.Abp.DynamicPlugin.Domain
 {
     internal class PlugInManager : IPlugInManager
     {
-        private static readonly string folderName = "PlugIns";
-        private static readonly string settingFileName = "plugInSettings.json";
-        private static readonly List<IPlugInDescriptor> _plugInDescriptors = new();
+        private readonly string folderName = "PlugIns";
+        private readonly string settingFileName = "plugInSettings.json";
+        private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
 
-        static PlugInManager()
+        public PlugInManager()
         {
             LoadFromFolder();
         }
@@ -35,7 +34,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             if (target != null)
             {
                 target.IsEnabled = true;
-                ((FolderSource)target.PlugInSource).Context = new AssemblyLoadContext("plugin", true);
+                ((FolderSource)target.PlugInSource).ResetContext();
                 SaveState();
             }
         }
@@ -66,7 +65,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
             return _plugInDescriptors.Where(t => t.IsEnabled).ToList().AsReadOnly();
         }
 
-        private static void LoadFromFolder()
+        private void LoadFromFolder()
         {
             var pluginPath = Path.Combine(AppContext.BaseDirectory, folderName);
             if (Path.Exists(pluginPath))
@@ -74,7 +73,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                 var previousStates = LoadState();
                 foreach (var plugin in Directory.GetDirectories(pluginPath))
                 {
-                    var nuspecFile = Directory.GetFiles(plugin).FirstOrDefault(t => t.EndsWith(".nuspec"));
+                    var nuspecFile = Array.Find(Directory.GetFiles(plugin), t => t.EndsWith(".nuspec"));
                     if (nuspecFile != null)
                     {
                         using StreamReader reader = new(nuspecFile);
@@ -105,24 +104,27 @@ namespace Nerd.Abp.DynamicPlugin.Domain
                     }
                 }
             }
+
             SaveState();
         }
 
-        private static void SaveState()
+        private void SaveState()
         {
             var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 WriteIndented = true
             };
+
             var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
             File.WriteAllText(filePath, jsonString, Encoding.UTF8);
         }
 
-        private static IReadOnlyList<IPlugInDescriptor> LoadState()
+        private IReadOnlyList<IPlugInDescriptor> LoadState()
         {
             var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
             var plugInStates = new List<PlugInDescriptor>();
+
             if (File.Exists(filePath))
             {
                 using StreamReader reader = new(filePath);

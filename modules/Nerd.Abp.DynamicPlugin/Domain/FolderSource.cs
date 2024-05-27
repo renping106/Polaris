@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using JetBrains.Annotations;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Runtime.Loader;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Modularity.PlugIns;
-using Volo.Abp.Modularity;
 using Volo.Abp;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Authentication;
+using Volo.Abp.Modularity;
+using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.Abp.DynamicPlugin.Domain
 {
@@ -22,7 +16,9 @@ namespace Nerd.Abp.DynamicPlugin.Domain
 
         public Func<string, bool>? Filter { get; set; }
 
-        public AssemblyLoadContext Context { get; set; }
+        public AssemblyLoadContext Context { get; private set; }
+
+        private static readonly string _contextName = "plugin";
 
         public FolderSource(
             [NotNull] string folder,
@@ -32,7 +28,13 @@ namespace Nerd.Abp.DynamicPlugin.Domain
 
             Folder = folder;
             SearchOption = searchOption;
-            Context = new AssemblyLoadContext("plugin", true);
+
+            Context = new AssemblyLoadContext(_contextName, true);
+        }
+
+        public void ResetContext()
+        {
+            Context = new AssemblyLoadContext(_contextName, true);
         }
 
         public Type[] GetModules()
@@ -83,7 +85,7 @@ namespace Nerd.Abp.DynamicPlugin.Domain
         {
             return Directory
                 .EnumerateFiles(folderPath, "*.*", searchOption)
-                .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
+                .Where(s => s.EndsWith(".dll"));
         }
     }
 }

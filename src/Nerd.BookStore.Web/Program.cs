@@ -28,20 +28,21 @@ public class Program
         try
         {
             Log.Information("Starting web host.");
+
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDynamicPluginService(typeof(BookStoreWebModule), () =>
+            {
+                var subAppBuilder = WebApplication.CreateBuilder(args);
+                subAppBuilder.Host.AddAppSettingsSecretsJson()
+                               .UseDynamicAutofac() 
+                               .UseSerilog();
+                return subAppBuilder;
+            });
+
             var app = builder.Build();
 
-            app.Run(async context =>
-            {
-                await app.UseDynamicPlugins(context, typeof(BookStoreWebModule), () =>
-                {
-                    var subAppBuilder = WebApplication.CreateBuilder(args);
-                    subAppBuilder.Host.AddAppSettingsSecretsJson()
-                                   .UseDynamicAutofac() // Need to remove DependsOn Volo.Abp.Autofac, we will load it dynamically
-                                   .UseSerilog();
-                    return subAppBuilder;
-                });
-            });
+            app.RunWithDynamicPlugin();
 
             await app.RunAsync();
             return 0;
