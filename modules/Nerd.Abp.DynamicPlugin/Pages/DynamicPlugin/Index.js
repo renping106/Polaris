@@ -24,16 +24,18 @@
                             );
                         },
                         action: function (data) {
+                            abp.ui.setBusy('#PlugInList');
                             _pluginAppService
                                 .enable(data.record.name)
                                 .then(function (data) {
+                                    abp.ui.clearBusy();
                                     if (data.success) {
                                         _dataTable.ajax.reloadEx();
                                         abp.notify.success(l('SuccessfullyEnabled'));
                                     }
                                     else {
                                         abp.notify.error(data.message, l('FailedToEnable'));
-                                    }
+                                    }                                  
                                 });
                         },
                     },
@@ -49,11 +51,13 @@
                             );
                         },
                         action: function (data) {
+                            abp.ui.setBusy('#PlugInList');
                             _pluginAppService
                                 .disable(data.record.name)
                                 .then(function () {
+                                    abp.ui.clearBusy();
                                     _dataTable.ajax.reloadEx();
-                                    abp.notify.success(l('SuccessfullyDisabled'));
+                                    abp.notify.success(l('SuccessfullyDisabled'));                             
                                 });
                         },
                     },
@@ -69,9 +73,11 @@
                             );
                         },
                         action: function (data) {
+                            abp.ui.setBusy('#PlugInList');
                             _pluginAppService
                                 .remove(data.record.name)
                                 .then(function () {
+                                    abp.ui.clearBusy();
                                     _dataTable.ajax.reloadEx();
                                     abp.notify.success(l('SuccessfullyRemoved'));
                                 });
