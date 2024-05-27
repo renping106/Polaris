@@ -63,7 +63,7 @@ namespace Nerd.Abp.DynamicPlugin.Services
             var plugin = GetDescriptor(plugInName);
             if (plugin.IsEnabled)
             {
-                throw new UserFriendlyException("Cannot remove an active plugin");
+                throw new UserFriendlyException(L["PluginCannotRemove"]);
             }
             _plugInManager.RemovePlugIn(GetDescriptor(plugInName));
         }

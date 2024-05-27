@@ -9,6 +9,8 @@
     "PlugInDisableConfirm": "Plugin '{0}' will be disabled. Do you confirm that?",
     "SuccessfullyEnabled": "Plugin is successully enabled.",
     "FailedToEnable": "Failed to enable.",
-    "SuccessfullyDisabled": "Plugin is successully disabled."
+    "SuccessfullyDisabled": "Plugin is successully disabled.",
+    "PluginExists": "Plugin '{0}' is already installed. Please remove the old one and try again.",
+    "PluginCannotRemove": "Plugin is enabled. Please disable it before removing."
   }
 }

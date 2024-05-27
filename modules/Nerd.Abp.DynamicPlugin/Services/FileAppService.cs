@@ -52,7 +52,7 @@ namespace Nerd.Abp.DynamicPlugin.Services
                         }
                         else
                         {
-                            throw new UserFriendlyException("Remove the old one first.");
+                            throw new UserFriendlyException(L["PluginExists", name]);
                         }
 
                         // extract nuspec
