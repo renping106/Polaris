@@ -22,7 +22,15 @@ namespace Nerd.Abp.DynamicPlugin.Extensions
                 var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
                 if (context != null)
                 {
+                    WeakReference contextReference = new WeakReference(context, trackResurrection: true);
+
                     context.Unload();
+
+                    for (int i = 0; contextReference.IsAlive && (i < 10); i++)
+                    {
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
+                    }
                 }
 
                 // Dynamic load them to make the generated proxies are in a collectable AssemblyLoadContext
