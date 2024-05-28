@@ -1,4 +1,6 @@
-﻿using Nerd.Abp.PluginManagement.Services.Dtos;
+﻿using Microsoft.AspNetCore.Authorization;
+using Nerd.Abp.PluginManagement.Permissions;
+using Nerd.Abp.PluginManagement.Services.Dtos;
 using Nerd.Abp.PluginManagement.Services.Interfaces;
 using System.IO.Compression;
 using Volo.Abp;
@@ -6,6 +8,7 @@ using Volo.Abp.BlobStoring;
 
 namespace Nerd.Abp.PluginManagement.Services
 {
+    [Authorize(PluginManagementPermissions.Upload)]
     public class FileAppService : PluginManagementAppServiceBase, IFileAppService
     {
         private readonly IBlobContainer _fileContainer;
