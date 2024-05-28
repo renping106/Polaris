@@ -1,0 +1,8 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:ThemeManagement": "Theme management",
+    "Permission:ThemeManagement": "Theme management",
+    "Permission:ThemeManagement.Edit": "Change theme"
+  }
+}
