@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Nerd.Abp.DynamicPlugin;
+using Nerd.Abp.PluginManagement;
 using Nerd.BookStore.EntityFrameworkCore;
 using Nerd.BookStore.Localization;
 using Nerd.BookStore.MultiTenancy;
@@ -46,7 +46,7 @@ namespace Nerd.BookStore.Web;
     typeof(AbpTenantManagementWebModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
-    typeof(DynamicPluginModule)
+    typeof(PluginManagementModule)
     )]
 public class BookStoreWebModule : AbpModule
 {

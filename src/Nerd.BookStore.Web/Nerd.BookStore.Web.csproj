@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\Nerd.Abp.DynamicPlugin\Nerd.Abp.DynamicPlugin.csproj" />
+    <ProjectReference Include="..\..\modules\Nerd.Abp.PluginManagement\Nerd.Abp.PluginManagement.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.HttpApi\Nerd.BookStore.HttpApi.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj" />

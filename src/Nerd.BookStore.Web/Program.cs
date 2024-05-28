@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-using Nerd.Abp.DynamicPlugin.Extensions;
+using Nerd.Abp.PluginManagement.Extensions;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -31,7 +31,7 @@ public class Program
 
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDynamicPluginService(typeof(BookStoreWebModule), () =>
+            builder.Services.AddPluginManagementService(typeof(BookStoreWebModule), () =>
             {
                 var subAppBuilder = WebApplication.CreateBuilder(args);
                 subAppBuilder.Host.AddAppSettingsSecretsJson()
@@ -42,7 +42,7 @@ public class Program
 
             var app = builder.Build();
 
-            app.RunWithDynamicPlugin();
+            app.RunWithPluginManagement();
 
             await app.RunAsync();
             return 0;

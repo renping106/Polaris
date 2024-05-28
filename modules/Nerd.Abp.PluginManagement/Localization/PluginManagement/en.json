@@ -1,0 +1,16 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:PluginManagement": "PlugIn management",
+    "Permission:PluginManagement": "PlugIn management",
+    "Permission:PluginManagement.Edit": "Edit plugin",
+    "Permission:PluginManagement.Upload": "Upload plugin",
+    "PlugInEnableConfirm": "Plugin '{0}' will be enabled. Do you confirm that?",
+    "PlugInDisableConfirm": "Plugin '{0}' will be disabled. Do you confirm that?",
+    "SuccessfullyEnabled": "Plugin is successully enabled.",
+    "FailedToEnable": "Failed to enable.",
+    "SuccessfullyDisabled": "Plugin is successully disabled.",
+    "PluginExists": "Plugin '{0}' is already installed. Please remove the old one and try again.",
+    "PluginCannotRemove": "Plugin is enabled. Please disable it before removing."
+  }
+}
