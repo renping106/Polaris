@@ -11,7 +11,10 @@
                     {
                         text: l('Enable'),
                         visible: function (data) {
-                            return (!data.isEnabled && abp.auth.isGranted('ThemeManagement.Edit'));
+                            return abp.auth.isGranted('ThemeManagement.Edit');
+                        },
+                        enabled: function (data) {
+                            return !data.record.isEnabled;
                         },
                         confirmMessage: function (data) {
                             return l(
@@ -67,7 +70,7 @@
                         },
                     },
                     {
-                        title: l("Enabled"),
+                        title: l("Current"),
                         data: 'isEnabled',
                         orderData: [2],
                         render: function (isEnabled) {

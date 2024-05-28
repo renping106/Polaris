@@ -43,7 +43,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "themes", "themes", "{176911
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.PluginManagement", "modules\Nerd.Abp.PluginManagement\Nerd.Abp.PluginManagement.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.ThemeManagement", "modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.ThemeManagement", "modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.LeptonxLiteTheme", "themes\Nerd.Abp.LeptonxLiteTheme\Nerd.Abp.LeptonxLiteTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{AA94D832-1CCC-4715-95A9-A483F23A1A5D} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{6078E600-A257-44EF-BB10-F060542EFBFF} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC} = {176911B4-9C27-4FFC-A0EC-7941FF04A0BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
