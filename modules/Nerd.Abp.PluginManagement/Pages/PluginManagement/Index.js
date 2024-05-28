@@ -121,7 +121,7 @@
                     {
                         title: l("Enabled"),
                         data: 'isEnabled',
-                        orderData: [3],
+                        orderData: [4],
                         render: function (isEnabled) {
                             return '<input type="checkbox" disabled ' + (isEnabled ? 'checked' : '') + ' />';
                         },

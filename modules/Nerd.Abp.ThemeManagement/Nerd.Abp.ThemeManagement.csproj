@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Pages\ThemeManagement\Index.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Localization\ThemeManagement\en.json" />
+    <EmbeddedResource Include="Pages\ThemeManagement\Index.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,10 +17,6 @@
     PageLayout.Content.MenuItemName = ThemeManagementMenus.List;
 }
 
-@section content_toolbar {
-    @await Component.InvokeAsync(typeof(AbpPageToolbarViewComponent), new { pageName = typeof(IndexModel).FullName })
-}
-
 @section scripts {
     <abp-script-bundle name="@typeof(IndexModel).FullName">
         <abp-script src="/Pages/ThemeManagement/Index.js" />
