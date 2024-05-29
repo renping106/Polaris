@@ -1,0 +1,140 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
+@using Nerd.Abp.DatabaseManagement.Localization
+@model Nerd.Abp.DatabaseManagement.Pages.Setup.InstallModel
+@inject IHtmlLocalizer<DatabaseManagementResource> L
+@inject IThemeManager ThemeManager
+@inject Microsoft.Extensions.Options.IOptions<IdentityOptions> IdentityOptions
+@inject Volo.Abp.AspNetCore.Mvc.UI.Layout.IPageLayout PageLayout
+@{
+    var options = IdentityOptions.Value;
+}
+
+@section styles {
+    <abp-style src="/Pages/Setup/install.css" />
+}
+@section scripts {
+    <abp-script src="/Pages/Setup/install.js" />
+    <abp-script src="/Pages/Setup/strength.js" />
+    <script>
+        $(function () {
+            $('#Config_Password').strength({
+                minLength: @(options.Password.RequiredLength),
+                upperCase: @(options.Password.RequireUppercase ? "true" : "false"),
+                lowerCase: @(options.Password.RequireLowercase ? "true" : "false"),
+                numbers: @(options.Password.RequireDigit ? "true" : "false"),
+                specialchars: @(options.Password.RequireNonAlphanumeric ? "true" : "false"),
+                target: '#passwordStrength',
+                style: "margin-top: 7px; height: 7px; border-radius: 5px"
+            });
+        })
+    </script>
+}
+
+@{
+    Layout = ThemeManager.CurrentTheme.GetEmptyLayout();
+}
+<div class="card mt-3 shadow-sm rounded">
+    <div class="card-body">
+        <form method="post">
+            <div class="container">
+                <div class="spinner-container">
+                    <div class="spinner-border text-primary"
+                         id="spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="text-center">
+
+                    <h1>@(Model.TenantName + " ")@L["is not initialized."]</h1>
+
+                    <p class="lead px-lg-5 mx-lg-5">@L["Please fill in the following form and let's Install Now."]</p>
+
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
+                                <div>
+                                    <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
+                                    <input asp-for="Config.SiteName" class="form-control" autofocus />
+                                    <span asp-validation-for="Config.SiteName"></span>
+                                    <span class="text-muted form-text small">@L["This is used as the default title of your pages."]</span>
+                                </div>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
+                                <select asp-for="Config.DatabaseProvider" class="form-select">
+                                    @foreach (var provider in Model.DatabaseProviders)
+                                    {
+                                        <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
+                                                data-connection-string-sample="@L["The connection string to your database instance. e.g., {0}", provider.SampleConnectionString]"
+                                                data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Config.DatabaseProvider"></span>
+                                <span class="text-muted form-text small">@L["The database is used to store the site's configuration and its contents."]</span>
+                            </div>
+                        </div>
+
+                        <div class="row connectionString" asp-validation-class-for="ConnectionString">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="Config.ConnectionString">@L["Connection string"]</label>
+                                <input asp-for="Config.ConnectionString" class="form-control" />
+                                <span asp-validation-for="Config.ConnectionString"></span>
+                                <span id="connectionStringHint" class="text-muted form-text small"></span>
+                            </div>
+                        </div>
+
+                        <fieldset>
+                            <legend>Default Admin</legend>
+                            <span class="text-muted form-text small">@L["The default admin has all the rights. It should be used carefully."]</span>
+                            <div class="row">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="UserName">
+                                    <label asp-for="Config.UserName">@L["User name"]</label>
+                                    <input asp-for="Config.UserName" class="form-control" disabled />
+                                    <span asp-validation-for="Config.UserName"></span>
+                                </div>
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Email">
+                                    <label asp-for="Config.Email">@L["Email"]</label>
+                                    <input asp-for="Config.Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Config.Email"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Password">
+                                    <label asp-for="Config.Password">@L["Password"]</label>
+                                    <div class="input-group">
+                                        <input asp-for="Config.Password" class="form-control" />
+                                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePassword"><i class="icon fa fa-eye"></i></button>
+                                    </div>
+                                    <div id="passwordStrength"></div>
+                                    <span asp-validation-for="Config.Password"></span>
+                                </div>
+
+                                <div class="mb-3 col-md-6" asp-validation-class-for="PasswordConfirmation">
+                                    <label asp-for="Config.PasswordConfirmation">@L["Password Confirmation"]</label>
+                                    <div class="input-group">
+                                        <input asp-for="Config.PasswordConfirmation" class="form-control" />
+                                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePasswordConfirmation"><i class="icon fa fa-eye"></i></button>
+                                    </div>
+                                    <span asp-validation-for="Config.PasswordConfirmation"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <button class="btn btn-primary" type="submit">@L["Setup"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

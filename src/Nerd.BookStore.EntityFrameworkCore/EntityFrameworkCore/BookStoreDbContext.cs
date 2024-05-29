@@ -15,13 +15,13 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace Nerd.BookStore.EntityFrameworkCore;
 
-[ReplaceDbContext(typeof(IIdentityDbContext))]
-[ReplaceDbContext(typeof(ITenantManagementDbContext))]
+//[ReplaceDbContext(typeof(IIdentityDbContext))]
+//[ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
 public class BookStoreDbContext :
-    AbpDbContext<BookStoreDbContext>,
-    IIdentityDbContext,
-    ITenantManagementDbContext
+    AbpDbContext<BookStoreDbContext>//,
+    //IIdentityDbContext,
+    //ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
@@ -65,14 +65,14 @@ public class BookStoreDbContext :
 
         /* Include modules to your migration db context */
 
-        builder.ConfigurePermissionManagement();
-        builder.ConfigureSettingManagement();
-        builder.ConfigureBackgroundJobs();
-        builder.ConfigureAuditLogging();
-        builder.ConfigureIdentity();
-        builder.ConfigureOpenIddict();
-        builder.ConfigureFeatureManagement();
-        builder.ConfigureTenantManagement();
+        //builder.ConfigurePermissionManagement();
+        //builder.ConfigureSettingManagement();
+        //builder.ConfigureBackgroundJobs();
+        //builder.ConfigureAuditLogging();
+        //builder.ConfigureIdentity();
+        //builder.ConfigureOpenIddict();
+        //builder.ConfigureFeatureManagement();
+        //builder.ConfigureTenantManagement();
 
         /* Configure your own tables/entities inside here */
 

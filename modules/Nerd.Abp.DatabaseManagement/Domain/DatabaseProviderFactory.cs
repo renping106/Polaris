@@ -18,5 +18,10 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             return _providers.FirstOrDefault(t => t.Key == providerKey)
                 ?? _providers.First(t => t.Key == InMemoryDatabaseProvider.ProviderKey);
         }
+
+        public IReadOnlyList<IDatabaseProvider> GetDatabaseProviders()
+        {
+            return _providers.ToList().AsReadOnly();
+        }
     }
 }
