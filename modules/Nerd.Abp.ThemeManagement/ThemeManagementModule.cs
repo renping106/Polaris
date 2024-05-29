@@ -8,7 +8,6 @@ using Nerd.Abp.ThemeManagement.Permissions;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.PageToolbars;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
@@ -42,7 +41,7 @@ namespace Nerd.Abp.PluginManagement
                 //Add plugin assembly
                 mvcBuilder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(ThemeManagementModule).Assembly));
 
-                //Add CompiledRazorAssemblyPart if the PlugIn module contains razor views.
+                //Add CompiledRazorAssemblyPart
                 mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(ThemeManagementModule).Assembly));
             });
         }

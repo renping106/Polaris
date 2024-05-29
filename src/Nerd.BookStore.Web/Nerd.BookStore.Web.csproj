@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
     <ProjectReference Include="..\..\modules\Nerd.Abp.PluginManagement\Nerd.Abp.PluginManagement.csproj" />
     <ProjectReference Include="..\..\modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj" />

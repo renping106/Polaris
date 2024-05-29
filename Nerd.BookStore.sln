@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.ThemeManagement", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.LeptonxLiteTheme", "themes\Nerd.Abp.LeptonxLiteTheme\Nerd.Abp.LeptonxLiteTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement", "modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,6 +154,7 @@ Global
 		{6078E600-A257-44EF-BB10-F060542EFBFF} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 		{FD38C52B-7424-4CE9-B67D-CC96411D50EC} = {176911B4-9C27-4FFC-A0EC-7941FF04A0BF}
+		{56686957-42F9-4CE6-824B-D8745E4E837C} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
