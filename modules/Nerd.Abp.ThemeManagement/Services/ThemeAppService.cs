@@ -1,37 +1,64 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using Nerd.Abp.ThemeManagement.Domain;
+using Nerd.Abp.ThemeManagement.Permissions;
 using Nerd.Abp.ThemeManagement.Services.Dtos;
 using Nerd.Abp.ThemeManagement.Services.Interfaces;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc.UI.Theming;
+using Volo.Abp.SettingManagement;
 
 namespace Nerd.Abp.ThemeManagement.Services
 {
+    [Authorize]
     public class ThemeAppService : ThemeManagementAppServiceBase, IThemeAppServoce
     {
-        private readonly IThemeManager _themeManager;
         private readonly AbpThemingOptions _options;
+        private readonly ISettingManager _settingManager;
 
-        public ThemeAppService(IOptions<AbpThemingOptions> options, IThemeManager themeManager)
+        public ThemeAppService(IOptions<AbpThemingOptions> options, ISettingManager settingManager)
         {
             _options = options.Value;
-            _themeManager = themeManager;
+            _settingManager = settingManager;
         }
 
-        public async Task<PagedResultDto<ThemeDto>> GetThemes()
+        [Authorize(ThemeManagementPermissions.GroupName)]
+        public async Task<PagedResultDto<ThemeDto>> GetThemesAsync()
         {
+            var currentTheme = await _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.ThemeType);
+            var theme = FindTheme(currentTheme);
             var themes = _options.Themes.ToList();
             return new PagedResultDto<ThemeDto>(
                    themes.Count,
-                   themes.Select(t => new ThemeDto() { Name = t.Value.Name, TypeName = t.Key.FullName, IsEnabled = _options.DefaultThemeName == t.Value.Name }).ToList()
+                   themes.Where(t => t.Key.FullName != null)
+                   .Select(t => new ThemeDto()
+                   {
+                       Name = t.Value.Name,
+                       TypeName = t.Key.FullName!,
+                       IsEnabled = theme?.ThemeType.FullName == t.Value.ThemeType.FullName,
+                   }).ToList()
                 );
         }
 
-        public async Task<bool> Enable(string typeName)
+        [Authorize(ThemeManagementPermissions.Edit)]
+        public async Task<bool> EnableAsync(string typeName)
+        {
+            var target = FindTheme(typeName);
+            if (target == null)
+            {
+                return false;
+            }
+            else
+            {
+                await _settingManager.SetForCurrentTenantAsync(ThemeManagementSettings.ThemeType, target.ThemeType.FullName);
+                return true;
+            }
+        }
+
+        private ThemeInfo FindTheme(string typeName)
         {
             var themes = _options.Themes.ToList();
-            var target = themes.Find(t => t.Key.FullName == typeName);
-            _options.DefaultThemeName = target.Value.Name;
-            return true;
+            return themes.Find(t => t.Key.FullName == typeName).Value;
         }
     }
 }

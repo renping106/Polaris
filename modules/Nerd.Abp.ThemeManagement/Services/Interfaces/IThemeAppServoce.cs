@@ -5,7 +5,7 @@ namespace Nerd.Abp.ThemeManagement.Services.Interfaces
 {
     public interface IThemeAppServoce
     {
-        Task<PagedResultDto<ThemeDto>> GetThemes();
-        Task<bool> Enable(string typeName);
+        Task<PagedResultDto<ThemeDto>> GetThemesAsync();
+        Task<bool> EnableAsync(string typeName);
     }
 }

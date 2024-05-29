@@ -2,7 +2,7 @@
 
 namespace Nerd.Abp.ThemeManagement.Permissions
 {
-    public class ThemeManagementPermissions
+    public static class ThemeManagementPermissions
     {
         public const string GroupName = "ThemeManagement";
         public const string Edit = GroupName + ".Edit";
