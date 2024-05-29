@@ -7,8 +7,8 @@ namespace Nerd.Abp.PluginManagement.Services.Interfaces
     public interface IPluginAppService : IApplicationService
     {
         PagedResultDto<PlugInDescriptorDto> GetList();
-        Task<PluginStateDto> Enable(string plugInName);
-        Task Disable(string plugInName);
-        Task Remove(string plugInName);
+        Task<PluginStateDto> EnableAsync(string plugInName);
+        Task DisableAsync(string plugInName);
+        void Remove(string plugInName);
     }
 }

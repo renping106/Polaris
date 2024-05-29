@@ -22,14 +22,14 @@ namespace Nerd.Abp.PluginManagement.Services
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
-        public async Task Disable(string plugInName)
+        public async Task DisableAsync(string plugInName)
         {
             _plugInManager.DisablePlugIn(GetDescriptor(plugInName));
             await _webAppShell.ResetWebApp();
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
-        public async Task<PluginStateDto> Enable(string plugInName)
+        public async Task<PluginStateDto> EnableAsync(string plugInName)
         {
             var pluginDescriptor = GetDescriptor(plugInName);
             var folderSource = new FolderSource(((FolderSource)pluginDescriptor.PlugInSource).Folder);
@@ -58,7 +58,7 @@ namespace Nerd.Abp.PluginManagement.Services
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
-        public async Task Remove(string plugInName)
+        public void Remove(string plugInName)
         {
             var plugin = GetDescriptor(plugInName);
             if (plugin.IsEnabled)
