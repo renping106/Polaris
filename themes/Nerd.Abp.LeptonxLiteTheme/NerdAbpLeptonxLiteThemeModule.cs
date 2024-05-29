@@ -23,21 +23,5 @@ namespace Nerd.Abp.LeptonxLiteTheme
                 mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule).Assembly));
             });
         }
-
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            Configure<AbpThemingOptions>(options =>
-            {
-                options.Themes.Add<NerdAbpLeptonXLiteTheme>();
-            });
-        }
-
-        public override void PostConfigureServices(ServiceConfigurationContext context)
-        {
-            Configure<AbpThemingOptions>(options =>
-            {
-                options.Themes.Remove(typeof(LeptonXLiteTheme));
-            });
-        }
     }
 }
