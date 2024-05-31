@@ -18,7 +18,7 @@
                         },
                         confirmMessage: function (data) {
                             return l(
-                                'PlugInEnableConfirm',
+                                'ThemeEnableConfirm',
                                 data.record.name
                             );
                         },
