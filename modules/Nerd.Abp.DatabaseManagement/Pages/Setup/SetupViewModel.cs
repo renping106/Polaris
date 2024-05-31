@@ -36,5 +36,8 @@ namespace Nerd.Abp.DatabaseManagement.Pages.Setup
         [Compare("Password")]
         [Display(Name = "Password Confirmation")]
         public string PasswordConfirmation { get; set; } = string.Empty;
+
+        [Display(Name = "User Host Setting")]
+        public bool UseHostSetting { get; set; } = true;
     }
 }

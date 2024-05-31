@@ -3,6 +3,6 @@
     public interface ITenantDatabaseRepository
     {
         string? GetProviderByTenant(Guid? tenantId);
-        void UpsertProviderForTenant(Guid? tenantId, string databaseProvider);
+        void UpsertProviderForTenant(Guid? tenantId, string? databaseProvider);
     }
 }

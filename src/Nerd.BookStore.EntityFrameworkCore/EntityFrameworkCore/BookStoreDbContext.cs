@@ -15,6 +15,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace Nerd.BookStore.EntityFrameworkCore;
 
+//Remove for setup
 //[ReplaceDbContext(typeof(IIdentityDbContext))]
 //[ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
@@ -38,6 +39,7 @@ public class BookStoreDbContext :
      * uses this DbContext on runtime. Otherwise, it will use its own DbContext class.
      */
 
+    //Remove for setup
     //Identity
     //public DbSet<IdentityUser> Users { get; set; }
     //public DbSet<IdentityRole> Roles { get; set; }
@@ -65,6 +67,7 @@ public class BookStoreDbContext :
 
         /* Include modules to your migration db context */
 
+        //Remove for setup
         //builder.ConfigurePermissionManagement();
         //builder.ConfigureSettingManagement();
         //builder.ConfigureBackgroundJobs();

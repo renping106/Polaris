@@ -1,4 +1,5 @@
-﻿(function ($) {
+﻿//https://github.com/OrchardCMS/OrchardCore/blob/main/src/OrchardCore.Modules/OrchardCore.Setup/Assets/js/strength.js
+(function ($) {
 
     $.fn.strength = function (options) {
 

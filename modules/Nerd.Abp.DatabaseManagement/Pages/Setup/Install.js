@@ -1,8 +1,13 @@
 $(function () {
     toggleConnectionString();
+    toggleDbSelect();
     // Show hide the connection string when a provider is selected
     $("#Config_DatabaseProvider").change(function () {
         toggleConnectionString();
+    });
+
+    $("#Config_UseHostSetting").change(function () {
+        toggleDbSelect();
     });
 
     $('#Config_Password').popover({
@@ -37,6 +42,15 @@ function toggleConnectionString() {
         $("#Config_ConnectionString").val($(this).data("connection-string-value"));
         $("#connectionStringHint").text($(this).data("connection-string-sample"));
     });
+}
+
+function toggleDbSelect() {
+    $("#Config_UseHostSetting").is(':checked')
+        ? $(".connectionString").hide()
+        : $(".connectionString").show();
+    $("#Config_UseHostSetting").is(':checked')
+        ? $(".dbselect").hide()
+        : $(".dbselect").show();
 }
 
 function togglePasswordVisibility(passwordCtl, togglePasswordCtl) {

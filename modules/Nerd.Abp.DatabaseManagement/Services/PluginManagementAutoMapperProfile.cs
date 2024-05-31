@@ -22,7 +22,8 @@ namespace Nerd.Abp.DatabaseManagement.Services
                 .ForMember(dest => dest.DatabaseProvider, opt => opt.MapFrom(src => src.DatabaseProvider))
                 .ForMember(dest => dest.ConnectionString, opt => opt.MapFrom(src => src.ConnectionString))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.UseHostSetting, opt => opt.MapFrom(src => src.UseHostSetting));
 
             CreateMap<TenantInfoModel, TenantCreateDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

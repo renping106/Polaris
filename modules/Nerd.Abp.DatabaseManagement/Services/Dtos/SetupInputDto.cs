@@ -14,5 +14,6 @@ namespace Nerd.Abp.DatabaseManagement.Services.Dtos
         public required string Password { get; set; }
         [Required]
         public required string Email { get; set; }
+        public bool UseHostSetting { get; set; }
     }
 }

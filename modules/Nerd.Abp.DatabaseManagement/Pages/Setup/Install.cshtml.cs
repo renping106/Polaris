@@ -10,6 +10,7 @@ public class InstallModel : DatabaseManagementPageModel
     [BindProperty]
     public SetupViewModel Config { get; set; } = new SetupViewModel();
     public List<DatabaseProviderDto> DatabaseProviders { get; set; }
+    public bool ShowUseHostSetting { get; set; } = true;
 
     private readonly ICurrentTenant _currentTenant;
     private readonly ISetupAppService _setupAppService;
@@ -21,28 +22,30 @@ public class InstallModel : DatabaseManagementPageModel
         DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
     }
 
-    public IActionResult OnGet([FromQuery(Name = "tenant")] string? tenantId)
+    public IActionResult OnGet([FromQuery(Name = "tenant")] Guid? tenantId)
     {
-        var tenantGuid = GetTenantId(tenantId);
-
-        using (_currentTenant.Change(tenantGuid))
+        using (_currentTenant.Change(tenantId))
         {
-            if (_setupAppService.IsInitialized(tenantGuid))
+            if (_setupAppService.IsInitialized(tenantId))
             {
                 return NotFound();
             }
         }
 
+        if (!tenantId.HasValue)
+        {
+            Config.UseHostSetting = false;
+            ShowUseHostSetting = false;
+        }
+
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync([FromQuery(Name = "tenant")] string? tenantId)
+    public async Task<IActionResult> OnPostAsync([FromQuery(Name = "tenant")] Guid? tenantId)
     {
-        var tenantGuid = GetTenantId(tenantId);
-
-        using (_currentTenant.Change(tenantGuid))
+        using (_currentTenant.Change(tenantId))
         {
-            if (_setupAppService.IsInitialized(tenantGuid))
+            if (_setupAppService.IsInitialized(tenantId))
             {
                 return NotFound();
             }
@@ -62,18 +65,13 @@ public class InstallModel : DatabaseManagementPageModel
             }
         }
 
-        return Page();
-    }
-
-    private static Guid? GetTenantId(string? tenantId)
-    {
-        Guid? tenantGuid = null;
-        if (!string.IsNullOrWhiteSpace(tenantId) && Guid.TryParse(tenantId, out var id))
+        if (!tenantId.HasValue)
         {
-            tenantGuid = id;
+            Config.UseHostSetting = false;
+            ShowUseHostSetting = false;
         }
 
-        return tenantGuid;
+        return Page();
     }
 }
 

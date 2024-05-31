@@ -54,32 +54,72 @@
                     <p class="lead px-lg-5 mx-lg-5">@L["Please fill in the following form and let's install now."]</p>
 
                 </div>
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div> 
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mt-2">
-                            <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
-                                <div>
-                                    <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
-                                    <input asp-for="Config.SiteName" class="form-control" autofocus />
-                                    <span asp-validation-for="Config.SiteName"></span>
-                                    <span class="text-muted form-text small">@L["This is used as the default title of your pages."]</span>
+                        @if (Model.ShowUseHostSetting)
+                        {
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
+                                    <div>
+                                        <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
+                                        <input asp-for="Config.SiteName" class="form-control" autofocus />
+                                        <span asp-validation-for="Config.SiteName"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6" asp-validation-class-for="UseHostSetting">
+                                    <div>
+                                        <label asp-for="Config.UseHostSetting">@L["Store data in host database?"]</label>
+                                        <div>
+                                            <input asp-for="Config.UseHostSetting" class="form-check-input" />
+                                            <span asp-validation-for="Config.UseHostSetting"></span>
+                                            <span class="text-muted form-text small">@L["Yes"]</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-3 col-md-6">
-                                <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
-                                <select asp-for="Config.DatabaseProvider" class="form-select">
-                                    @foreach (var provider in Model.DatabaseProviders)
-                                    {
-                                        <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
-                                                data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
-                                                data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="Config.DatabaseProvider"></span>
-                                <span class="text-muted form-text small">@L["The database is used to store the site's configuration and its contents."]</span>
+
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6 dbselect" asp-validation-class-for="DatabaseProvider">
+                                    <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
+                                    <select asp-for="Config.DatabaseProvider" class="form-select">
+                                        @foreach (var provider in Model.DatabaseProviders)
+                                        {
+                                            <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
+                                                    data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
+                                                    data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Config.DatabaseProvider"></span>
+                                </div>
                             </div>
-                        </div>
+                        }
+                        else
+                        {
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
+                                    <div>
+                                        <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
+                                        <input asp-for="Config.SiteName" class="form-control" autofocus />
+                                        <span asp-validation-for="Config.SiteName"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6 dbselect" asp-validation-class-for="DatabaseProvider">
+                                    <div>
+                                        <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
+                                        <select asp-for="Config.DatabaseProvider" class="form-select">
+                                            @foreach (var provider in Model.DatabaseProviders)
+                                            {
+                                                <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
+                                                        data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
+                                                        data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Config.DatabaseProvider"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
 
                         <div class="row connectionString" asp-validation-class-for="ConnectionString">
                             <div class="mb-3 col-md-12">

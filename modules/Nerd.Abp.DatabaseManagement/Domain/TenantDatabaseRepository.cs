@@ -33,16 +33,10 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             return databaseProvider;
         }
 
-        public void UpsertProviderForTenant(Guid? tenantId, string databaseProvider)
+        public void UpsertProviderForTenant(Guid? tenantId, string? databaseProvider)
         {
             var key = tenantId.Normalize();
-
-            _providerCache.Remove(key, out var status);
-
-            if (!databaseProvider.IsNullOrWhiteSpace())
-            {
-                _providerCache.GetOrAdd(key, () => databaseProvider);
-            }
+            _providerCache.AddOrUpdate(key, (_) => databaseProvider, (_, _) => databaseProvider);
         }
 
         private async Task<string?> RefreshProviderCache(Guid? tenantId)
