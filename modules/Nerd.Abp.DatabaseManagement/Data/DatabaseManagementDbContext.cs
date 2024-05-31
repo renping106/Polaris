@@ -5,7 +5,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Nerd.Abp.DatabaseManagement.Data
 {
-    [ConnectionStringName("Default")]
+    //[ConnectionStringName("Default")]
     public class DatabaseManagementDbContext : AbpDbContext<DatabaseManagementDbContext>
     {
         public DbSet<ModelHistory> ModelHistories { get; set; }

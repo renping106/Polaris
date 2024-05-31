@@ -1,9 +1,13 @@
-﻿using Volo.Abp;
+﻿using Nerd.Abp.ThemeManagement.Domain;
+using Volo.Abp;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.EventBus.Local;
 using Volo.Abp.ObjectExtending;
+using Volo.Abp.SettingManagement;
+using Volo.Abp.Settings;
 using Volo.Abp.TenantManagement;
 
 namespace Nerd.Abp.DatabaseManagement.Services
@@ -12,15 +16,18 @@ namespace Nerd.Abp.DatabaseManagement.Services
     [RemoteService(false)]
     public class NewTenantAppService : TenantAppService
     {
+        private readonly ISettingManager _settingManager;
+
         public NewTenantAppService(
             ITenantRepository tenantRepository,
             ITenantManager tenantManager,
             IDataSeeder dataSeeder,
             IDistributedEventBus distributedEventBus,
-            ILocalEventBus localEventBus)
+            ILocalEventBus localEventBus,
+            ISettingManager settingManager)
             : base(tenantRepository, tenantManager, dataSeeder, distributedEventBus, localEventBus)
         {
-
+            _settingManager = settingManager;
         }
 
         public override async Task<TenantDto> CreateAsync(TenantCreateDto input)
@@ -30,6 +37,18 @@ namespace Nerd.Abp.DatabaseManagement.Services
 
             await TenantRepository.InsertAsync(tenant);
             return ObjectMapper.Map<Tenant, TenantDto>(tenant);
+        }
+
+        public override async Task<PagedResultDto<TenantDto>> GetListAsync(GetTenantsInput input)
+        {
+            var tenants = await base.GetListAsync(input);
+            foreach (var item in tenants.Items)
+            {
+                var dbSetting = await _settingManager.GetOrNullForTenantAsync(DatabaseManagementSettings.DatabaseProvider, item.Id); 
+                item.SetProperty("Initilized", dbSetting != null);
+            }
+
+            return tenants;
         }
     }
 }

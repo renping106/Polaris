@@ -6,6 +6,7 @@ using Volo.Abp.EntityFrameworkCore.ConnectionStrings;
 using Volo.Abp.EntityFrameworkCore.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Uow;
+using Volo.Abp.EntityFrameworkCore;
 
 namespace Nerd.Abp.DatabaseManagement.SqlServer
 {
@@ -34,7 +35,7 @@ namespace Nerd.Abp.DatabaseManagement.SqlServer
 
         public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
         {
-            return context.DbContextOptions.UseSqlServer();
+            return context.UseSqlServer();
         }
     }
 }
