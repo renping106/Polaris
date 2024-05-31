@@ -25,7 +25,7 @@ public class PluginManagementMenuContributor : IMenuContributor
             new ApplicationMenuItem(PluginManagementMenus.Prefix,
             displayName: l["Menu:" + PluginManagementMenus.Prefix],
             "~/PluginManagement",
-            icon: "fa fa-globe")
+            icon: "fa fa-server")
              .RequirePermissions(PluginManagementPermissions.GroupName));
 
         return Task.CompletedTask;

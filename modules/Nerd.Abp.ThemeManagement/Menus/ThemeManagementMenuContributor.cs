@@ -25,7 +25,7 @@ namespace Nerd.Abp.ThemeManagement.Menus
                 new ApplicationMenuItem(ThemeManagementMenus.Prefix,
                 displayName: l["Menu:" + ThemeManagementMenus.Prefix],
                 "~/ThemeManagement",
-                icon: "fa fa-globe")
+                icon: "fa fa-camera")
                  .RequirePermissions(ThemeManagementPermissions.GroupName));
 
             return Task.CompletedTask;
