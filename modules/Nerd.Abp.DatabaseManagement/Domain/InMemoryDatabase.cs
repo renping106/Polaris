@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
+using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore.DependencyInjection;
@@ -18,7 +18,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public bool HasConnectionString => false;
 
-        public string SampleConnectionString => "";
+        public string SampleConnectionString => "InMemory";
 
         public bool IgnoreMigration => true;
 

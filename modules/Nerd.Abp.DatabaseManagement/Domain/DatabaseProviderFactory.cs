@@ -1,5 +1,4 @@
-﻿using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
-using Volo.Abp;
+﻿using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 using Volo.Abp.DependencyInjection;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
@@ -15,8 +14,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public IDatabaseProvider GetDatabaseProvider(string providerKey)
         {
-            return _providers.FirstOrDefault(t => t.Key == providerKey)
-                ?? _providers.First(t => t.Key == InMemoryDatabaseProvider.ProviderKey);
+            return _providers.First(t => t.Key == providerKey);
         }
 
         public IReadOnlyList<IDatabaseProvider> GetDatabaseProviders()

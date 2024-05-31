@@ -34,10 +34,6 @@ function toggleConnectionString() {
             ? $(".connectionString").show()
             : $(".connectionString").hide();
 
-        $(this).data("connection-string").toLowerCase() === "true"
-            ? $(".pwd").attr('required', 'required')
-            : $(".pwd").removeAttr('required');
-
         $("#Config_ConnectionString").val($(this).data("connection-string-value"));
         $("#connectionStringHint").text($(this).data("connection-string-sample"));
     });

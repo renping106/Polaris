@@ -9,8 +9,7 @@ public class InstallModel : DatabaseManagementPageModel
 {
     [BindProperty]
     public SetupViewModel Config { get; set; } = new SetupViewModel();
-    public List<DatabaseProviderDto> DatabaseProviders { get; set; } = new List<DatabaseProviderDto>();
-    public string TenantName { get; set; } = string.Empty;
+    public List<DatabaseProviderDto> DatabaseProviders { get; set; }
 
     private readonly ICurrentTenant _currentTenant;
     private readonly ISetupAppService _setupAppService;
@@ -19,117 +18,59 @@ public class InstallModel : DatabaseManagementPageModel
     {
         _currentTenant = currentTenant;
         _setupAppService = setupStatusAppService;
+        DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
     }
 
-    public async Task<IActionResult> OnGet([FromQuery(Name = "tenant")]string tenantId)
+    public IActionResult OnGet([FromQuery(Name = "tenant")] string? tenantId)
     {
-        var (Valid, TenantId) = await CheckTenant(tenantId);
+        var tenantGuid = GetTenantId(tenantId);
 
-        using (_currentTenant.Change(TenantId))
+        using (_currentTenant.Change(tenantGuid))
         {
-            if (!Valid)
+            if (_setupAppService.IsInitialized(tenantGuid))
             {
                 return NotFound();
             }
-
-            if (_setupAppService.IsInitialized(TenantId))
-            {
-                return NotFound();
-            }
-
-            DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
         }
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync([FromQuery(Name = "tenant")] string tenantId)
+    public async Task<IActionResult> OnPostAsync([FromQuery(Name = "tenant")] string? tenantId)
     {
-        var (Valid, TenantId) = await CheckTenant(tenantId);
+        var tenantGuid = GetTenantId(tenantId);
 
-        using (_currentTenant.Change(TenantId))
+        using (_currentTenant.Change(tenantGuid))
         {
-            if (!Valid)
+            if (_setupAppService.IsInitialized(tenantGuid))
             {
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
-            //    var databaseProvider = _databaseProviderResolver.GetDatabaseProvider(Config.DatabaseProvider);
-            //    try
-            //    {
-            //        var config = ObjectMapper.Map<SetupViewModel, InstallationConfigDto>(Config);
-            //        var connectionCheck = false;
-
-            //        if (_installationAppService.IsUseHostSetting(config))
-            //        {
-            //            connectionCheck = true;
-            //        }
-            //        else
-            //        {
-            //            var result = await databaseProvider.CheckConnectionString(Config.ConnectionString);
-            //            connectionCheck = result.Connected;
-            //        }
-
-            //        if (connectionCheck)
-            //        {
-            //            var installError = await _installationAppService.Install(config);
-            //            if (installError.Success)
-            //            {
-            //                return Redirect("/");
-            //            }
-            //            else
-            //            {
-            //                ModelState.AddModelError(string.Empty, installError.Message);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ModelState.AddModelError("Config.ConnectionString", ex.Message);
-            //    }
-            //}
-
-            //DatabaseProviders = _installationAppService.GetSupportedDatabaseProviders().Items.ToList();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var setupInput = ObjectMapper.Map<SetupViewModel, SetupInputDto>(Config);
+                    await _setupAppService.InstallAsync(setupInput);
+                    return Redirect("/");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
         }
 
         return Page();
     }
 
-    private async Task<(bool Valid, Guid? TenantId)> CheckTenant(string tenantId)
-    {
-        Guid? tenantGuid = GetTenantId(tenantId);
-        bool validTenantId = false;
-
-        if (tenantGuid.HasValue)
-        {
-            try
-            {
-                //var tenant = await _tenantAppService.GetAsync(tenantGuid.Value);
-                validTenantId = true;
-                //TenantName = $"Tenant {tenant.Name}";
-            }
-            catch (Exception) { }
-        }
-        else if (tenantId == null)
-        {
-            TenantName = "Host";
-            validTenantId = true;
-        }
-
-        return (validTenantId, tenantGuid);
-    }
-
-    private static Guid? GetTenantId(string tenantId)
+    private static Guid? GetTenantId(string? tenantId)
     {
         Guid? tenantGuid = null;
-        if (!string.IsNullOrWhiteSpace(tenantId))
+        if (!string.IsNullOrWhiteSpace(tenantId) && Guid.TryParse(tenantId, out var id))
         {
-            if (Guid.TryParse(tenantId, out var id))
-            {
-                tenantGuid = id;
-            }
+            tenantGuid = id;
         }
 
         return tenantGuid;

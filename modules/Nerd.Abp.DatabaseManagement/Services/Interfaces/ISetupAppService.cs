@@ -1,5 +1,4 @@
 ﻿using Nerd.Abp.DatabaseManagement.Services.Dtos;
-using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.DatabaseManagement.Services.Interfaces
 {
@@ -7,5 +6,6 @@ namespace Nerd.Abp.DatabaseManagement.Services.Interfaces
     {
         bool IsInitialized(Guid? tenantId);
         IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders();
+        Task InstallAsync(SetupInputDto input);
     }
 }

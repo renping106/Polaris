@@ -49,12 +49,12 @@
                 </div>
                 <div class="text-center">
 
-                    <h1>@(Model.TenantName + " ")@L["is not initialized."]</h1>
+                    <h1>@L["Site is not initialized."]</h1>
 
-                    <p class="lead px-lg-5 mx-lg-5">@L["Please fill in the following form and let's Install Now."]</p>
+                    <p class="lead px-lg-5 mx-lg-5">@L["Please fill in the following form and let's install now."]</p>
 
                 </div>
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div> 
                 <div class="card">
                     <div class="card-body">
                         <div class="row mt-2">
@@ -72,7 +72,7 @@
                                     @foreach (var provider in Model.DatabaseProviders)
                                     {
                                         <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
-                                                data-connection-string-sample="@L["The connection string to your database instance. e.g., {0}", provider.SampleConnectionString]"
+                                                data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
                                                 data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
                                     }
                                 </select>

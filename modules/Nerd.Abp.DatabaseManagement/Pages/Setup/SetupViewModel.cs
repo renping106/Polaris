@@ -9,23 +9,15 @@ namespace Nerd.Abp.DatabaseManagement.Pages.Setup
     {
         [Required]
         [Display(Name = "Site Name")]
-        public string SiteName { get; set; }
-
-        public string Description { get; set; }
+        public string SiteName { get; set; } = string.Empty;
 
         [BindProperty]
-        public string DatabaseProvider { get; set; }
+        public string DatabaseProvider { get; set; } = string.Empty;
 
         [Required]
         [BindProperty]
         [Display(Name = "Connection String")]
-        public string ConnectionString { get; set; }
-
-        /// <summary>
-        /// True if the database configuration is preset and can't be changed or displayed on the Setup screen.
-        /// </summary>
-        [BindNever]
-        public bool DatabaseConfigurationPreset { get; set; }
+        public string ConnectionString { get; set; } = string.Empty;
 
         [BindNever]
         [Display(Name = "User Name")]
@@ -33,18 +25,16 @@ namespace Nerd.Abp.DatabaseManagement.Pages.Setup
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password")]
         [Display(Name = "Password Confirmation")]
-        public string PasswordConfirmation { get; set; }
-
-        public string SiteTimeZone { get; set; }
+        public string PasswordConfirmation { get; set; } = string.Empty;
     }
 }

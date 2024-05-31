@@ -7,20 +7,20 @@ namespace Ping.Nerd.Web.Filters
 {
     public class SetupAsyncPageFilter : IAsyncPageFilter, ITransientDependency
     {
-        private readonly ISetupAppService _statuaAppService;
+        private readonly ISetupAppService _setupAppService;
         private readonly ICurrentTenant _currentTenant;
         private static readonly string _setupPath = "/Setup/Install";
 
-        public SetupAsyncPageFilter(ISetupAppService statuaAppService,
+        public SetupAsyncPageFilter(ISetupAppService setupAppService,
             ICurrentTenant currentTenant)
         {
-            _statuaAppService = statuaAppService;
+            _setupAppService = setupAppService;
             _currentTenant = currentTenant;
         }
 
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            if (!_statuaAppService.IsInitialized(_currentTenant.Id)
+            if (!_setupAppService.IsInitialized(_currentTenant.Id)
                 && context.HttpContext.Request.Path.Value?.IndexOf(_setupPath) < 0)
             {
                 var queryString = "";

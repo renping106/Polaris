@@ -1,4 +1,4 @@
-﻿namespace Nerd.Abp.DatabaseManagement.Domain.Interfaces
+﻿namespace Nerd.Abp.DatabaseManagement.Abstractions.Database
 {
     public interface IDatabaseProviderFactory
     {
