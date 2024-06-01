@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj" />
+    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
+    <ProjectReference Include="..\..\src\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Nerd.BookStore.TestBase\Nerd.Abp.TestBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

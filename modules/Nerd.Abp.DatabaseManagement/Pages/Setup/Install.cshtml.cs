@@ -34,6 +34,7 @@ public class InstallModel : DatabaseManagementPageModel
 
         if (!tenantId.HasValue)
         {
+            DatabaseProviders = DatabaseProviders.Where(p => p.HasConnectionString).ToList();
             Config.UseHostSetting = false;
             ShowUseHostSetting = false;
         }

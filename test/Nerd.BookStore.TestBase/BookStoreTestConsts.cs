@@ -1,4 +1,4 @@
-﻿namespace Nerd.BookStore;
+﻿namespace Nerd.Abp;
 
 public static class BookStoreTestConsts
 {

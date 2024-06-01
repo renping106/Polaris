@@ -2,7 +2,7 @@
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
-namespace Nerd.BookStore;
+namespace Nerd.Abp;
 
 public class BookStoreTestDataSeedContributor : IDataSeedContributor, ITransientDependency
 {

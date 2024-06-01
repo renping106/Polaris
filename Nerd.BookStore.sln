@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.EntityFrameworkCore.Tests", "test\Nerd.BookStore.EntityFrameworkCore.Tests\Nerd.BookStore.EntityFrameworkCore.Tests.csproj", "{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.TestBase", "test\Nerd.BookStore.TestBase\Nerd.BookStore.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.TestBase", "test\Nerd.BookStore.TestBase\Nerd.Abp.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain.Tests", "test\Nerd.BookStore.Domain.Tests\Nerd.BookStore.Domain.Tests.csproj", "{E512F4D9-9375-480F-A2F6-A46509F9D824}"
 EndProject
@@ -49,9 +49,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.LeptonxLiteTheme",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement", "modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.SqlServer", "modules\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.SqlServer", "modules\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.Abstractions", "modules\Nerd.Abp.DatabaseManagement.Abstractions\Nerd.Abp.DatabaseManagement.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Abstractions", "modules\Nerd.Abp.DatabaseManagement.Abstractions\Nerd.Abp.DatabaseManagement.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.Tests", "test\Nerd.Abp.DatabaseManagement.Tests\Nerd.Abp.DatabaseManagement.Tests.csproj", "{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.Sqlite", "modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +147,14 @@ Global
 		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +181,8 @@ Global
 		{56686957-42F9-4CE6-824B-D8745E4E837C} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

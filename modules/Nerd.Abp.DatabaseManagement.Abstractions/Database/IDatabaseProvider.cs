@@ -15,7 +15,6 @@ namespace Nerd.Abp.DatabaseManagement.Abstractions.Database
         public bool IgnoreMigration { get; }
         public UnitOfWorkTransactionBehavior UnitOfWorkTransactionBehaviorOption { get; }
         public SequentialGuidType? SequentialGuidTypeOption { get; }
-        Task<AbpConnectionStringCheckResult> CheckConnectionString(string connectionString);
         DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context);
     }
 }

@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj" />
     <ProjectReference Include="..\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj" />
   </ItemGroup>
 

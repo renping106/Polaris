@@ -1,5 +1,6 @@
 using Nerd.BookStore.Samples;
 using Xunit;
+using Nerd.Abp;
 
 namespace Nerd.BookStore.EntityFrameworkCore.Applications;
 

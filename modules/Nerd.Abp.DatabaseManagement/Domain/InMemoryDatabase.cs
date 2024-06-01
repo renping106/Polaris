@@ -26,22 +26,6 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public SequentialGuidType? SequentialGuidTypeOption => null;
 
-        public Task<AbpConnectionStringCheckResult> CheckConnectionString(string connectionString)
-        {
-            var result = new AbpConnectionStringCheckResult()
-            {
-                Connected = false,
-                DatabaseExists = false
-            };
-            if (!string.IsNullOrEmpty(connectionString))
-            {
-                result.Connected = true;
-                result.DatabaseExists = true;
-            }
-
-            return Task.FromResult(result);
-        }
-
         public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
         {
             var connectionString = context.ConnectionString;

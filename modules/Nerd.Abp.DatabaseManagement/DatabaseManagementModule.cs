@@ -4,13 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Nerd.Abp.DatabaseManagement.Data;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
-using Nerd.Abp.DatabaseManagement.Extensions;
+using Nerd.Abp.DatabaseManagement.Sqlite;
 using Nerd.Abp.DatabaseManagement.SqlServer;
 using Ping.Nerd.Web.Filters;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AutoMapper;
-using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Guids;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
@@ -21,7 +20,8 @@ namespace Nerd.Abp.DatabaseManagement
 {
     [DependsOn(
     typeof(AbpTenantManagementApplicationModule),
-    typeof(DatabaseManagementSqlServerModule)
+    typeof(DatabaseManagementSqlServerModule),
+    typeof(DatabaseManagementSqliteModule)
     )]
     public class DatabaseManagementModule : AbpModule
     {

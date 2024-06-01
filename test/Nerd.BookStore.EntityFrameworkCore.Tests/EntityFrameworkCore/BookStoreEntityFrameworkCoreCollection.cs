@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Nerd.Abp;
+using Xunit;
 
 namespace Nerd.BookStore.EntityFrameworkCore;
 

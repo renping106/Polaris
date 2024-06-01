@@ -26,13 +26,6 @@ namespace Nerd.Abp.DatabaseManagement.SqlServer
 
         public SequentialGuidType? SequentialGuidTypeOption => SequentialGuidType.SequentialAtEnd;
 
-        public async Task<AbpConnectionStringCheckResult> CheckConnectionString(string connectionString)
-        {
-            var checker = new SqlServerConnectionStringChecker();
-            var result = await checker.CheckAsync(connectionString);
-            return result;
-        }
-
         public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
         {
             return context.UseSqlServer();

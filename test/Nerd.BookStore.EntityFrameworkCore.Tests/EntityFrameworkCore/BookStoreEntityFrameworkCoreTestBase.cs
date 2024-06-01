@@ -1,8 +1,9 @@
-﻿using Volo.Abp;
+﻿using Nerd.Abp;
+using Volo.Abp;
 
 namespace Nerd.BookStore.EntityFrameworkCore;
 
-public abstract class BookStoreEntityFrameworkCoreTestBase : BookStoreTestBase<BookStoreEntityFrameworkCoreTestModule>
+public abstract class BookStoreEntityFrameworkCoreTestBase : NerdAbpTestBase<BookStoreEntityFrameworkCoreTestModule>
 {
 
 }

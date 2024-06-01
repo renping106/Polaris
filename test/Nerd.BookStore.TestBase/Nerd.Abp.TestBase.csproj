@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <RootNamespace>Nerd.BookStore</RootNamespace>
+    <RootNamespace>Nerd.Abp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,10 @@
     <PackageReference Include="xunit" Version="2.6.1" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.6.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
   </ItemGroup>
 
 </Project>

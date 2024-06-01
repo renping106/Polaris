@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
+using Nerd.Abp;
 using Nerd.BookStore.EntityFrameworkCore;
 using Nerd.BookStore.Localization;
 using Nerd.BookStore.Web;

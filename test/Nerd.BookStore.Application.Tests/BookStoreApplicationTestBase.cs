@@ -1,8 +1,8 @@
 ﻿using Volo.Abp.Modularity;
 
-namespace Nerd.BookStore;
+namespace Nerd.Abp;
 
-public abstract class BookStoreApplicationTestBase<TStartupModule> : BookStoreTestBase<TStartupModule>
+public abstract class BookStoreApplicationTestBase<TStartupModule> : NerdAbpTestBase<TStartupModule>
     where TStartupModule : IAbpModule
 {
 
