@@ -33,16 +33,5 @@ public class BookStoreEntityFrameworkCoreTestModule : AbpModule
             options.IsDynamicPermissionStoreEnabled = false;
         });
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
-
-        // It is in DatabaseManagement test
-        //ConfigureDatabase(context.Services);
     }
-
-    //private void ConfigureDatabase(IServiceCollection services)
-    //{
-    //    services.Configure<AbpDbContextOptions>(options =>
-    //    {
-    //        options.ConfigDatabase();
-    //    });
-    //}
 }

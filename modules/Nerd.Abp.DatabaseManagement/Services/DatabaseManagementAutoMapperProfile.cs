@@ -7,9 +7,9 @@ using static Nerd.Abp.DatabaseManagement.Pages.TenantManagement.Tenants.CreateMo
 
 namespace Nerd.Abp.DatabaseManagement.Services
 {
-    internal class PluginManagementAutoMapperProfile : Profile
+    internal class DatabaseManagementAutoMapperProfile : Profile
     {
-        public PluginManagementAutoMapperProfile()
+        public DatabaseManagementAutoMapperProfile()
         {
             CreateMap<IDatabaseProvider, DatabaseProviderDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
