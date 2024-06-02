@@ -84,7 +84,7 @@ namespace Nerd.Abp.PluginManagement
             Configure<RazorPagesOptions>(options =>
             {
                 //Configure authorization.
-                options.Conventions.AuthorizePage("/PluginManagement", PluginManagementPermissions.GroupName);
+                options.Conventions.AuthorizePage("/PluginManagement", PluginManagementPermissions.Default);
                 options.Conventions.AuthorizePage("/PluginManagement/Upload", PluginManagementPermissions.Upload);
             });
 

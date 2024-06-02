@@ -9,7 +9,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.PluginManagement.Services
 {
-    [Authorize(PluginManagementPermissions.GroupName)]
+    [Authorize(PluginManagementPermissions.Default)]
     public class PluginAppService : PluginManagementAppServiceBase, IPluginAppService
     {
         private readonly IPlugInManager _plugInManager;

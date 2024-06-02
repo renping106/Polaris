@@ -9,8 +9,8 @@ public class PluginManagementPermissionDefinitionProvider : PermissionDefinition
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(PluginManagementPermissions.GroupName, L("Permission:" + PluginManagementPermissions.GroupName));
-        var permission = myGroup.AddPermission(PluginManagementPermissions.GroupName, L("Permission:" + PluginManagementPermissions.GroupName), multiTenancySide: MultiTenancySides.Host);
+        var myGroup = context.AddGroup(PluginManagementPermissions.Default, L("Permission:" + PluginManagementPermissions.Default));
+        var permission = myGroup.AddPermission(PluginManagementPermissions.Default, L("Permission:" + PluginManagementPermissions.Default), multiTenancySide: MultiTenancySides.Host);
         permission.AddChild(PluginManagementPermissions.Edit, L("Permission:" + PluginManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Host);
         permission.AddChild(PluginManagementPermissions.Upload, L("Permission:" + PluginManagementPermissions.Upload), multiTenancySide: MultiTenancySides.Host);
     }

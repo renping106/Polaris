@@ -26,7 +26,7 @@ public class PluginManagementMenuContributor : IMenuContributor
             displayName: l["Menu:" + PluginManagementMenus.Prefix],
             "~/PluginManagement",
             icon: "fa fa-server")
-             .RequirePermissions(PluginManagementPermissions.GroupName));
+             .RequirePermissions(PluginManagementPermissions.Default));
 
         return Task.CompletedTask;
     }
