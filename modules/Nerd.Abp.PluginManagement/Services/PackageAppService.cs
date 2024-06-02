@@ -9,22 +9,22 @@ using Volo.Abp.BlobStoring;
 namespace Nerd.Abp.PluginManagement.Services
 {
     [Authorize(PluginManagementPermissions.Upload)]
-    public class FileAppService : PluginManagementAppServiceBase, IFileAppService
+    public class PackageAppService : PluginManagementAppServiceBase, IPackageAppService
     {
         private readonly IBlobContainer _fileContainer;
 
-        public FileAppService(IBlobContainer fileContainer)
+        public PackageAppService(IBlobContainer fileContainer)
         {
             _fileContainer = fileContainer;
         }
 
-        public async Task SaveBlobAsync(SaveBlobInputDto input)
+        public async Task UploadAsync(SaveBlobInputDto input)
         {
             await _fileContainer.SaveAsync(input.Name, input.Content, true);
             await InstallPackageAsync(input.Name);
         }
 
-        public async Task<BlobDto> GetBlobAsync(GetBlobRequestDto input)
+        public async Task<BlobDto> GetAsync(GetBlobRequestDto input)
         {
             var blob = await _fileContainer.GetAllBytesAsync(input.Name);
 

@@ -11,13 +11,13 @@ namespace Nerd.Abp.PluginManagement.Pages.PluginManagement
         [BindProperty]
         public UploadFileDto UploadFileDto { get; set; }
 
-        private readonly IFileAppService _fileAppService;
+        private readonly IPackageAppService _packageAppService;
 
         public bool Uploaded { get; set; } = false;
 
-        public UploadModel(IFileAppService fileAppService)
+        public UploadModel(IPackageAppService packageAppService)
         {
-            _fileAppService = fileAppService;
+            _packageAppService = packageAppService;
         }
 
         public void OnGet()
@@ -35,7 +35,7 @@ namespace Nerd.Abp.PluginManagement.Pages.PluginManagement
                 {
                     await UploadFileDto.File.CopyToAsync(memoryStream);
 
-                    await _fileAppService.SaveBlobAsync(
+                    await _packageAppService.UploadAsync(
                         new SaveBlobInputDto
                         {
                             Name = UploadFileDto.Name,
