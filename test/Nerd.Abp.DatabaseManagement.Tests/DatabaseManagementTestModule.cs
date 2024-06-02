@@ -28,6 +28,8 @@ namespace Nerd.Abp.DatabaseManagement.Tests
             {
                 options.ConfigDatabase();
             });
+
+            context.Services.AddAlwaysAllowAuthorization();
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)
