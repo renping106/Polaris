@@ -35,6 +35,12 @@ namespace Nerd.Abp.PluginManagement.Services
             };
         }
 
+        public void RemovePlugIn(string pluginName)
+        {
+            var pluginFolder = Path.Combine(AppContext.BaseDirectory, "PlugIns", pluginName);
+            Directory.Delete(pluginFolder, true);
+        }
+
         private async Task InstallPackageAsync(string name)
         {
             var content = await _fileContainer.GetAllBytesAsync(name);

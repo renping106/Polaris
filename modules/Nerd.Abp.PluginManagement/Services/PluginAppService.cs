@@ -14,11 +14,13 @@ namespace Nerd.Abp.PluginManagement.Services
     {
         private readonly IPlugInManager _plugInManager;
         private readonly IWebAppShell _webAppShell;
+        private readonly IPackageAppService _packageAppService;
 
-        public PluginAppService(IPlugInManager plugInManager, IWebAppShell webAppShell)
+        public PluginAppService(IPlugInManager plugInManager, IWebAppShell webAppShell, IPackageAppService packageAppService)
         {
             _plugInManager = plugInManager;
             _webAppShell = webAppShell;
+            _packageAppService = packageAppService;
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
@@ -57,7 +59,7 @@ namespace Nerd.Abp.PluginManagement.Services
             };
         }
 
-        [Authorize(PluginManagementPermissions.Edit)]
+        [Authorize(PluginManagementPermissions.Upload)]
         public void Remove(string plugInName)
         {
             var plugin = GetDescriptor(plugInName);
@@ -66,6 +68,7 @@ namespace Nerd.Abp.PluginManagement.Services
                 throw new UserFriendlyException(L["PluginCannotRemove"]);
             }
             _plugInManager.RemovePlugIn(GetDescriptor(plugInName));
+            _packageAppService.RemovePlugIn(plugInName);
         }
 
         public PagedResultDto<PlugInDescriptorDto> GetList()

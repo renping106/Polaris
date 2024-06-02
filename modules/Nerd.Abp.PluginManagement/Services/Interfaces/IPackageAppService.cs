@@ -8,5 +8,6 @@ namespace Nerd.Abp.PluginManagement.Services.Interfaces
         Task UploadAsync(SaveBlobInputDto input);
 
         Task<BlobDto> GetAsync(GetBlobRequestDto input);
+        void RemovePlugIn(string pluginName);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Nerd.Abp.PluginManagement.Domain.Interfaces;
-using System.Runtime.Loader;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -45,8 +44,6 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 _plugInDescriptors.Remove(target);
-                var pluginFolder = Path.Combine(AppContext.BaseDirectory, folderName, plugIn.Name);
-                Directory.Delete(pluginFolder, true);
                 SaveState();
             }
         }
@@ -65,6 +62,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             return _plugInDescriptors.Where(t => t.IsEnabled).ToList().AsReadOnly();
         }
 
+        //TODO move to a separate service or PackageAppService
         private void LoadFromFolder()
         {
             var pluginPath = Path.Combine(AppContext.BaseDirectory, folderName);
