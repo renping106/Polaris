@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Nerd.Abp.PluginManagement.Domain;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -11,6 +10,7 @@ namespace Nerd.Abp.PluginManagement.Extensions
     {
         /// <summary>
         /// We need to load Volo.Abp.Autofac and Castle.Core into a different AssemblyLoadContext.
+        /// This will allow us unload generated proxies
         /// Make sure to remove DependsOn to them.
         /// </summary>
         /// <param name="hostBuilder"></param>

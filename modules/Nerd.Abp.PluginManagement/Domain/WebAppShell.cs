@@ -10,7 +10,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 {
     internal class WebAppShell : IWebAppShell
     {
-        private WebAppCache? _webAppCache;
+        private WebAppShellContext? _context;
         private readonly object instanceLock = new object();
         private readonly WebShellOptions _options;
         private readonly IServiceProvider _hostServiceProvider;
@@ -21,19 +21,19 @@ namespace Nerd.Abp.PluginManagement.Domain
             _hostServiceProvider = hostServiceProvider;
         }
 
-        public WebAppCache GetWebApp()
+        public WebAppShellContext GetContext()
         {
-            if (_webAppCache == null)
+            if (_context == null)
             {
                 lock (instanceLock)
                 {
-                    if (_webAppCache == null)
+                    if (_context == null)
                     {
-                        _webAppCache = InitShellAsync().GetAwaiter().GetResult();
+                        _context = InitShellAsync().GetAwaiter().GetResult();
                     }
                 }
             }
-            return _webAppCache!;
+            return _context!;
         }
 
         public async ValueTask<(bool Success, string Message)> ResetWebApp()
@@ -43,7 +43,7 @@ namespace Nerd.Abp.PluginManagement.Domain
                 var newShell = await InitShellAsync();
                 if (newShell != null)
                 {
-                    _webAppCache = newShell;
+                    _context = newShell;
                 }
             }
             catch (Exception ex)
@@ -66,7 +66,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             return (true, string.Empty);
         }
 
-        private async ValueTask<WebAppCache> InitShellAsync(IPlugInDescriptor? externalPlugin = null)
+        private async ValueTask<WebAppShellContext> InitShellAsync(IPlugInDescriptor? externalPlugin = null)
         {
             var shellAppBuilder = _options.BuilderInit();
 
@@ -117,7 +117,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
-            return new WebAppCache(shellApp.Services, requestDelegate);
+            return new WebAppShellContext(shellApp.Services, requestDelegate);
         }
 
         private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)

@@ -2,7 +2,7 @@
 {
     public interface IWebAppShell
     {
-        WebAppCache GetWebApp();
+        WebAppShellContext GetContext();
         ValueTask<(bool Success, string Message)> ResetWebApp();
         ValueTask<(bool Success, string Message)> TestWebApp(IPlugInDescriptor plugInDescriptor);
     }

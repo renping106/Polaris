@@ -17,7 +17,7 @@ namespace Nerd.Abp.PluginManagement.Extensions
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var webAppShell = _appShell.GetWebApp();
+            var webAppShell = _appShell.GetContext();
 
             // Workaround to fix asp-page tag helpers in plugin
             var scope = webAppShell.Services.CreateScope();
