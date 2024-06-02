@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
@@ -47,14 +48,16 @@ namespace Nerd.Abp.DatabaseManagement.Services
             return ObjectMapper.Map<IReadOnlyList<IDatabaseProvider>, IReadOnlyList<DatabaseProviderDto>>(providers);
         }
 
-        public async Task InstallAsync(SetupInputDto input)
+        public async Task InstallAsync(SetupInputDto input, Guid? tenantId)
         {
-            var tenantId = CurrentTenant.Id;
             if (!IsInitialized(tenantId))
             {
                 if (tenantId.HasValue)
                 {
-                    await SetupTenant(input);
+                    using (CurrentTenant.Change(tenantId))
+                    {
+                        await SetupTenant(input);
+                    }
                 }
                 else
                 {
@@ -65,7 +68,7 @@ namespace Nerd.Abp.DatabaseManagement.Services
 
         public bool IsInitialized(Guid? tenantId)
         {
-            var database = _repository.GetProviderByTenant(CurrentTenant.Id);
+            var database = _repository.GetProviderByTenant(tenantId);
             return database != null;
         }
 
@@ -81,8 +84,9 @@ namespace Nerd.Abp.DatabaseManagement.Services
                 _configManager.SetDatabaseProvider(input.DatabaseProvider);
                 _configManager.SetConnectionString(input.ConnectionString);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.LogError(ex.Message);
                 _repository.UpsertProviderForTenant(null, null);
                 _options.ConnectionStrings.Default = null;
                 throw;
@@ -120,15 +124,17 @@ namespace Nerd.Abp.DatabaseManagement.Services
                 await _migrationService.MigrateAsync(input.Email, input.Password);
                 await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.LogError(ex.Message);
+                _repository.UpsertProviderForTenant(CurrentTenant.Id, null);
+
                 using (var unitOfWork = UnitOfWorkManager.Begin(true))
                 {
                     var tenant = await _tenantRepository.GetAsync(CurrentTenant.Id!.Value);
                     tenant.RemoveDefaultConnectionString();
                     await _tenantRepository.UpdateAsync(tenant);
                 }
-                _repository.UpsertProviderForTenant(CurrentTenant.Id, null);
                 throw;
             }
 

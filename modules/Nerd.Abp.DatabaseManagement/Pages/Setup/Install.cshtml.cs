@@ -24,12 +24,9 @@ public class InstallModel : DatabaseManagementPageModel
 
     public IActionResult OnGet([FromQuery(Name = "tenant")] Guid? tenantId)
     {
-        using (_currentTenant.Change(tenantId))
+        if (_setupAppService.IsInitialized(tenantId))
         {
-            if (_setupAppService.IsInitialized(tenantId))
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
 
         if (!tenantId.HasValue)
@@ -44,25 +41,22 @@ public class InstallModel : DatabaseManagementPageModel
 
     public async Task<IActionResult> OnPostAsync([FromQuery(Name = "tenant")] Guid? tenantId)
     {
-        using (_currentTenant.Change(tenantId))
+        if (_setupAppService.IsInitialized(tenantId))
         {
-            if (_setupAppService.IsInitialized(tenantId))
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
-            if (ModelState.IsValid)
+        if (ModelState.IsValid)
+        {
+            try
             {
-                try
-                {
-                    var setupInput = ObjectMapper.Map<SetupViewModel, SetupInputDto>(Config);
-                    await _setupAppService.InstallAsync(setupInput);
-                    return Redirect("/");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError(string.Empty, ex.Message);
-                }
+                var setupInput = ObjectMapper.Map<SetupViewModel, SetupInputDto>(Config);
+                await _setupAppService.InstallAsync(setupInput, tenantId);
+                return Redirect("/");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
             }
         }
 

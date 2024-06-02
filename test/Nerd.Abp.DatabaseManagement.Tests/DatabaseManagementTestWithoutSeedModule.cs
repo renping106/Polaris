@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DatabaseManagement.Extensions;
 using Volo.Abp.Autofac;
 using Volo.Abp.EntityFrameworkCore;
@@ -23,6 +24,8 @@ namespace Nerd.Abp.DatabaseManagement.Tests
             {
                 options.ConfigDatabase();
             });
+
+            context.Services.AddAlwaysAllowAuthorization();
         }
     }
 }

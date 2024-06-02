@@ -70,7 +70,7 @@ namespace Nerd.Abp.DatabaseManagement
                 options.AddDefaultRepositories(includeAllEntities: true);
             });
 
-            // make AbpUnitOfWorkDefaultOptions as scoped
+            // Make AbpUnitOfWorkDefaultOptions as scoped
             context.Services.AddScoped(provider =>
             {
                 var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;
@@ -79,7 +79,7 @@ namespace Nerd.Abp.DatabaseManagement
                 return tranOption;
             });
 
-            // make AbpSequentialGuidGeneratorOptions as scoped
+            // Make AbpSequentialGuidGeneratorOptions as scoped
             context.Services.AddScoped(provider =>
             {
                 var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;

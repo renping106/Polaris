@@ -6,6 +6,6 @@ namespace Nerd.Abp.DatabaseManagement.Services.Interfaces
     {
         bool IsInitialized(Guid? tenantId);
         IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders();
-        Task InstallAsync(SetupInputDto input);
+        Task InstallAsync(SetupInputDto input, Guid? tenantId);
     }
 }

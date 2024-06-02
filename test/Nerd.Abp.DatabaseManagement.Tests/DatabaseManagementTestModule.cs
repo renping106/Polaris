@@ -50,7 +50,7 @@ namespace Nerd.Abp.DatabaseManagement.Tests
                     Password = "Test",
                     Email = "test@test.com"
                 };
-                await setupAppService.InstallAsync(setupInput);
+                await setupAppService.InstallAsync(setupInput, null);
             });
         }
     }
