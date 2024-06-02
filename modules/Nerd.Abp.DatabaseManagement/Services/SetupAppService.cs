@@ -117,24 +117,17 @@ namespace Nerd.Abp.DatabaseManagement.Services
                     }
                     await _tenantRepository.UpdateAsync(tenant);
 
+                    await _migrationService.MigrateAsync(input.Email, input.Password);
+                    await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
                     await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseProvider, input.DatabaseProvider);
+
                     await unitOfWork.CompleteAsync();
                 }
-
-                await _migrationService.MigrateAsync(input.Email, input.Password);
-                await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex.Message);
                 _repository.UpsertProviderForTenant(CurrentTenant.Id, null);
-
-                using (var unitOfWork = UnitOfWorkManager.Begin(true))
-                {
-                    var tenant = await _tenantRepository.GetAsync(CurrentTenant.Id!.Value);
-                    tenant.RemoveDefaultConnectionString();
-                    await _tenantRepository.UpdateAsync(tenant);
-                }
                 throw;
             }
 
