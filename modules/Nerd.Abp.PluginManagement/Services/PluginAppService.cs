@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 using Nerd.Abp.PluginManagement.Domain;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Permissions;
@@ -6,6 +7,7 @@ using Nerd.Abp.PluginManagement.Services.Dtos;
 using Nerd.Abp.PluginManagement.Services.Interfaces;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.EventBus.Local;
 
 namespace Nerd.Abp.PluginManagement.Services
 {
@@ -15,12 +17,18 @@ namespace Nerd.Abp.PluginManagement.Services
         private readonly IPlugInManager _plugInManager;
         private readonly IWebAppShell _webAppShell;
         private readonly IPackageAppService _packageAppService;
+        private readonly ILocalEventBus _localEventBus;
 
-        public PluginAppService(IPlugInManager plugInManager, IWebAppShell webAppShell, IPackageAppService packageAppService)
+        public PluginAppService(
+            IPlugInManager plugInManager,
+            IWebAppShell webAppShell,
+            IPackageAppService packageAppService,
+            ILocalEventBus localEventBus)
         {
             _plugInManager = plugInManager;
             _webAppShell = webAppShell;
             _packageAppService = packageAppService;
+            _localEventBus = localEventBus;
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
@@ -57,6 +65,12 @@ namespace Nerd.Abp.PluginManagement.Services
                 Success = tryAddResult.Success,
                 Message = tryAddResult.Message
             };
+        }
+
+        [Authorize(PluginManagementPermissions.Edit)]
+        public async Task MigrateSchema()
+        {
+            await _localEventBus.PublishAsync(new DbContextChangedEvent());
         }
 
         [Authorize(PluginManagementPermissions.Upload)]

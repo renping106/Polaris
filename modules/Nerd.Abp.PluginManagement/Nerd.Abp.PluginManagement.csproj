@@ -36,4 +36,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nerd.Abp.DatabaseManagement.Abstractions\Nerd.Abp.DatabaseManagement.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

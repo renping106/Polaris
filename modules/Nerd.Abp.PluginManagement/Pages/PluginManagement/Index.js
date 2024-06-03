@@ -28,14 +28,20 @@
                             _pluginAppService
                                 .enable(data.record.name)
                                 .then(function (data) {
-                                    abp.ui.clearBusy();
                                     if (data.success) {
-                                        _dataTable.ajax.reloadEx();
-                                        abp.notify.success(l('SuccessfullyEnabled'));
+                                        _pluginAppService
+                                            .migrateSchema()
+                                            .then(function () {
+                                                abp.ui.clearBusy();
+                                                _dataTable.ajax.reloadEx();
+                                                abp.notify.success(l('SuccessfullyEnabled'));
+                                            })
+           
                                     }
                                     else {
+                                        abp.ui.clearBusy();
                                         abp.notify.error(data.message, l('FailedToEnable'));
-                                    }                                  
+                                    }
                                 });
                         },
                     },
@@ -57,7 +63,7 @@
                                 .then(function () {
                                     abp.ui.clearBusy();
                                     _dataTable.ajax.reloadEx();
-                                    abp.notify.success(l('SuccessfullyDisabled'));                             
+                                    abp.notify.success(l('SuccessfullyDisabled'));
                                 });
                         },
                     },
