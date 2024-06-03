@@ -68,7 +68,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         private async ValueTask<WebAppShellContext> InitShellAsync(IPlugInDescriptor? externalPlugin = null)
         {
-            var shellAppBuilder = _options.BuilderInit();
+            var shellAppBuilder = _options.InitBuilder();
 
             RegisterSharedServices(shellAppBuilder);
 

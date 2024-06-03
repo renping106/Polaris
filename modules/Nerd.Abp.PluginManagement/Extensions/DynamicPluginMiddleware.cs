@@ -40,12 +40,12 @@ namespace Nerd.Abp.PluginManagement.Extensions
     {
         public static IServiceCollection AddPluginManagementService(this IServiceCollection services, 
             Type startupModuleType, 
-            Func<WebApplicationBuilder> builderInit)
+            Func<WebApplicationBuilder> initBuiler)
         {
             services.Configure<WebShellOptions>(options =>
             {
                 options.StartupModuleTyp = startupModuleType;
-                options.BuilderInit = builderInit;
+                options.InitBuilder = initBuiler;
                 options.SharedServices.Add(typeof(IWebAppShell));
                 options.SharedServices.Add(typeof(IPlugInManager));
             });
