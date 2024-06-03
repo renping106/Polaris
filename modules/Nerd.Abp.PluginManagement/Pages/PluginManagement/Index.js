@@ -27,16 +27,15 @@
                             abp.ui.setBusy('#PlugInList');
                             _pluginAppService
                                 .enable(data.record.name)
-                                .then(function (data) {
-                                    if (data.success) {
+                                .then(function (result) {
+                                    if (result.success) {
                                         _pluginAppService
-                                            .migrateSchema()
+                                            .updateSchema(data.record.name)
                                             .then(function () {
                                                 abp.ui.clearBusy();
                                                 _dataTable.ajax.reloadEx();
                                                 abp.notify.success(l('SuccessfullyEnabled'));
-                                            })
-           
+                                            });
                                     }
                                     else {
                                         abp.ui.clearBusy();
@@ -83,9 +82,13 @@
                             _pluginAppService
                                 .remove(data.record.name)
                                 .then(function () {
-                                    abp.ui.clearBusy();
-                                    _dataTable.ajax.reloadEx();
-                                    abp.notify.success(l('SuccessfullyRemoved'));
+                                    _pluginAppService
+                                        .removeSchema(data.record.name)
+                                        .then(function () {
+                                            abp.ui.clearBusy();
+                                            _dataTable.ajax.reloadEx();
+                                            abp.notify.success(l('SuccessfullyRemoved'));
+                                        });
                                 });
                         },
                     },

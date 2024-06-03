@@ -34,6 +34,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         public void ResetContext()
         {
+            Context.Unload();
             Context = new AssemblyLoadContext(_contextName, true);
         }
 

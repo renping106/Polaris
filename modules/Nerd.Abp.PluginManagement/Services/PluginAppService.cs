@@ -68,9 +68,21 @@ namespace Nerd.Abp.PluginManagement.Services
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
-        public async Task MigrateSchema()
+        public async Task UpdateSchema(string plugInName)
         {
-            await _localEventBus.PublishAsync(new DbContextChangedEvent());
+            await _localEventBus.PublishAsync(new DbContextChangedEvent()
+            {
+                EventType = DbContextChangedEventType.Update
+            });
+        }
+
+        [Authorize(PluginManagementPermissions.Edit)]
+        public async Task RemoveSchema(string plugInName)
+        {
+            await _localEventBus.PublishAsync(new DbContextChangedEvent()
+            {
+                EventType = DbContextChangedEventType.Remove
+            });
         }
 
         [Authorize(PluginManagementPermissions.Upload)]
