@@ -5,13 +5,13 @@ using Volo.Abp.MultiTenancy;
 
 namespace Ping.Nerd.Web.Filters
 {
-    public class SetupAsyncPageFilter : IAsyncPageFilter, ITransientDependency
+    public class TenantStateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
     {
         private readonly ISetupAppService _setupAppService;
         private readonly ICurrentTenant _currentTenant;
         private static readonly string _setupPath = "/Setup/Install";
 
-        public SetupAsyncPageFilter(ISetupAppService setupAppService,
+        public TenantStateAsyncPageFilter(ISetupAppService setupAppService,
             ICurrentTenant currentTenant)
         {
             _setupAppService = setupAppService;
