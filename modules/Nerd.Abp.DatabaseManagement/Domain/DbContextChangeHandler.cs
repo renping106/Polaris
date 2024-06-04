@@ -16,7 +16,10 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public async Task HandleEventAsync(DbContextChangedEvent eventData)
         {
-            await _migrationManager.MigrateSchemaAsync();
+            foreach (var item in eventData.DbContextTypes)
+            {
+                await _migrationManager.MigratePluginSchemaAsync(item);
+            }
         }
     }
 }

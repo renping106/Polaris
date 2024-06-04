@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
+using Nerd.Abp.DatabaseManagement.Abstractions;
 using Nerd.Abp.PluginManagement.Localization;
 using Nerd.Abp.PluginManagement.Menus;
 using Nerd.Abp.PluginManagement.Permissions;
@@ -20,6 +21,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace Nerd.Abp.PluginManagement
 {
     [DependsOn(
+        typeof(DatabaseManagementAbstractionModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpBlobStoringFileSystemModule)

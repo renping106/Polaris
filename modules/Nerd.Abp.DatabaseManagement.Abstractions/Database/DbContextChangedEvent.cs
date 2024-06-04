@@ -2,6 +2,6 @@
 {
     public class DbContextChangedEvent
     {
-        public DbContextChangedEventType EventType { get; set; }
+        public required IReadOnlyList<Type> DbContextTypes { get; set; }
     }
 }

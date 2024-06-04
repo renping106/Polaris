@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Nerd.Abp.DatabaseManagement.Abstractions.Database;
-using Nerd.Abp.PluginManagement.Domain;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Permissions;
 using Nerd.Abp.PluginManagement.Services.Dtos;
@@ -42,13 +41,7 @@ namespace Nerd.Abp.PluginManagement.Services
         public async Task<PluginStateDto> EnableAsync(string plugInName)
         {
             var pluginDescriptor = GetDescriptor(plugInName);
-            var folderSource = new FolderSource(((FolderSource)pluginDescriptor.PlugInSource).Folder);
-            var testPlugin = new PlugInDescriptor()
-            {
-                Name = pluginDescriptor.Name,
-                Version = pluginDescriptor.Version,
-                PlugInSource = folderSource
-            };
+            var testPlugin = pluginDescriptor.Clone();
 
             var tryAddResult = await _webAppShell.TestWebApp(testPlugin);
 
@@ -58,7 +51,7 @@ namespace Nerd.Abp.PluginManagement.Services
                 await _webAppShell.ResetWebApp();
             }
 
-            folderSource.Context.Unload(); //unload test context
+            ((IPlugInContext)testPlugin.PlugInSource).UnloadContext(); //unload test context
 
             return new PluginStateDto()
             {
@@ -70,18 +63,10 @@ namespace Nerd.Abp.PluginManagement.Services
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task UpdateSchema(string plugInName)
         {
+            var plugin = GetDescriptor(plugInName);
             await _localEventBus.PublishAsync(new DbContextChangedEvent()
             {
-                EventType = DbContextChangedEventType.Update
-            });
-        }
-
-        [Authorize(PluginManagementPermissions.Edit)]
-        public async Task RemoveSchema(string plugInName)
-        {
-            await _localEventBus.PublishAsync(new DbContextChangedEvent()
-            {
-                EventType = DbContextChangedEventType.Remove
+                DbContextTypes = ((IPlugInContext)plugin.PlugInSource).DbContextTypes
             });
         }
 

@@ -47,9 +47,9 @@ namespace Nerd.BookStore.Web;
     typeof(AbpTenantManagementWebModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
+    typeof(DatabaseManagementModule),
     typeof(PluginManagementModule),
-    typeof(ThemeManagementModule),
-    typeof(DatabaseManagementModule)
+    typeof(ThemeManagementModule)
     )]
 public class BookStoreWebModule : AbpModule
 {

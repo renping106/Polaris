@@ -13,5 +13,17 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         [JsonIgnore]
         public IPlugInSource PlugInSource { get; set; }
+
+        public IPlugInDescriptor Clone()
+        {
+            var folderSource = new FolderSource(((FolderSource)PlugInSource).Folder);
+            return new PlugInDescriptor()
+            {
+                Name = this.Name,
+                Version = this.Version,
+                PlugInSource = folderSource
+            };
+
+        }
     }
 }

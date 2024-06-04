@@ -18,6 +18,7 @@ using Volo.Abp.Timing;
 using Nerd.Abp.DatabaseManagement.Data;
 using Nerd.Abp.DatabaseManagement.Domain.Entities;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
+using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
 {
@@ -30,16 +31,19 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         private readonly IEnumerable<IAbpEfCoreDbContext> _dbContexts;
         private readonly ICurrentDatabase _currentDatabase;
         private readonly DatabaseManagementDbContext _modelHistoryContext;
+        private readonly IDbContextLocator _dbContextLocator;
 
         public MigrationManager(IClock clock,
             DatabaseManagementDbContext modelHistoryContext,
             IDbContextsResolver dbContextsResolver,
-            ICurrentDatabase currentDatabase)
+            ICurrentDatabase currentDatabase,
+            IDbContextLocator dbContextLocator)
         {
             _dbContexts = dbContextsResolver.DbContexts;
             _clock = clock;
             _currentDatabase = currentDatabase;
             _modelHistoryContext = modelHistoryContext;
+            _dbContextLocator = dbContextLocator;
         }
 
         public async Task MigrateSchemaAsync()
@@ -54,6 +58,20 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
                 MigrateDatabase(dbContext);
             }
+        }
+
+        public Task MigratePluginSchemaAsync(Type pluginDbContextType)
+        {
+            foreach (var dbContext in _dbContexts)
+            {
+                if (pluginDbContextType.FullName == dbContext.GetType().FullName)
+                {
+                    MigrateDatabase(dbContext);
+                    break;
+                }
+            }
+
+            return Task.CompletedTask;
         }
 
         private void MigrateDatabase(IAbpEfCoreDbContext dbContext)
@@ -155,13 +173,13 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
             var references = dbContext.GetType().Assembly
                 .GetReferencedAssemblies()
-                .Select(e => MetadataReference.CreateFromFile(Assembly.Load(e).Location))
+                .Select(e => MetadataReference.CreateFromFile(_dbContextLocator.GetReferenceLocation(dbContext, e)))
                 .Union(new MetadataReference[]
                 {
                     MetadataReference.CreateFromFile(Assembly.Load("Microsoft.EntityFrameworkCore.Abstractions").Location),
                     MetadataReference.CreateFromFile(Assembly.Load("Microsoft.EntityFrameworkCore.Relational").Location),
                     MetadataReference.CreateFromFile(typeof(Object).Assembly.Location),
-                    MetadataReference.CreateFromFile(dbContext.GetType().Assembly.Location)
+                    MetadataReference.CreateFromFile(_dbContextLocator.GetLocation(dbContext))
                 })
                 .Union(providerReferences);
             var compilation = CSharpCompilation.Create(nameSpace)

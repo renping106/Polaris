@@ -82,13 +82,9 @@
                             _pluginAppService
                                 .remove(data.record.name)
                                 .then(function () {
-                                    _pluginAppService
-                                        .removeSchema(data.record.name)
-                                        .then(function () {
-                                            abp.ui.clearBusy();
-                                            _dataTable.ajax.reloadEx();
-                                            abp.notify.success(l('SuccessfullyRemoved'));
-                                        });
+                                    abp.ui.clearBusy();
+                                    _dataTable.ajax.reloadEx();
+                                    abp.notify.success(l('SuccessfullyRemoved'));
                                 });
                         },
                     },

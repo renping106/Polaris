@@ -15,10 +15,12 @@ using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
+using Nerd.Abp.DatabaseManagement.Abstractions;
 
 namespace Nerd.Abp.DatabaseManagement
 {
     [DependsOn(
+    typeof(DatabaseManagementAbstractionModule),
     typeof(AbpTenantManagementApplicationModule),
     typeof(DatabaseManagementSqlServerModule),
     typeof(DatabaseManagementSqliteModule)

@@ -22,7 +22,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 target.IsEnabled = false;
-                ((FolderSource)target.PlugInSource).Context.Unload();
+                ((IPlugInContext)target.PlugInSource).UnloadContext();
                 SaveState();
             }
         }
@@ -33,7 +33,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 target.IsEnabled = true;
-                ((FolderSource)target.PlugInSource).ResetContext();
+                ((IPlugInContext)target.PlugInSource).ResetContext();
                 SaveState();
             }
         }

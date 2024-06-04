@@ -9,5 +9,6 @@ namespace Nerd.Abp.PluginManagement.Domain.Interfaces
         bool IsEnabled { get; set; }
         string Version { get; set; }
         IPlugInSource PlugInSource { get; set; }
+        IPlugInDescriptor Clone();
     }
 }

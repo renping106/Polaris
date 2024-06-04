@@ -1,14 +1,16 @@
 ﻿using JetBrains.Annotations;
+using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Runtime.Loader;
 using Volo.Abp;
+using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
 
 namespace Nerd.Abp.PluginManagement.Domain
 {
-    internal class FolderSource : IPlugInSource
+    internal class FolderSource : IPlugInSource, IPlugInContext
     {
         public string Folder { get; }
 
@@ -19,6 +21,7 @@ namespace Nerd.Abp.PluginManagement.Domain
         public AssemblyLoadContext Context { get; private set; }
 
         private static readonly string _contextName = "plugin";
+        private List<Type> _dbContextTypes;
 
         public FolderSource(
             [NotNull] string folder,
@@ -30,17 +33,24 @@ namespace Nerd.Abp.PluginManagement.Domain
             SearchOption = searchOption;
 
             Context = new AssemblyLoadContext(_contextName, true);
+            _dbContextTypes = new List<Type>();
         }
 
         public void ResetContext()
         {
-            Context.Unload();
+            UnloadContext();
             Context = new AssemblyLoadContext(_contextName, true);
+        }
+
+        public void UnloadContext()
+        {
+            Context.Unload();
         }
 
         public Type[] GetModules()
         {
             var modules = new List<Type>();
+            _dbContextTypes = new List<Type>();
 
             foreach (var assembly in GetAssemblies())
             {
@@ -52,6 +62,11 @@ namespace Nerd.Abp.PluginManagement.Domain
                         {
                             modules.AddIfNotContains(type);
                         }
+
+                        if (type.IsAssignableTo<IAbpEfCoreDbContext>())
+                        {
+                            _dbContextTypes.AddIfNotContains(type);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -62,6 +77,8 @@ namespace Nerd.Abp.PluginManagement.Domain
 
             return modules.ToArray();
         }
+
+        public IReadOnlyList<Type> DbContextTypes => _dbContextTypes;
 
         private List<Assembly> GetAssemblies()
         {
