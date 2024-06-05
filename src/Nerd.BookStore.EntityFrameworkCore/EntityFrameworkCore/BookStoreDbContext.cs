@@ -15,14 +15,13 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace Nerd.BookStore.EntityFrameworkCore;
 
-//Remove for setup
-//[ReplaceDbContext(typeof(IIdentityDbContext))]
-//[ReplaceDbContext(typeof(ITenantManagementDbContext))]
+[ReplaceDbContext(typeof(IIdentityDbContext))]
+[ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
 public class BookStoreDbContext :
-    AbpDbContext<BookStoreDbContext>//,
-    //IIdentityDbContext,
-    //ITenantManagementDbContext
+    AbpDbContext<BookStoreDbContext>,
+    IIdentityDbContext,
+    ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
@@ -39,19 +38,18 @@ public class BookStoreDbContext :
      * uses this DbContext on runtime. Otherwise, it will use its own DbContext class.
      */
 
-    //Remove for setup
     //Identity
-    //public DbSet<IdentityUser> Users { get; set; }
-    //public DbSet<IdentityRole> Roles { get; set; }
-    //public DbSet<IdentityClaimType> ClaimTypes { get; set; }
-    //public DbSet<OrganizationUnit> OrganizationUnits { get; set; }
-    //public DbSet<IdentitySecurityLog> SecurityLogs { get; set; }
-    //public DbSet<IdentityLinkUser> LinkUsers { get; set; }
-    //public DbSet<IdentityUserDelegation> UserDelegations { get; set; }
+    public DbSet<IdentityUser> Users { get; set; }
+    public DbSet<IdentityRole> Roles { get; set; }
+    public DbSet<IdentityClaimType> ClaimTypes { get; set; }
+    public DbSet<OrganizationUnit> OrganizationUnits { get; set; }
+    public DbSet<IdentitySecurityLog> SecurityLogs { get; set; }
+    public DbSet<IdentityLinkUser> LinkUsers { get; set; }
+    public DbSet<IdentityUserDelegation> UserDelegations { get; set; }
 
-    //// Tenant Management
-    //public DbSet<Tenant> Tenants { get; set; }
-    //public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
+    // Tenant Management
+    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
 
@@ -66,16 +64,14 @@ public class BookStoreDbContext :
         base.OnModelCreating(builder);
 
         /* Include modules to your migration db context */
-
-        //Remove for setup
-        //builder.ConfigurePermissionManagement();
-        //builder.ConfigureSettingManagement();
-        //builder.ConfigureBackgroundJobs();
-        //builder.ConfigureAuditLogging();
-        //builder.ConfigureIdentity();
-        //builder.ConfigureOpenIddict();
-        //builder.ConfigureFeatureManagement();
-        //builder.ConfigureTenantManagement();
+        builder.ConfigurePermissionManagement();
+        builder.ConfigureSettingManagement();
+        builder.ConfigureBackgroundJobs();
+        builder.ConfigureAuditLogging();
+        builder.ConfigureIdentity();
+        builder.ConfigureOpenIddict();
+        builder.ConfigureFeatureManagement();
+        builder.ConfigureTenantManagement();
 
         /* Configure your own tables/entities inside here */
 
