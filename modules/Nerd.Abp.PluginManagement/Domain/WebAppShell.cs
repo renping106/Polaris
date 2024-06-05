@@ -94,13 +94,13 @@ namespace Nerd.Abp.PluginManagement.Domain
                 {
                     options.PlugInSources.Add(externalPlugin.PlugInSource);
                 }
-             
+
             });
 
             var shellApp = shellAppBuilder.Build();
 
             Action<IApplicationBuilder> configure = async (builder) =>
-            {  
+            {
                 await shellApp.InitializeApplicationAsync();
             };
 
@@ -121,6 +121,8 @@ namespace Nerd.Abp.PluginManagement.Domain
                     return _hostServiceProvider.GetRequiredService(item);
                 });
             }
+
+            shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
         }
     }
 }

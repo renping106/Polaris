@@ -3,9 +3,19 @@
     public interface IPlugInManager
     {
         IReadOnlyList<IPlugInDescriptor> GetAllPlugIns(bool refresh = false);
+        /// <summary>
+        ///  Get only enabled plugins without pre-enabled
+        /// </summary>
+        /// <returns></returns>
         IReadOnlyList<IPlugInDescriptor> GetEnabledPlugIns();
         void EnablePlugIn(IPlugInDescriptor plugIn);
         void DisablePlugIn(IPlugInDescriptor plugIn);
         void RemovePlugIn(IPlugInDescriptor plugIn);
+        void SetPreEnabledPlugIn(IPlugInDescriptor plugIn);
+        /// <summary>
+        /// Get all enabled and pre-enabled plugins
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyList<IPlugInDescriptor> GetAllEnabledPlugIns();
     }
 }

@@ -43,6 +43,7 @@ namespace Nerd.Abp.PluginManagement.Services
             var pluginDescriptor = GetDescriptor(plugInName);
             var targetPlugIn = pluginDescriptor.Clone();
 
+            _plugInManager.SetPreEnabledPlugIn(targetPlugIn);
             var tryAddResult = await _webAppShell.UpdateWebApp(targetPlugIn);
             if (tryAddResult.Success)
             {

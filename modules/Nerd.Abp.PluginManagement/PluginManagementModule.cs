@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.DatabaseManagement.Abstractions;
+using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Localization;
 using Nerd.Abp.PluginManagement.Menus;
 using Nerd.Abp.PluginManagement.Permissions;
@@ -42,14 +42,7 @@ namespace Nerd.Abp.PluginManagement
                 options.AddAssemblyResource(typeof(PluginManagementResource), typeof(PluginManagementModule).Assembly);
             });
 
-            PreConfigure<IMvcBuilder>(mvcBuilder =>
-            {
-                //Add plugin assembly
-                mvcBuilder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(PluginManagementModule).Assembly));
-
-                //Add CompiledRazorAssemblyPart if the PlugIn module contains razor views.
-                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(PluginManagementModule).Assembly));
-            });
+            ConfigurePlugInViews(context);
         }
 
         public override void ConfigureServices(ServiceConfigurationContext context)
@@ -115,6 +108,29 @@ namespace Nerd.Abp.PluginManagement
                         fileSystem.BasePath = packageFolder;
                     });
                 });
+            });
+        }
+
+        private void ConfigurePlugInViews(ServiceConfigurationContext context)
+        {
+            var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<HostServiceProvider>();
+            var pluginManager = hostServiceProvider?.Instance.GetRequiredService<IPlugInManager>();
+
+            PreConfigure<IMvcBuilder>(mvcBuilder =>
+            {
+                mvcBuilder.AddApplicationPartIfNotExists(typeof(PluginManagementModule).Assembly);
+
+                if (pluginManager != null)
+                {
+                    foreach (var plugin in pluginManager.GetAllEnabledPlugIns())
+                    {
+                        var parts = ((IPlugInContext)plugin.PlugInSource).CompiledRazorAssemblyParts;
+                        foreach (var part in parts)
+                        {
+                            mvcBuilder.PartManager.ApplicationParts.Add(part);
+                        }
+                    }
+                }
             });
         }
     }

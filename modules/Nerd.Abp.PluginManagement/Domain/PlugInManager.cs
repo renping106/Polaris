@@ -10,6 +10,7 @@ namespace Nerd.Abp.PluginManagement.Domain
         private readonly string folderName = "PlugIns";
         private readonly string settingFileName = "plugInSettings.json";
         private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
+        private IPlugInDescriptor? _preEnabledPlugIn;
 
         public PlugInManager()
         {
@@ -22,6 +23,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 target.IsEnabled = false;
+                _preEnabledPlugIn = null;
                 ((IPlugInContext)target.PlugInSource).UnloadContext();
                 SaveState();
             }
@@ -60,6 +62,18 @@ namespace Nerd.Abp.PluginManagement.Domain
         public IReadOnlyList<IPlugInDescriptor> GetEnabledPlugIns()
         {
             return _plugInDescriptors.Where(t => t.IsEnabled).ToList().AsReadOnly();
+        }
+
+        public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
+        {
+            _preEnabledPlugIn = plugIn;
+        }
+
+        public IReadOnlyList<IPlugInDescriptor> GetAllEnabledPlugIns()
+        {
+            var enabledPlugIns = GetEnabledPlugIns().ToList();
+            if (_preEnabledPlugIn != null) enabledPlugIns.Add(_preEnabledPlugIn);
+            return enabledPlugIns;
         }
 
         //TODO move to a separate service or PackageAppService

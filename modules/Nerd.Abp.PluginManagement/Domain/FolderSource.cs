@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
@@ -22,6 +23,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         private static readonly string _contextName = "plugin";
         private List<Type> _dbContextTypes;
+        private List<CompiledRazorAssemblyPart> _compiledRazorAssemblyParts;
 
         public FolderSource(
             [NotNull] string folder,
@@ -32,7 +34,8 @@ namespace Nerd.Abp.PluginManagement.Domain
             Folder = folder;
             SearchOption = searchOption;
 
-            _dbContextTypes = new List<Type>();
+            _dbContextTypes = new();
+            _compiledRazorAssemblyParts = new();
         }
 
         public void UnloadContext()
@@ -44,7 +47,8 @@ namespace Nerd.Abp.PluginManagement.Domain
         public Type[] GetModules()
         {
             var modules = new List<Type>();
-            _dbContextTypes = new List<Type>();
+            _dbContextTypes = new();
+            _compiledRazorAssemblyParts = new();
 
             foreach (var assembly in GetAssemblies())
             {
@@ -55,12 +59,13 @@ namespace Nerd.Abp.PluginManagement.Domain
                         if (AbpModule.IsAbpModule(type))
                         {
                             modules.AddIfNotContains(type);
+                            _compiledRazorAssemblyParts.AddIfNotContains(new CompiledRazorAssemblyPart(type.Assembly));
                         }
 
                         if (type.IsAssignableTo<IAbpEfCoreDbContext>())
                         {
                             _dbContextTypes.AddIfNotContains(type);
-                        }
+                        }              
                     }
                 }
                 catch (Exception ex)
@@ -73,6 +78,8 @@ namespace Nerd.Abp.PluginManagement.Domain
         }
 
         public IReadOnlyList<Type> DbContextTypes => _dbContextTypes;
+
+        public IReadOnlyList<CompiledRazorAssemblyPart> CompiledRazorAssemblyParts => _compiledRazorAssemblyParts;
 
         private List<Assembly> GetAssemblies()
         {
