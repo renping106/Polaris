@@ -32,6 +32,8 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         private readonly ICurrentDatabase _currentDatabase;
         private readonly DatabaseManagementDbContext _modelHistoryContext;
         private readonly IDbContextLocator _dbContextLocator;
+        private readonly List<string> _pendingChanges = new List<string>();
+        private readonly List<ModelHistory> _snapshots = new List<ModelHistory>();
 
         public MigrationManager(IClock clock,
             DatabaseManagementDbContext modelHistoryContext,
@@ -58,18 +60,19 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
                 MigrateDatabase(dbContext);
             }
+
+            CommitChanges();
         }
 
-        public Task MigratePluginSchemaAsync(Type pluginDbContextType)
+        public Task MigratePluginSchemaAsync(IReadOnlyList<Type> pluginDbContextTypes)
         {
-            foreach (var dbContext in _dbContexts)
+            var pluginDbContextNames = pluginDbContextTypes.Select(x => x.FullName).ToList();
+            foreach (var dbContext in _dbContexts.Where(t => pluginDbContextNames.Contains(t.GetType().FullName)))
             {
-                if (pluginDbContextType.FullName == dbContext.GetType().FullName)
-                {
-                    MigrateDatabase(dbContext);
-                    break;
-                }
+                MigrateDatabase(dbContext);
             }
+
+            CommitChanges();
 
             return Task.CompletedTask;
         }
@@ -85,10 +88,11 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             {
                 var upOperations = modelDiffer.GetDifferences(sourceModel, targetModel);
 
-                Migrate(dbContext, upOperations);
+                // Generate SQL
+                GeneratePendingChanges(dbContext, upOperations);
 
-                // generate new migration and save it
-                SaveSnapshot(dbContext);
+                // Generate new snapshot
+                GenerateSnapshot(dbContext);
             }
         }
 
@@ -110,6 +114,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
                     }
                     catch (Exception)
                     {
+                        //No snapshots
                     }
                 }
 
@@ -117,7 +122,10 @@ namespace Nerd.Abp.DatabaseManagement.Domain
                     ? null
                     : (CreateModelSnapshot(dbContext, lastSnapshot.Snapshot, MigrationNamespace, MigrationClassName)?.Model);
             }
-            catch (DbException) { }
+            catch (DbException)
+            {
+                //Return null
+            }
 
             if (lastModel is IMutableModel mutableModel)
             {
@@ -132,33 +140,47 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             return lastModel;
         }
 
-        private void SaveSnapshot(IAbpEfCoreDbContext dbContext)
+        private void GenerateSnapshot(IAbpEfCoreDbContext dbContext)
         {
             var snapshotCode = ModelSnapshotToString(dbContext, MigrationNamespace, MigrationClassName);
-
-            _modelHistoryContext.Set<ModelHistory>().Add(new ModelHistory()
+            _snapshots.Add(new ModelHistory()
             {
-                DbContextFullName = dbContext.GetType().FullName,
+                DbContextFullName = dbContext.GetType().FullName ?? "Unknow",
                 Snapshot = snapshotCode,
                 SnapshotTime = _clock.Now
             });
-            _modelHistoryContext.SaveChanges();
         }
 
-        private static void Migrate(IAbpEfCoreDbContext dbContext, IReadOnlyList<MigrationOperation> upOperations)
+        private void GeneratePendingChanges(IAbpEfCoreDbContext dbContext, IReadOnlyList<MigrationOperation> upOperations)
         {
             var sqlList = dbContext.Database.GetService<IMigrationsSqlGenerator>()
                 .Generate(upOperations, ((DbContext)dbContext).Model)
                 .Select(p => p.CommandText).ToList();
-            int changeCount = dbContext.ExecuteListSqlCommand(sqlList);
+
+            foreach (var item in sqlList)
+            {
+                _pendingChanges.AddIfNotContains(item);
+            }
+        }
+
+        private void CommitChanges()
+        {
+            if (_pendingChanges.Count > 0)
+            {
+                _modelHistoryContext.ExecuteListSqlCommand(_pendingChanges);
+                _modelHistoryContext.Set<ModelHistory>().AddRange(_snapshots);
+                _modelHistoryContext.SaveChanges();
+            }
+            _pendingChanges.Clear();
+            _snapshots.Clear();
         }
 
         private static string ModelSnapshotToString(IAbpEfCoreDbContext dbContext, string nameSpace, string className)
         {
             var snapshotCode = new DesignTimeServicesBuilder(
-                        dbContext.GetType().Assembly,
-                        Assembly.GetEntryAssembly(),
-                        new OperationReporter(new OperationReportHandler()), Array.Empty<string>())
+                                     dbContext.GetType().Assembly,
+                                     Assembly.GetEntryAssembly(),
+                                     new OperationReporter(new OperationReportHandler()), Array.Empty<string>())
                     .Build((DbContext)dbContext)
                     .GetRequiredService<IMigrationsCodeGenerator>()
                     .GenerateSnapshot(nameSpace, dbContext.GetType(), className, dbContext.GetService<IDesignTimeModel>().Model);

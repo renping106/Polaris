@@ -89,17 +89,18 @@ namespace Nerd.Abp.PluginManagement.Domain
                     options.PlugInSources.Add(enabledPlug.PlugInSource);
                 }
 
-                // Test plugin
+                // Plugin to add
                 if (externalPlugin != null)
                 {
                     options.PlugInSources.Add(externalPlugin.PlugInSource);
                 }
+             
             });
 
             var shellApp = shellAppBuilder.Build();
 
             Action<IApplicationBuilder> configure = async (builder) =>
-            {
+            {  
                 await shellApp.InitializeApplicationAsync();
             };
 

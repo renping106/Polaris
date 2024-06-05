@@ -1,10 +1,8 @@
-﻿using Volo.Abp.EntityFrameworkCore;
-
-namespace Nerd.Abp.DatabaseManagement.Domain.Interfaces
+﻿namespace Nerd.Abp.DatabaseManagement.Domain.Interfaces
 {
     public interface IMigrationManager
     {
         Task MigrateSchemaAsync();
-        Task MigratePluginSchemaAsync(Type pluginDbContextType);
+        Task MigratePluginSchemaAsync(IReadOnlyList<Type> pluginDbContextTypes);
     }
 }
