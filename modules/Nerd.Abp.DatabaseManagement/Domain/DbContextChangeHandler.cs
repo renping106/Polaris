@@ -1,5 +1,6 @@
 ﻿using Nerd.Abp.DatabaseManagement.Abstractions.Database;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
+using Nerd.Abp.ThemeManagement.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus;
 using Volo.Abp.SettingManagement;
@@ -19,7 +20,15 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public async Task HandleEventAsync(DbContextChangedEvent eventData)
         {
-            await _migrationManager.MigratePluginSchemaAsync(eventData.DbContextTypes);
+            var result = await _migrationManager.MigratePluginSchemaAsync(eventData.DbContextTypes);
+            if (result > 0)
+            {
+                var dbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
+                int versionNum = 0;
+                int.TryParse(dbVersion, out versionNum);
+                versionNum++;
+                await _settingManager.SetGlobalAsync(DatabaseManagementSettings.DatabaseVersion, versionNum.ToString());
+            }
         }
     }
 }

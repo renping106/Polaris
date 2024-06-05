@@ -9,6 +9,7 @@ namespace Nerd.Abp.ThemeManagement.Domain
             //Define your own settings here. Example:
             context.Add(new SettingDefinition(DatabaseManagementSettings.DatabaseProvider));
             context.Add(new SettingDefinition(DatabaseManagementSettings.SiteName, "Nerd"));
+            context.Add(new SettingDefinition(DatabaseManagementSettings.DatabaseVersion));
         }
     }
 }

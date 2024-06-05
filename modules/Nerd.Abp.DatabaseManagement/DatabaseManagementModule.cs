@@ -52,6 +52,7 @@ namespace Nerd.Abp.DatabaseManagement
             Configure<MvcOptions>(mvcOptions =>
             {
                 mvcOptions.Filters.AddService(typeof(TenantStateAsyncPageFilter));
+                mvcOptions.Filters.AddService(typeof(TenantUpdateAsyncPageFilter));
             });
 
             Configure<AbpVirtualFileSystemOptions>(options =>

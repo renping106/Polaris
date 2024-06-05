@@ -7,5 +7,6 @@
         //Add your own setting names here. Example:
         public const string DatabaseProvider = Prefix + ".DatabaseProvider";
         public const string SiteName = Prefix + ".SiteName";
+        public const string DatabaseVersion = Prefix + ".DatabaseVersion";
     }
 }

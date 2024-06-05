@@ -3,6 +3,6 @@
     public interface IMigrationManager
     {
         Task MigrateSchemaAsync();
-        Task MigratePluginSchemaAsync(IReadOnlyList<Type> pluginDbContextTypes);
+        Task<int> MigratePluginSchemaAsync(IReadOnlyList<Type> pluginDbContextTypes);
     }
 }
