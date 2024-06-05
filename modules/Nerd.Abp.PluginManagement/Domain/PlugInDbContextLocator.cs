@@ -64,7 +64,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             var dbAssemblyContext = AssemblyLoadContext.GetLoadContext(dbAssembly);
             if (dbAssemblyContext != null)
             {
-                var targetAssemblyContext = pluginAssemblyContexts.First(t => t.Context.ToString() == dbAssemblyContext.ToString());
+                var targetAssemblyContext = pluginAssemblyContexts.First(t => t.Context?.ToString() == dbAssemblyContext.ToString());
                 return Path.Combine(targetAssemblyContext.Folder, assembly.Name + ".dll");
             }
             else

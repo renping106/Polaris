@@ -34,24 +34,20 @@ namespace Nerd.Abp.PluginManagement.Services
         public async Task DisableAsync(string plugInName)
         {
             _plugInManager.DisablePlugIn(GetDescriptor(plugInName));
-            await _webAppShell.ResetWebApp();
+            await _webAppShell.UpdateWebApp();
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task<PluginStateDto> EnableAsync(string plugInName)
         {
             var pluginDescriptor = GetDescriptor(plugInName);
-            var testPlugin = pluginDescriptor.Clone();
+            var targetPlugIn = pluginDescriptor.Clone();
 
-            var tryAddResult = await _webAppShell.TestWebApp(testPlugin);
-
+            var tryAddResult = await _webAppShell.UpdateWebApp(targetPlugIn);
             if (tryAddResult.Success)
             {
-                _plugInManager.EnablePlugIn(GetDescriptor(plugInName));
-                await _webAppShell.ResetWebApp();
+                _plugInManager.EnablePlugIn(targetPlugIn);
             }
-
-            ((IPlugInContext)testPlugin.PlugInSource).UnloadContext(); //unload test context
 
             return new PluginStateDto()
             {

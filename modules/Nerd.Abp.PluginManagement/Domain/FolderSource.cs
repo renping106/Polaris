@@ -18,7 +18,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         public Func<string, bool>? Filter { get; set; }
 
-        public AssemblyLoadContext Context { get; private set; }
+        public AssemblyLoadContext? Context { get; private set; }
 
         private static readonly string _contextName = "plugin";
         private List<Type> _dbContextTypes;
@@ -32,19 +32,13 @@ namespace Nerd.Abp.PluginManagement.Domain
             Folder = folder;
             SearchOption = searchOption;
 
-            Context = new AssemblyLoadContext(_contextName, true);
             _dbContextTypes = new List<Type>();
-        }
-
-        public void ResetContext()
-        {
-            UnloadContext();
-            Context = new AssemblyLoadContext(_contextName, true);
         }
 
         public void UnloadContext()
         {
-            Context.Unload();
+            Context?.Unload();
+            Context = null;
         }
 
         public Type[] GetModules()
@@ -87,6 +81,11 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (Filter != null)
             {
                 assemblyFiles = assemblyFiles.Where(Filter);
+            }
+
+            if (Context == null)
+            {
+                Context = new AssemblyLoadContext(_contextName, true);
             }
 
             var results = new List<Assembly>();

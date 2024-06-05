@@ -33,7 +33,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 target.IsEnabled = true;
-                ((IPlugInContext)target.PlugInSource).ResetContext();
+                target.PlugInSource = plugIn.PlugInSource;
                 SaveState();
             }
         }

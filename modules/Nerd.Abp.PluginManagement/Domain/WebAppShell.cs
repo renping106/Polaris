@@ -36,11 +36,11 @@ namespace Nerd.Abp.PluginManagement.Domain
             return _context!;
         }
 
-        public async ValueTask<(bool Success, string Message)> ResetWebApp()
+        public async ValueTask<(bool Success, string Message)> UpdateWebApp(IPlugInDescriptor? plugInToAdd = null)
         {
             try
             {
-                var newShell = await InitShellAsync();
+                var newShell = await InitShellAsync(plugInToAdd);
                 if (newShell != null)
                 {
                     _context = newShell;
@@ -48,19 +48,10 @@ namespace Nerd.Abp.PluginManagement.Domain
             }
             catch (Exception ex)
             {
-                return (false, ex.Message);
-            }
-            return (true, string.Empty);
-        }
-
-        public async ValueTask<(bool Success, string Message)> TestWebApp(IPlugInDescriptor plugInDescriptor)
-        {
-            try
-            {
-                _ = await InitShellAsync(plugInDescriptor);
-            }
-            catch (Exception ex)
-            {
+                if (plugInToAdd != null)
+                {
+                    ((IPlugInContext)plugInToAdd.PlugInSource).UnloadContext();
+                }
                 return (false, ex.Message);
             }
             return (true, string.Empty);
