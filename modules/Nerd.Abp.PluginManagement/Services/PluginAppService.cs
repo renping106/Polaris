@@ -47,6 +47,10 @@ namespace Nerd.Abp.PluginManagement.Services
             var tryAddResult = await _webAppShell.UpdateWebApp(targetPlugIn);
             if (tryAddResult.Success)
             {
+                await _localEventBus.PublishAsync(new DbContextChangedEvent()
+                {
+                    DbContextTypes = ((IPlugInContext)targetPlugIn.PlugInSource).DbContextTypes
+                });
                 _plugInManager.EnablePlugIn(targetPlugIn);
             }
 
@@ -55,16 +59,6 @@ namespace Nerd.Abp.PluginManagement.Services
                 Success = tryAddResult.Success,
                 Message = tryAddResult.Message
             };
-        }
-
-        [Authorize(PluginManagementPermissions.Edit)]
-        public async Task UpdateSchema(string plugInName)
-        {
-            var plugin = GetDescriptor(plugInName);
-            await _localEventBus.PublishAsync(new DbContextChangedEvent()
-            {
-                DbContextTypes = ((IPlugInContext)plugin.PlugInSource).DbContextTypes
-            });
         }
 
         [Authorize(PluginManagementPermissions.Upload)]

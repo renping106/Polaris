@@ -10,6 +10,5 @@ namespace Nerd.Abp.PluginManagement.Services.Interfaces
         Task<PluginStateDto> EnableAsync(string plugInName);
         Task DisableAsync(string plugInName);
         void Remove(string plugInName);
-        Task UpdateSchema(string plugInName);
     }
 }

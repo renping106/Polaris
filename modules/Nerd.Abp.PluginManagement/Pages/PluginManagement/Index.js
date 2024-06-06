@@ -29,13 +29,9 @@
                                 .enable(data.record.name)
                                 .then(function (result) {
                                     if (result.success) {
-                                        _pluginAppService
-                                            .updateSchema(data.record.name)
-                                            .then(function () {
-                                                abp.ui.clearBusy();
-                                                _dataTable.ajax.reloadEx();
-                                                abp.notify.success(l('SuccessfullyEnabled'));
-                                            });
+                                        abp.ui.clearBusy();
+                                        _dataTable.ajax.reloadEx();
+                                        abp.notify.success(l('SuccessfullyEnabled'));
                                     }
                                     else {
                                         abp.ui.clearBusy();
