@@ -13,10 +13,10 @@ namespace Nerd.Abp.PluginManagement.Services
     [Authorize(PluginManagementPermissions.Default)]
     public class PluginAppService : PluginManagementAppServiceBase, IPluginAppService
     {
+        private readonly ILocalEventBus _localEventBus;
+        private readonly IPackageAppService _packageAppService;
         private readonly IPlugInManager _plugInManager;
         private readonly IWebAppShell _webAppShell;
-        private readonly IPackageAppService _packageAppService;
-        private readonly ILocalEventBus _localEventBus;
 
         public PluginAppService(
             IPlugInManager plugInManager,
@@ -68,6 +68,15 @@ namespace Nerd.Abp.PluginManagement.Services
             };
         }
 
+        public PagedResultDto<PlugInDescriptorDto> GetList()
+        {
+            var plugins = _plugInManager.GetAllPlugIns(true);
+            return new PagedResultDto<PlugInDescriptorDto>(
+                   plugins.Count,
+                   ObjectMapper.Map<IReadOnlyList<IPlugInDescriptor>, List<PlugInDescriptorDto>>(plugins)
+                );
+        }
+
         [Authorize(PluginManagementPermissions.Upload)]
         public void Remove(string plugInName)
         {
@@ -78,15 +87,6 @@ namespace Nerd.Abp.PluginManagement.Services
             }
             _plugInManager.RemovePlugIn(_plugInManager.GetPlugIn(plugInName));
             _packageAppService.RemovePlugIn(plugInName);
-        }
-
-        public PagedResultDto<PlugInDescriptorDto> GetList()
-        {
-            var plugins = _plugInManager.GetAllPlugIns(true);
-            return new PagedResultDto<PlugInDescriptorDto>(
-                   plugins.Count,
-                   ObjectMapper.Map<IReadOnlyList<IPlugInDescriptor>, List<PlugInDescriptorDto>>(plugins)
-                );
         }
     }
 }

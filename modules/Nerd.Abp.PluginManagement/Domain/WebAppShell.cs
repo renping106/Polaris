@@ -11,48 +11,14 @@ namespace Nerd.Abp.PluginManagement.Domain
     internal class WebAppShell : IWebAppShell
     {
         private WebAppShellContext? _context;
-        private readonly object instanceLock = new object();
-        private readonly WebShellOptions _options;
         private readonly IServiceProvider _hostServiceProvider;
-
-        public IServiceProvider? ShellServiceProvider => _context?.Services;
+        private readonly WebShellOptions _options;
+        private readonly object instanceLock = new object();
 
         public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
         {
             _options = webShellOptions.Value;
             _hostServiceProvider = hostServiceProvider;
-        }
-
-        public WebAppShellContext GetContext()
-        {
-            if (_context == null)
-            {
-                lock (instanceLock)
-                {
-                    if (_context == null)
-                    {
-                        _context = InitShellAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
-            return _context!;
-        }
-
-        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
-        {
-            try
-            {
-                var newShell = await InitShellAsync();
-                if (newShell != null)
-                {
-                    _context = newShell;
-                }
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-            return (true, string.Empty);
         }
 
         private async ValueTask<WebAppShellContext> InitShellAsync()
@@ -116,5 +82,39 @@ namespace Nerd.Abp.PluginManagement.Domain
 
             shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
         }
+
+        public WebAppShellContext GetContext()
+        {
+            if (_context == null)
+            {
+                lock (instanceLock)
+                {
+                    if (_context == null)
+                    {
+                        _context = InitShellAsync().GetAwaiter().GetResult();
+                    }
+                }
+            }
+            return _context!;
+        }
+
+        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
+        {
+            try
+            {
+                var newShell = await InitShellAsync();
+                if (newShell != null)
+                {
+                    _context = newShell;
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+            return (true, string.Empty);
+        }
+
+        public IServiceProvider? ShellServiceProvider => _context?.Services;
     }
 }

@@ -2,7 +2,7 @@
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.PluginManagement.Domain
+namespace Nerd.Abp.PluginManagement.Domain.Models
 {
     internal class PlugInDescriptor : IPlugInDescriptor
     {
@@ -19,8 +19,8 @@ namespace Nerd.Abp.PluginManagement.Domain
             var folderSource = new FolderSource(((FolderSource)PlugInSource).Folder);
             return new PlugInDescriptor()
             {
-                Name = this.Name,
-                Version = this.Version,
+                Name = Name,
+                Version = Version,
                 PlugInSource = folderSource
             };
 

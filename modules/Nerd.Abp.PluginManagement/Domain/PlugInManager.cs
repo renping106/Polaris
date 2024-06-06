@@ -1,4 +1,5 @@
 ﻿using Nerd.Abp.PluginManagement.Domain.Interfaces;
+using Nerd.Abp.PluginManagement.Domain.Models;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;

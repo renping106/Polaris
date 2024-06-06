@@ -17,12 +17,12 @@ namespace Nerd.Abp.DatabaseManagement.Services
     [RemoteService(false)]
     public class SetupAppService : DatabaseManagementAppServiceBase, ISetupAppService, ITransientDependency
     {
-        private readonly IDatabaseProviderFactory _databaseProviderFactory;
-        private readonly ITenantDatabaseRepository _repository;
-        private readonly IDatabaseMigrationService _migrationService;
-        private readonly ISettingManager _settingManager;
         private readonly IConfigFileManager _configManager;
+        private readonly IDatabaseProviderFactory _databaseProviderFactory;
+        private readonly IDatabaseMigrationService _migrationService;
         private readonly AbpDbConnectionOptions _options;
+        private readonly ITenantDatabaseRepository _repository;
+        private readonly ISettingManager _settingManager;
         private readonly ITenantRepository _tenantRepository;
 
         public SetupAppService(IDatabaseProviderFactory databaseProviderFactory,
@@ -40,42 +40,6 @@ namespace Nerd.Abp.DatabaseManagement.Services
             _configManager = configManager;
             _options = options.CurrentValue;
             _tenantRepository = tenantRepository;
-        }
-
-        public IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders()
-        {
-            var providers = _databaseProviderFactory.GetDatabaseProviders();
-            return ObjectMapper.Map<IReadOnlyList<IDatabaseProvider>, IReadOnlyList<DatabaseProviderDto>>(providers);
-        }
-
-        public async Task InstallAsync(SetupInputDto input, Guid? tenantId)
-        {
-            if (!IsInitialized(tenantId))
-            {
-                if (tenantId.HasValue)
-                {
-                    using (CurrentTenant.Change(tenantId))
-                    {
-                        await SetupTenantAsync(input);
-                    }
-                }
-                else
-                {
-                    await SetupHostAsync(input);
-                }
-            }
-        }
-
-        public bool IsInitialized(Guid? tenantId)
-        {
-            var database = _repository.GetProviderByTenant(tenantId);
-            return database != null;
-        }
-
-        public async Task<bool> TenantExistsAsync(Guid tenantId)
-        {
-            var tenant = await _tenantRepository.FindAsync(tenantId);
-            return tenant != null;
         }
 
         private async Task SetupHostAsync(SetupInputDto input)
@@ -137,6 +101,42 @@ namespace Nerd.Abp.DatabaseManagement.Services
                 throw;
             }
 
+        }
+
+        public IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders()
+        {
+            var providers = _databaseProviderFactory.GetDatabaseProviders();
+            return ObjectMapper.Map<IReadOnlyList<IDatabaseProvider>, IReadOnlyList<DatabaseProviderDto>>(providers);
+        }
+
+        public async Task InstallAsync(SetupInputDto input, Guid? tenantId)
+        {
+            if (!IsInitialized(tenantId))
+            {
+                if (tenantId.HasValue)
+                {
+                    using (CurrentTenant.Change(tenantId))
+                    {
+                        await SetupTenantAsync(input);
+                    }
+                }
+                else
+                {
+                    await SetupHostAsync(input);
+                }
+            }
+        }
+
+        public bool IsInitialized(Guid? tenantId)
+        {
+            var database = _repository.GetProviderByTenant(tenantId);
+            return database != null;
+        }
+
+        public async Task<bool> TenantExistsAsync(Guid tenantId)
+        {
+            var tenant = await _tenantRepository.FindAsync(tenantId);
+            return tenant != null;
         }
     }
 }
