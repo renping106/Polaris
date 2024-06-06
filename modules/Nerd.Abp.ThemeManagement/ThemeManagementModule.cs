@@ -38,11 +38,7 @@ namespace Nerd.Abp.PluginManagement
 
             PreConfigure<IMvcBuilder>(mvcBuilder =>
             {
-                //Add plugin assembly
-                mvcBuilder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(ThemeManagementModule).Assembly));
-
-                //Add CompiledRazorAssemblyPart
-                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(ThemeManagementModule).Assembly));
+                mvcBuilder.AddApplicationPartIfNotExists(typeof(ThemeManagementModule).Assembly);
             });
         }
 

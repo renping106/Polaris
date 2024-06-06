@@ -39,11 +39,7 @@ namespace Nerd.Abp.DatabaseManagement
 
             PreConfigure<IMvcBuilder>(mvcBuilder =>
             {
-                //Add plugin assembly
-                mvcBuilder.PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DatabaseManagementModule).Assembly));
-
-                //Add CompiledRazorAssemblyPart
-                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(DatabaseManagementModule).Assembly));
+                mvcBuilder.AddApplicationPartIfNotExists(typeof(DatabaseManagementModule).Assembly);
             });
         }
 
