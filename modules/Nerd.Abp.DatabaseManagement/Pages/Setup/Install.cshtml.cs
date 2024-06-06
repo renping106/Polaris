@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;
-using Volo.Abp.MultiTenancy;
+using Volo.Abp.TenantManagement;
 
 namespace Nerd.Abp.DatabaseManagement.Pages.Setup;
 
@@ -12,21 +12,28 @@ public class InstallModel : DatabaseManagementPageModel
     public List<DatabaseProviderDto> DatabaseProviders { get; set; }
     public bool ShowUseHostSetting { get; set; } = true;
 
-    private readonly ICurrentTenant _currentTenant;
     private readonly ISetupAppService _setupAppService;
 
-    public InstallModel(ICurrentTenant currentTenant, ISetupAppService setupStatusAppService)
+    public InstallModel(ISetupAppService setupStatusAppService)
     {
-        _currentTenant = currentTenant;
         _setupAppService = setupStatusAppService;
         DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
     }
 
-    public IActionResult OnGet([FromQuery(Name = "tenant")] Guid? tenantId)
+    public async Task<IActionResult> OnGet([FromQuery(Name = "tenant")] Guid? tenantId)
     {
         if (_setupAppService.IsInitialized(tenantId))
         {
             return NotFound();
+        }
+
+        if (tenantId.HasValue)
+        {
+            var flag = await _setupAppService.TenantExistsAsync(tenantId.Value);
+            if (!flag)
+            {
+                return NotFound();
+            }
         }
 
         if (!tenantId.HasValue)

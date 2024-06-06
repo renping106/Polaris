@@ -33,14 +33,14 @@ namespace Nerd.Abp.PluginManagement.Services
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task DisableAsync(string plugInName)
         {
-            _plugInManager.DisablePlugIn(GetDescriptor(plugInName));
+            _plugInManager.DisablePlugIn(_plugInManager.GetPlugIn(plugInName));
             await _webAppShell.UpdateWebApp();
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task<PluginStateDto> EnableAsync(string plugInName)
         {
-            var pluginDescriptor = GetDescriptor(plugInName);
+            var pluginDescriptor = _plugInManager.GetPlugIn(plugInName);
             var targetPlugIn = pluginDescriptor.Clone();
 
             _plugInManager.SetPreEnabledPlugIn(targetPlugIn);
@@ -64,12 +64,12 @@ namespace Nerd.Abp.PluginManagement.Services
         [Authorize(PluginManagementPermissions.Upload)]
         public void Remove(string plugInName)
         {
-            var plugin = GetDescriptor(plugInName);
+            var plugin = _plugInManager.GetPlugIn(plugInName);
             if (plugin.IsEnabled)
             {
                 throw new UserFriendlyException(L["PluginCannotRemove"]);
             }
-            _plugInManager.RemovePlugIn(GetDescriptor(plugInName));
+            _plugInManager.RemovePlugIn(_plugInManager.GetPlugIn(plugInName));
             _packageAppService.RemovePlugIn(plugInName);
         }
 
@@ -80,12 +80,6 @@ namespace Nerd.Abp.PluginManagement.Services
                    plugins.Count,
                    ObjectMapper.Map<IReadOnlyList<IPlugInDescriptor>, List<PlugInDescriptorDto>>(plugins)
                 );
-        }
-
-        private IPlugInDescriptor GetDescriptor(string name)
-        {
-            var plugins = _plugInManager.GetAllPlugIns();
-            return plugins.First(p => p.Name == name);
         }
     }
 }

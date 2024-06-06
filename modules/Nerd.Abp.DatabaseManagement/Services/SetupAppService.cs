@@ -56,12 +56,12 @@ namespace Nerd.Abp.DatabaseManagement.Services
                 {
                     using (CurrentTenant.Change(tenantId))
                     {
-                        await SetupTenant(input);
+                        await SetupTenantAsync(input);
                     }
                 }
                 else
                 {
-                    await SetupHost(input);
+                    await SetupHostAsync(input);
                 }
             }
         }
@@ -72,7 +72,13 @@ namespace Nerd.Abp.DatabaseManagement.Services
             return database != null;
         }
 
-        private async Task SetupHost(SetupInputDto input)
+        public async Task<bool> TenantExistsAsync(Guid tenantId)
+        {
+            var tenant = await _tenantRepository.FindAsync(tenantId);
+            return tenant != null;
+        }
+
+        private async Task SetupHostAsync(SetupInputDto input)
         {
             try
             {
@@ -93,7 +99,7 @@ namespace Nerd.Abp.DatabaseManagement.Services
             }
         }
 
-        private async Task SetupTenant(SetupInputDto input)
+        private async Task SetupTenantAsync(SetupInputDto input)
         {
             if (input.UseHostSetting)
             {

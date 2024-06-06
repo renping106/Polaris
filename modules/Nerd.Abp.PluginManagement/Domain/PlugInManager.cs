@@ -76,6 +76,12 @@ namespace Nerd.Abp.PluginManagement.Domain
             return enabledPlugIns;
         }
 
+        public IPlugInDescriptor GetPlugIn(string name)
+        {
+            var plugins = GetAllPlugIns();
+            return plugins.First(p => p.Name == name);
+        }
+
         //TODO move to a separate service or PackageAppService
         private void LoadFromFolder()
         {

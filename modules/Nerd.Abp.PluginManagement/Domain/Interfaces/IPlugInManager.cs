@@ -11,6 +11,7 @@
         void EnablePlugIn(IPlugInDescriptor plugIn);
         void DisablePlugIn(IPlugInDescriptor plugIn);
         void RemovePlugIn(IPlugInDescriptor plugIn);
+        IPlugInDescriptor GetPlugIn(string name);
         void SetPreEnabledPlugIn(IPlugInDescriptor plugIn);
         /// <summary>
         /// Get all enabled and pre-enabled plugins
