@@ -8,7 +8,6 @@ namespace Nerd.Abp.PluginManagement.Services.Interfaces
     {
         PagedResultDto<PlugInDescriptorDto> GetList();
         Task<PluginStateDto> EnableAsync(string plugInName);
-        Task EnableCommitAsync(string plugInName);
         Task DisableAsync(string plugInName);
         void Remove(string plugInName);
     }

@@ -66,16 +66,18 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         }
 
         public Task<int> MigratePluginSchemaAsync(IReadOnlyList<Type> pluginDbContextTypes)
-        {
+        {            
             var pluginDbContextNames = pluginDbContextTypes.Select(x => x.FullName).ToList();
             foreach (var dbContext in _dbContexts.Where(t => pluginDbContextNames.Contains(t.GetType().FullName)))
             {
                 MigrateDatabase(dbContext);
             }
 
+            var count = _pendingChanges.Count;
+
             CommitChanges();
 
-            return Task.FromResult(_pendingChanges.Count);
+            return Task.FromResult(count);
         }
 
         private void MigrateDatabase(IAbpEfCoreDbContext dbContext)

@@ -47,8 +47,18 @@ namespace Nerd.Abp.PluginManagement.Services
 
             var tryAddResult = await _webAppShell.UpdateWebApp();
 
-            if (!tryAddResult.Success)
+            if (tryAddResult.Success)
             {
+                await _localEventBus.PublishAsync(new DbContextChangedEvent()
+                {
+                    DbContextTypes = ((IPlugInContext)targetPlugIn.PlugInSource).DbContextTypes
+                });
+                _plugInManager.EnablePlugIn(targetPlugIn);
+            }
+            else
+            {
+                // Also needs to remove preenabled plugin 
+                //
                 ((IPlugInContext)targetPlugIn.PlugInSource).UnloadContext();
             }
 
@@ -57,22 +67,6 @@ namespace Nerd.Abp.PluginManagement.Services
                 Success = tryAddResult.Success,
                 Message = tryAddResult.Message
             };
-        }
-
-        /// <summary>
-        /// Need a second call to use latest DI container for dbcontexts retrieving
-        /// </summary>
-        /// <param name="plugInName"></param>
-        /// <returns></returns>
-        [Authorize(PluginManagementPermissions.Edit)]
-        public async Task EnableCommitAsync(string plugInName)
-        {
-            var targetPlugIn = _plugInManager.GetEnabledPlugIns().First(t => t.Name == plugInName);
-            await _localEventBus.PublishAsync(new DbContextChangedEvent()
-            {
-                DbContextTypes = ((IPlugInContext)targetPlugIn.PlugInSource).DbContextTypes
-            });
-            _plugInManager.EnablePlugIn(targetPlugIn);
         }
 
         [Authorize(PluginManagementPermissions.Upload)]

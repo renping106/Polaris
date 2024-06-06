@@ -58,7 +58,7 @@ namespace Nerd.Abp.PluginManagement.Domain
         {
             var shellAppBuilder = _options.InitBuilder();
 
-            var shellEnvironment = RegisterSharedServices(shellAppBuilder);
+            RegisterSharedServices(shellAppBuilder);
 
             await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
             {
@@ -100,11 +100,15 @@ namespace Nerd.Abp.PluginManagement.Domain
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
+            // Set latest shell ServcieProvider to be used in following actions
+            var shellEnvironment = (ShellEnvironment)shellApp.Services.GetRequiredService<IShellEnvironment>();
             shellEnvironment.ShellServiceProvider = shellApp.Services;
+            shellEnvironment.HostServiceProvider = _hostServiceProvider;
+
             return new WebAppShellContext(shellApp.Services, requestDelegate);
         }
 
-        private ShellEnvironment RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
+        private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
         {
             foreach (var item in _options.SharedServices)
             {
@@ -113,10 +117,6 @@ namespace Nerd.Abp.PluginManagement.Domain
                     return _hostServiceProvider.GetRequiredService(item);
                 });
             }
-
-            var shellEnvironment = new ShellEnvironment(_hostServiceProvider);
-            shellAppBuilder.Services.AddSingleton(shellEnvironment);
-            return shellEnvironment;
         }
     }
 }

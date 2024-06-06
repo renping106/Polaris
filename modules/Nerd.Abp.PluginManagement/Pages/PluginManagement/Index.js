@@ -29,15 +29,9 @@
                                 .enable(data.record.name)
                                 .then(function (result) {
                                     if (result.success) {
-                                        _pluginAppService
-                                            .enableCommit(data.record.name)
-                                            .then(function () {
-                                                abp.ui.clearBusy();
-                                                _dataTable.ajax.reloadEx();
-                                                abp.notify.success(l('SuccessfullyEnabled'));
-                                            }).catch(function () {
-                                                abp.ui.clearBusy();
-                                            });;
+                                        abp.ui.clearBusy();
+                                        _dataTable.ajax.reloadEx();
+                                        abp.notify.success(l('SuccessfullyEnabled'));
                                     }
                                     else {
                                         abp.ui.clearBusy();

@@ -4,30 +4,38 @@ using Nerd.Abp.ThemeManagement.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus;
 using Volo.Abp.SettingManagement;
+using Nerd.Abp.Extension.Abstractions.Plugin;
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
 {
     internal class DbContextChangeHandler : ILocalEventHandler<DbContextChangedEvent>, ITransientDependency
     {
-        private readonly IMigrationManager _migrationManager;
-        private readonly ISettingManager _settingManager;
+        private readonly IShellEnvironment _shellEnvironment;
 
-        public DbContextChangeHandler(IMigrationManager migrationManager, ISettingManager settingManager)
+        public DbContextChangeHandler(IShellEnvironment shellEnvironment)
         {
-            _migrationManager = migrationManager;
-            _settingManager = settingManager;
+            _shellEnvironment = shellEnvironment;
         }
 
         public async Task HandleEventAsync(DbContextChangedEvent eventData)
         {
-            var result = await _migrationManager.MigratePluginSchemaAsync(eventData.DbContextTypes);
+            if (_shellEnvironment.ShellServiceProvider == null)
+            {
+                throw new AbpException("ShellServiceProvider is null.");
+            }
+
+            var provider = _shellEnvironment.ShellServiceProvider;
+            var migrationManager = provider.GetRequiredService<IMigrationManager>();
+            var result = await migrationManager.MigratePluginSchemaAsync(eventData.DbContextTypes);
             if (result > 0)
             {
-                var dbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
-                int versionNum = 0;
-                int.TryParse(dbVersion, out versionNum);
+                var settingManager = provider.GetRequiredService<ISettingManager>();
+                var dbVersion = await settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
+                int.TryParse(dbVersion, out int versionNum);
                 versionNum++;
-                await _settingManager.SetGlobalAsync(DatabaseManagementSettings.DatabaseVersion, versionNum.ToString());
+                await settingManager.SetGlobalAsync(DatabaseManagementSettings.DatabaseVersion, versionNum.ToString());
             }
         }
     }

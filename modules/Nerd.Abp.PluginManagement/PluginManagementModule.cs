@@ -114,8 +114,8 @@ namespace Nerd.Abp.PluginManagement
 
         private void ConfigurePlugInViews(ServiceConfigurationContext context)
         {
-            var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<ShellEnvironment>();
-            var pluginManager = hostServiceProvider?.HostServiceProvider.GetRequiredService<IPlugInManager>();
+            var shellEnvironment = context.Services.GetSingletonInstanceOrNull<IShellEnvironment>();
+            var pluginManager = shellEnvironment?.HostServiceProvider?.GetRequiredService<IPlugInManager>();
 
             PreConfigure<IMvcBuilder>(mvcBuilder =>
             {
