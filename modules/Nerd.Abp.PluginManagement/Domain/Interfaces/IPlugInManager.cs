@@ -13,5 +13,6 @@
         void RemovePlugIn(IPlugInDescriptor plugIn);
         IPlugInDescriptor GetPlugIn(string name);
         void SetPreEnabledPlugIn(IPlugInDescriptor plugIn);
+        void ClearPreEnabledPlugIn();
     }
 }

@@ -188,14 +188,19 @@ namespace Nerd.Abp.PluginManagement.Services
 
         private async Task UpdatePlugInAsync(string pluginName)
         {
+            var plugin = _plugInManager.GetPlugIn(pluginName);
+            var pluginNew = plugin.Clone();
+            _plugInManager.DisablePlugIn(plugin);
             var tryAddResult = await _webAppShell.UpdateWebApp();
             if (tryAddResult.Success)
-            {
-                var plugin = _plugInManager.GetPlugIn(pluginName);
+            {          
                 await _localEventBus.PublishAsync(new DbContextChangedEvent()
                 {
                     DbContextTypes = ((IPlugInContext)plugin.PlugInSource).DbContextTypes
                 });
+
+                _plugInManager.EnablePlugIn(pluginNew);
+                await _webAppShell.UpdateWebApp();
             }
             else
             {

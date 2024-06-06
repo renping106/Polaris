@@ -35,7 +35,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             {
                 target.IsEnabled = true;
                 target.PlugInSource = plugIn.PlugInSource;
-                _preEnabledPlugIn = null;
+                ClearPreEnabledPlugIn();
                 SaveState();
             }
         }
@@ -69,6 +69,11 @@ namespace Nerd.Abp.PluginManagement.Domain
         public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
         {
             _preEnabledPlugIn = plugIn;
+        }
+
+        public void ClearPreEnabledPlugIn()
+        {
+            _preEnabledPlugIn = null;
         }
 
         public IPlugInDescriptor GetPlugIn(string name)

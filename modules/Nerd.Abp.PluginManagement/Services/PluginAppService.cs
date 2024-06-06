@@ -57,9 +57,8 @@ namespace Nerd.Abp.PluginManagement.Services
             }
             else
             {
-                // Also needs to remove preenabled plugin 
-                //
                 ((IPlugInContext)targetPlugIn.PlugInSource).UnloadContext();
+                _plugInManager.ClearPreEnabledPlugIn();
             }
 
             return new PluginStateDto()
