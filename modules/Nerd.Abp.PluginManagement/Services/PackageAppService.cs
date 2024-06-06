@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.PluginManagement.Domain;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Permissions;

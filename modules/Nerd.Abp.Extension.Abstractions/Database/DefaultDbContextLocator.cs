@@ -2,7 +2,7 @@
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Nerd.Abp.DatabaseManagement.Abstractions.Database
+namespace Nerd.Abp.Extension.Abstractions.Database
 {
     public class DefaultDbContextLocator : IDbContextLocator, ITransientDependency
     {

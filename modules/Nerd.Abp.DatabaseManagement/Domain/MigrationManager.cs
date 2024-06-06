@@ -18,7 +18,7 @@ using Volo.Abp.Timing;
 using Nerd.Abp.DatabaseManagement.Data;
 using Nerd.Abp.DatabaseManagement.Domain.Entities;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
-using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+using Nerd.Abp.Extension.Abstractions.Database;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
 {

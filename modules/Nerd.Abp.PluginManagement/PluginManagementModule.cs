@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
-using Nerd.Abp.DatabaseManagement.Abstractions;
+using Nerd.Abp.Extension.Abstractions;
+using Nerd.Abp.Extension.Abstractions.Plugin;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Localization;
 using Nerd.Abp.PluginManagement.Menus;
@@ -113,8 +114,8 @@ namespace Nerd.Abp.PluginManagement
 
         private void ConfigurePlugInViews(ServiceConfigurationContext context)
         {
-            var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<HostServiceProvider>();
-            var pluginManager = hostServiceProvider?.Instance.GetRequiredService<IPlugInManager>();
+            var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<ShellEnvironment>();
+            var pluginManager = hostServiceProvider?.HostServiceProvider.GetRequiredService<IPlugInManager>();
 
             PreConfigure<IMvcBuilder>(mvcBuilder =>
             {

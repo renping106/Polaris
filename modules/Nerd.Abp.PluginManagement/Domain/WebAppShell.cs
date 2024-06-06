@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Nerd.Abp.Extension.Abstractions.Plugin;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Runtime.Loader;
 using Volo.Abp.Modularity;
@@ -57,7 +58,7 @@ namespace Nerd.Abp.PluginManagement.Domain
         {
             var shellAppBuilder = _options.InitBuilder();
 
-            RegisterSharedServices(shellAppBuilder);
+            var shellEnvironment = RegisterSharedServices(shellAppBuilder);
 
             await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
             {
@@ -99,10 +100,11 @@ namespace Nerd.Abp.PluginManagement.Domain
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
+            shellEnvironment.ShellServiceProvider = shellApp.Services;
             return new WebAppShellContext(shellApp.Services, requestDelegate);
         }
 
-        private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
+        private ShellEnvironment RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
         {
             foreach (var item in _options.SharedServices)
             {
@@ -112,7 +114,9 @@ namespace Nerd.Abp.PluginManagement.Domain
                 });
             }
 
-            shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
+            var shellEnvironment = new ShellEnvironment(_hostServiceProvider);
+            shellAppBuilder.Services.AddSingleton(shellEnvironment);
+            return shellEnvironment;
         }
     }
 }

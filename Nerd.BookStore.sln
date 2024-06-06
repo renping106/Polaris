@@ -51,11 +51,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.SqlServer", "modules\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Abstractions", "modules\Nerd.Abp.DatabaseManagement.Abstractions\Nerd.Abp.DatabaseManagement.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.Extension.Abstractions", "modules\Nerd.Abp.Extension.Abstractions\Nerd.Abp.Extension.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.Tests", "test\Nerd.Abp.DatabaseManagement.Tests\Nerd.Abp.DatabaseManagement.Tests.csproj", "{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Tests", "test\Nerd.Abp.DatabaseManagement.Tests\Nerd.Abp.DatabaseManagement.Tests.csproj", "{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nerd.Abp.DatabaseManagement.Sqlite", "modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Sqlite", "modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

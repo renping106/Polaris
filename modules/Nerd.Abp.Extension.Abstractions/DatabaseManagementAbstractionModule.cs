@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Modularity;
 
-namespace Nerd.Abp.DatabaseManagement.Abstractions
+namespace Nerd.Abp.Extension.Abstractions
 {
     public class DatabaseManagementAbstractionModule : AbpModule
     {

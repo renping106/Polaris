@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nerd.Abp.DatabaseManagement.Abstractions\Nerd.Abp.DatabaseManagement.Abstractions.csproj" />
+    <ProjectReference Include="..\Nerd.Abp.Extension.Abstractions\Nerd.Abp.Extension.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

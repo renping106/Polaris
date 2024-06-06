@@ -1,4 +1,4 @@
-﻿using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+﻿using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.ThemeManagement.Domain;
 using Volo.Abp.DependencyInjection;

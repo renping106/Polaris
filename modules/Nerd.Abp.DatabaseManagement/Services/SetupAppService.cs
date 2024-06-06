@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;

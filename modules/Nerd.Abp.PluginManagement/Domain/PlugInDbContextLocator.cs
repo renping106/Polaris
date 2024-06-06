@@ -1,4 +1,4 @@
-﻿using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+﻿using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Reflection;
 using System.Runtime.Loader;

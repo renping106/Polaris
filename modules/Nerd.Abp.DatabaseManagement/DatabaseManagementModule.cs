@@ -15,7 +15,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
-using Nerd.Abp.DatabaseManagement.Abstractions;
+using Nerd.Abp.Extension.Abstractions;
 
 namespace Nerd.Abp.DatabaseManagement
 {

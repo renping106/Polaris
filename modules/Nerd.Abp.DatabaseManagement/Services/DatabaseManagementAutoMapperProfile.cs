@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Nerd.Abp.DatabaseManagement.Abstractions.Database;
+using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.DatabaseManagement.Pages.Setup;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
 using Volo.Abp.TenantManagement;
