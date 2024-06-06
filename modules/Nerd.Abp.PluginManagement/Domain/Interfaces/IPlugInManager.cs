@@ -13,10 +13,5 @@
         void RemovePlugIn(IPlugInDescriptor plugIn);
         IPlugInDescriptor GetPlugIn(string name);
         void SetPreEnabledPlugIn(IPlugInDescriptor plugIn);
-        /// <summary>
-        /// Get all enabled and pre-enabled plugins
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyList<IPlugInDescriptor> GetAllEnabledPlugIns();
     }
 }

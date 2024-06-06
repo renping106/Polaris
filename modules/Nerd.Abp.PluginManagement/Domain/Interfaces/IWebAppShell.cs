@@ -3,6 +3,6 @@
     public interface IWebAppShell
     {
         WebAppShellContext GetContext();
-        ValueTask<(bool Success, string Message)> UpdateWebApp(IPlugInDescriptor? plugInToAdd = null);
+        ValueTask<(bool Success, string Message)> UpdateWebApp();
     }
 }

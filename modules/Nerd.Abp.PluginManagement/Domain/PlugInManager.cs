@@ -23,7 +23,6 @@ namespace Nerd.Abp.PluginManagement.Domain
             if (target != null)
             {
                 target.IsEnabled = false;
-                _preEnabledPlugIn = null;
                 ((IPlugInContext)target.PlugInSource).UnloadContext();
                 SaveState();
             }
@@ -36,6 +35,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             {
                 target.IsEnabled = true;
                 target.PlugInSource = plugIn.PlugInSource;
+                _preEnabledPlugIn = null;
                 SaveState();
             }
         }
@@ -61,19 +61,14 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         public IReadOnlyList<IPlugInDescriptor> GetEnabledPlugIns()
         {
-            return _plugInDescriptors.Where(t => t.IsEnabled).ToList().AsReadOnly();
+            var enabledPlugIns = _plugInDescriptors.Where(t => t.IsEnabled).ToList();
+            if (_preEnabledPlugIn != null) enabledPlugIns.Add(_preEnabledPlugIn);
+            return enabledPlugIns;
         }
 
         public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
         {
             _preEnabledPlugIn = plugIn;
-        }
-
-        public IReadOnlyList<IPlugInDescriptor> GetAllEnabledPlugIns()
-        {
-            var enabledPlugIns = GetEnabledPlugIns().ToList();
-            if (_preEnabledPlugIn != null) enabledPlugIns.Add(_preEnabledPlugIn);
-            return enabledPlugIns;
         }
 
         public IPlugInDescriptor GetPlugIn(string name)

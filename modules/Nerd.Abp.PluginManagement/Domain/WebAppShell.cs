@@ -36,11 +36,11 @@ namespace Nerd.Abp.PluginManagement.Domain
             return _context!;
         }
 
-        public async ValueTask<(bool Success, string Message)> UpdateWebApp(IPlugInDescriptor? plugInToAdd = null)
+        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
         {
             try
             {
-                var newShell = await InitShellAsync(plugInToAdd);
+                var newShell = await InitShellAsync();
                 if (newShell != null)
                 {
                     _context = newShell;
@@ -48,16 +48,12 @@ namespace Nerd.Abp.PluginManagement.Domain
             }
             catch (Exception ex)
             {
-                if (plugInToAdd != null)
-                {
-                    ((IPlugInContext)plugInToAdd.PlugInSource).UnloadContext();
-                }
                 return (false, ex.Message);
             }
             return (true, string.Empty);
         }
 
-        private async ValueTask<WebAppShellContext> InitShellAsync(IPlugInDescriptor? externalPlugin = null)
+        private async ValueTask<WebAppShellContext> InitShellAsync()
         {
             var shellAppBuilder = _options.InitBuilder();
 
@@ -87,12 +83,6 @@ namespace Nerd.Abp.PluginManagement.Domain
                 foreach (var enabledPlug in enabledPlugIns)
                 {
                     options.PlugInSources.Add(enabledPlug.PlugInSource);
-                }
-
-                // Plugin to add
-                if (externalPlugin != null)
-                {
-                    options.PlugInSources.Add(externalPlugin.PlugInSource);
                 }
 
             });

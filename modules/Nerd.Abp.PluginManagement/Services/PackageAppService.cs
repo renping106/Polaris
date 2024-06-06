@@ -197,6 +197,10 @@ namespace Nerd.Abp.PluginManagement.Services
                     DbContextTypes = ((IPlugInContext)plugin.PlugInSource).DbContextTypes
                 });
             }
+            else
+            {
+                throw new UserFriendlyException(L["FailedToUpdatePlugin"]);
+            }
         }
     }
 }

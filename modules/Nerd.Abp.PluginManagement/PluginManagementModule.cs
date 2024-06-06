@@ -122,7 +122,7 @@ namespace Nerd.Abp.PluginManagement
 
                 if (pluginManager != null)
                 {
-                    foreach (var plugin in pluginManager.GetAllEnabledPlugIns())
+                    foreach (var plugin in pluginManager.GetEnabledPlugIns())
                     {
                         var parts = ((IPlugInContext)plugin.PlugInSource).CompiledRazorAssemblyParts;
                         foreach (var part in parts)

@@ -29,14 +29,22 @@
                                 .enable(data.record.name)
                                 .then(function (result) {
                                     if (result.success) {
-                                        abp.ui.clearBusy();
-                                        _dataTable.ajax.reloadEx();
-                                        abp.notify.success(l('SuccessfullyEnabled'));
+                                        _pluginAppService
+                                            .enableCommit(data.record.name)
+                                            .then(function () {
+                                                abp.ui.clearBusy();
+                                                _dataTable.ajax.reloadEx();
+                                                abp.notify.success(l('SuccessfullyEnabled'));
+                                            }).catch(function () {
+                                                abp.ui.clearBusy();
+                                            });;
                                     }
                                     else {
                                         abp.ui.clearBusy();
                                         abp.notify.error(data.message, l('FailedToEnable'));
                                     }
+                                }).catch(function () {
+                                    abp.ui.clearBusy();
                                 });
                         },
                     },
