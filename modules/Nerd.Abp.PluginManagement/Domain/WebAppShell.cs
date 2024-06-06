@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Nerd.Abp.Extension.Abstractions.Plugin;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Runtime.Loader;
 using Volo.Abp.Modularity;
@@ -15,6 +14,8 @@ namespace Nerd.Abp.PluginManagement.Domain
         private readonly object instanceLock = new object();
         private readonly WebShellOptions _options;
         private readonly IServiceProvider _hostServiceProvider;
+
+        public IServiceProvider? ShellServiceProvider => _context?.Services;
 
         public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
         {
@@ -100,11 +101,6 @@ namespace Nerd.Abp.PluginManagement.Domain
             // Build the request pipeline.
             var requestDelegate = ((IApplicationBuilder)shellApp).Build();
 
-            // Set latest shell ServcieProvider to be used in following actions
-            var shellEnvironment = (ShellEnvironment)shellApp.Services.GetRequiredService<IShellEnvironment>();
-            shellEnvironment.ShellServiceProvider = shellApp.Services;
-            shellEnvironment.HostServiceProvider = _hostServiceProvider;
-
             return new WebAppShellContext(shellApp.Services, requestDelegate);
         }
 
@@ -117,6 +113,8 @@ namespace Nerd.Abp.PluginManagement.Domain
                     return _hostServiceProvider.GetRequiredService(item);
                 });
             }
+
+            shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
         }
     }
 }

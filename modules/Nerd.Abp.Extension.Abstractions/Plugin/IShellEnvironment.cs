@@ -2,7 +2,6 @@
 {
     public interface IShellEnvironment
     {
-        IServiceProvider? HostServiceProvider { get; }
         IServiceProvider? ShellServiceProvider { get; }
     }
 }

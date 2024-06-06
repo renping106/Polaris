@@ -11,12 +11,10 @@ namespace Nerd.Abp.PluginManagement.Extensions
     internal class PluginManagementMiddleware : IMiddleware
     {
         private readonly IWebAppShell _appShell;
-        private readonly IServiceProvider _serviceProvider;
 
-        public PluginManagementMiddleware(IWebAppShell appShell, IServiceProvider serviceProvider)
+        public PluginManagementMiddleware(IWebAppShell appShell)
         {
             _appShell = appShell;
-            _serviceProvider = serviceProvider;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -58,7 +56,7 @@ namespace Nerd.Abp.PluginManagement.Extensions
             services.AddTransient<PluginManagementMiddleware>();
             services.AddSingleton<IWebAppShell, WebAppShell>();
             services.AddSingleton<IPlugInManager, PlugInManager>();
-            services.AddSingleton<IShellEnvironment>(new ShellEnvironment());
+            services.AddSingleton<IShellEnvironment>(x => x.GetRequiredService<IWebAppShell>());
 
             return services;
         }
