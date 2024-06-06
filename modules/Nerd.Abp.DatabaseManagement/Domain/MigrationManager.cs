@@ -34,6 +34,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         private readonly IDbContextLocator _dbContextLocator;
         private readonly List<string> _pendingChanges = new List<string>();
         private readonly List<ModelHistory> _snapshots = new List<ModelHistory>();
+        private bool _flag = true;
 
         public MigrationManager(IClock clock,
             DatabaseManagementDbContext modelHistoryContext,
@@ -101,20 +102,25 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             IModel? lastModel = null;
             try
             {
-                // read latest snapshot
+                // Read latest snapshot
+                // TODO Find a better way that not throwing exceptions
                 ModelHistory? lastSnapshot = null;
                 if (_modelHistoryContext.Database.CanConnect())
                 {
                     try
                     {
-                        lastSnapshot = _modelHistoryContext.Set<ModelHistory>()
-                                                 .Where(t => t.DbContextFullName == dbContext.GetType().FullName)
-                                                 .OrderByDescending(e => e.Id)
-                                                 .FirstOrDefault();
+                        if (_flag)
+                        {
+                            lastSnapshot = _modelHistoryContext.Set<ModelHistory>()
+                                                               .Where(t => t.DbContextFullName == dbContext.GetType().FullName)
+                                                               .OrderByDescending(e => e.Id)
+                                                               .FirstOrDefault();
+                        }
                     }
                     catch (Exception)
                     {
-                        //No snapshots
+                        //No snapshot table
+                        _flag = false;
                     }
                 }
 
@@ -124,7 +130,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             }
             catch (DbException)
             {
-                //Return null
+                // Take failure as null
             }
 
             if (lastModel is IMutableModel mutableModel)
