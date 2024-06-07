@@ -1,5 +1,6 @@
 ﻿using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
+using Nerd.Abp.PluginManagement.Domain.Models;
 using System.Reflection;
 using System.Runtime.Loader;
 using Volo.Abp;
@@ -56,7 +57,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             var pluginAssemblyContexts = _plugInManager.GetAllPlugIns()
                 .Select(t => new
                 {
-                    ((FolderSource)t.PlugInSource).Folder,
+                    ((DynamicPlugInSource)t.PlugInSource).Folder,
                     ((IPlugInContext)t.PlugInSource).Context
                 });
 

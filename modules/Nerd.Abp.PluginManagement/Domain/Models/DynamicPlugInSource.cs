@@ -9,9 +9,9 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.PluginManagement.Domain
+namespace Nerd.Abp.PluginManagement.Domain.Models
 {
-    internal class FolderSource : IPlugInSource, IPlugInContext
+    internal class DynamicPlugInSource : IPlugInSource, IPlugInContext
     {
         public string Folder { get; }
 
@@ -25,7 +25,7 @@ namespace Nerd.Abp.PluginManagement.Domain
         private List<Type> _dbContextTypes;
         private List<CompiledRazorAssemblyPart> _compiledRazorAssemblyParts;
 
-        public FolderSource(
+        public DynamicPlugInSource(
             [NotNull] string folder,
             SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
@@ -65,7 +65,7 @@ namespace Nerd.Abp.PluginManagement.Domain
                         if (type.IsAssignableTo<IAbpEfCoreDbContext>())
                         {
                             _dbContextTypes.AddIfNotContains(type);
-                        }              
+                        }
                     }
                 }
                 catch (Exception ex)

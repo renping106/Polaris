@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Nerd.Abp.PluginManagement.Domain
+namespace Nerd.Abp.PluginManagement.Domain.Models
 {
     public class WebShellOptions
     {

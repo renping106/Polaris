@@ -16,14 +16,13 @@ namespace Nerd.Abp.PluginManagement.Domain.Models
 
         public IPlugInDescriptor Clone()
         {
-            var folderSource = new FolderSource(((FolderSource)PlugInSource).Folder);
+            var folderSource = new DynamicPlugInSource(((DynamicPlugInSource)PlugInSource).Folder);
             return new PlugInDescriptor()
             {
                 Name = Name,
                 Version = Version,
                 PlugInSource = folderSource
             };
-
         }
     }
 }

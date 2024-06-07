@@ -88,7 +88,7 @@ namespace Nerd.Abp.PluginManagement.Domain
                 Name = pluginName,
                 Version = version,
                 Description = description,
-                PlugInSource = new FolderSource(pluginFolder)
+                PlugInSource = new DynamicPlugInSource(pluginFolder)
             };
             return descriptor;
         }
@@ -101,7 +101,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         public static void InstallPackage(IPlugInDescriptor plugInDescriptor, byte[] packageContent)
         {
-            var pluginFolder = ((FolderSource)plugInDescriptor.PlugInSource).Folder;
+            var pluginFolder = ((DynamicPlugInSource)plugInDescriptor.PlugInSource).Folder;
 
             using (var stream = new MemoryStream(packageContent))
             {
@@ -123,7 +123,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         public static void RollbackPackage(IPlugInDescriptor plugInDescriptor)
         {
-            var pluginFolder = ((FolderSource)plugInDescriptor.PlugInSource).Folder;
+            var pluginFolder = ((DynamicPlugInSource)plugInDescriptor.PlugInSource).Folder;
             var pluginFolderBackup = pluginFolder + backupSuffix;
 
             // Delete extracted files

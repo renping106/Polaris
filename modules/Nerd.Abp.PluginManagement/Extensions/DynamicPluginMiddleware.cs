@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.Extension.Abstractions.Plugin;
 using Nerd.Abp.PluginManagement.Domain;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
+using Nerd.Abp.PluginManagement.Domain.Models;
 
 
 namespace Nerd.Abp.PluginManagement.Extensions
