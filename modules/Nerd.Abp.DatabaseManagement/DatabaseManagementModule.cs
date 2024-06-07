@@ -20,7 +20,7 @@ using Nerd.Abp.Extension.Abstractions;
 namespace Nerd.Abp.DatabaseManagement
 {
     [DependsOn(
-    typeof(DatabaseManagementAbstractionModule),
+    typeof(ExtensionAbstractionModule),
     typeof(AbpTenantManagementApplicationModule),
     typeof(DatabaseManagementSqlServerModule),
     typeof(DatabaseManagementSqliteModule)

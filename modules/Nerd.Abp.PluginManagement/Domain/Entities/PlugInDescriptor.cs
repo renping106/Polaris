@@ -2,7 +2,7 @@
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.PluginManagement.Domain.Models
+namespace Nerd.Abp.PluginManagement.Domain.Entities
 {
     internal class PlugInDescriptor : IPlugInDescriptor
     {

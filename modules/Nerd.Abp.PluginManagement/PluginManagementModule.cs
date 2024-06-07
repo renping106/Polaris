@@ -22,7 +22,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace Nerd.Abp.PluginManagement
 {
     [DependsOn(
-        typeof(DatabaseManagementAbstractionModule),
+        typeof(ExtensionAbstractionModule),
         typeof(AbpAspNetCoreMvcUiThemeSharedModule),
         typeof(AbpAutoMapperModule),
         typeof(AbpBlobStoringFileSystemModule)

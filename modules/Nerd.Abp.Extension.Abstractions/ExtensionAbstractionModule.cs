@@ -2,7 +2,7 @@
 
 namespace Nerd.Abp.Extension.Abstractions
 {
-    public class DatabaseManagementAbstractionModule : AbpModule
+    public class ExtensionAbstractionModule : AbpModule
     {
     }
 }

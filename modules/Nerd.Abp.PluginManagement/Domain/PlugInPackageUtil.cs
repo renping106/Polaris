@@ -1,5 +1,5 @@
 ﻿using Nerd.Abp.PluginManagement.Domain.Interfaces;
-using Nerd.Abp.PluginManagement.Domain.Models;
+using Nerd.Abp.PluginManagement.Domain.Entities;
 using System.IO.Compression;
 using System.Xml.Linq;
 

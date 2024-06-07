@@ -9,7 +9,7 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Nerd.Abp.PluginManagement.Domain.Models
+namespace Nerd.Abp.PluginManagement.Domain.Entities
 {
     internal class DynamicPlugInSource : IPlugInSource, IPlugInContext
     {

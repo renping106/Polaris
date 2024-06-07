@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
-using Nerd.Abp.PluginManagement.Domain.Models;
+using Nerd.Abp.PluginManagement.Domain.Entities;
 using System.Runtime.Loader;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;

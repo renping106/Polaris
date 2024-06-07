@@ -35,8 +35,8 @@ public class Program
             {
                 var subAppBuilder = WebApplication.CreateBuilder(args);
                 subAppBuilder.Host.AddAppSettingsSecretsJson()
-                               .UseDynamicAutofac() 
-                               .UseSerilog();
+                                  .UseDynamicAutofac() 
+                                  .UseSerilog();
                 return subAppBuilder;
             });
 
