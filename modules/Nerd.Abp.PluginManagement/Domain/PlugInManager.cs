@@ -84,20 +84,22 @@ namespace Nerd.Abp.PluginManagement.Domain
         private void LoadData()
         {
             var plugInList = PlugInPackageUtil.LoadFromFolder();
-            var previousStates = LoadState();
+            var configuredPlugIns = LoadState();
 
             foreach (var plugIn in plugInList)
             {
-                var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugIn.Name);
+                var configured = configuredPlugIns.FirstOrDefault(t => t.Name == plugIn.Name);
+                var isEnabled = configured?.IsEnabled ?? false;
                 var exist = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
                 if (exist != null)
                 {
-                    exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
+                    exist.IsEnabled = isEnabled;
                     exist.Version = plugIn.Version;
                     exist.Description = plugIn.Description;
                 }
                 else
                 {
+                    plugIn.IsEnabled = isEnabled;
                     _plugInDescriptors.Add(plugIn);
                 }
             }
