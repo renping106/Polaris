@@ -6,6 +6,7 @@
     "Permission:ThemeManagement.Edit": "Change theme",
     "ThemeEnableConfirm": "Theme '{0}' will be enabled. Do you confirm that?",
     "SuccessfullyEnabled": "Theme is successully enabled.",
-    "FailedToEnable": "Failed to enable."
+    "FailedToEnable": "Failed to enable.",
+    "Theme": "Themes"
   }
 }

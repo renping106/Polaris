@@ -21,12 +21,12 @@ namespace Nerd.Abp.ThemeManagement.Menus
 
             var administrationMenu = context.Menu.GetAdministration();
             //Add main menu items.
-            administrationMenu.AddItem(
-                new ApplicationMenuItem(ThemeManagementMenus.Prefix,
-                displayName: l["Menu:" + ThemeManagementMenus.Prefix],
-                "~/ThemeManagement",
-                icon: "fa fa-camera")
-                 .RequirePermissions(ThemeManagementPermissions.GroupName));
+            var group = 
+                new ApplicationMenuItem(ThemeManagementMenus.Prefix, displayName: l["Menu:" + ThemeManagementMenus.Prefix], icon: "fa fa-camera");
+            group.AddItem(
+                new ApplicationMenuItem(ThemeManagementMenus.List, displayName: l["Themes"], "~/ThemeManagement").RequirePermissions(ThemeManagementPermissions.GroupName)
+                );
+            administrationMenu.AddItem(group);
 
             return Task.CompletedTask;
         }

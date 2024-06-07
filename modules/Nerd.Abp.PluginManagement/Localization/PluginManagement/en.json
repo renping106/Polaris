@@ -13,6 +13,7 @@
     "PluginExists": "Newer or same version of plugin '{0}' is already installed.",
     "PluginCannotRemove": "Plugin is enabled. Please disable it before removing.",
     "InvalidPlugin": "This is not a valid plugin package.",
-    "FailedToUpdatePlugin": "Failed to update plugin."
+    "FailedToUpdatePlugin": "Failed to update plugin.",
+    "PlugIn": "PlugIns"
   }
 }

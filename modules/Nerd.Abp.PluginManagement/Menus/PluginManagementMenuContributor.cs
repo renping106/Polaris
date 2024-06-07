@@ -21,12 +21,12 @@ public class PluginManagementMenuContributor : IMenuContributor
 
         var administrationMenu = context.Menu.GetAdministration();
         //Add main menu items.
-        administrationMenu.AddItem(
-            new ApplicationMenuItem(PluginManagementMenus.Prefix,
-            displayName: l["Menu:" + PluginManagementMenus.Prefix],
-            "~/PluginManagement",
-            icon: "fa fa-server")
-             .RequirePermissions(PluginManagementPermissions.Default));
+        var group = 
+            new ApplicationMenuItem(PluginManagementMenus.Prefix, displayName: l["Menu:" + PluginManagementMenus.Prefix], icon: "fa fa-server");
+        group.AddItem(
+            new ApplicationMenuItem(PluginManagementMenus.List, displayName: l["PlugIns"], "~/PluginManagement").RequirePermissions(PluginManagementPermissions.Default)
+            );
+        administrationMenu.AddItem(group);
 
         return Task.CompletedTask;
     }
