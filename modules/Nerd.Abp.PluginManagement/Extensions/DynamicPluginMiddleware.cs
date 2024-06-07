@@ -50,13 +50,13 @@ namespace Nerd.Abp.PluginManagement.Extensions
                 options.InitBuilder = initBuiler;
                 options.SharedServices.Add(typeof(IWebAppShell));
                 options.SharedServices.Add(typeof(IPlugInManager));
-                options.SharedServices.Add(typeof(IShellEnvironment));
+                options.SharedServices.Add(typeof(IShellServiceProvider));
             });
 
             services.AddTransient<PluginManagementMiddleware>();
             services.AddSingleton<IWebAppShell, WebAppShell>();
             services.AddSingleton<IPlugInManager, PlugInManager>();
-            services.AddSingleton<IShellEnvironment>(x => x.GetRequiredService<IWebAppShell>());
+            services.AddSingleton<IShellServiceProvider>(x => x.GetRequiredService<IWebAppShell>());
 
             return services;
         }

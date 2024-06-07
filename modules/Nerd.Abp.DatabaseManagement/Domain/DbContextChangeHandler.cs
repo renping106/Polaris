@@ -12,21 +12,21 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 {
     internal class DbContextChangeHandler : ILocalEventHandler<DbContextChangedEvent>, ITransientDependency
     {
-        private readonly IShellEnvironment _shellEnvironment;
+        private readonly IShellServiceProvider _shellEnvironment;
 
-        public DbContextChangeHandler(IShellEnvironment shellEnvironment)
+        public DbContextChangeHandler(IShellServiceProvider shellEnvironment)
         {
             _shellEnvironment = shellEnvironment;
         }
 
         public async Task HandleEventAsync(DbContextChangedEvent eventData)
         {
-            if (_shellEnvironment.ShellServiceProvider == null)
+            if (_shellEnvironment.ServiceProvider == null)
             {
                 throw new AbpException("ShellServiceProvider is null.");
             }
 
-            var provider = _shellEnvironment.ShellServiceProvider;
+            var provider = _shellEnvironment.ServiceProvider;
             var migrationManager = provider.GetRequiredService<IMigrationManager>();
             var result = await migrationManager.MigratePluginSchemaAsync(eventData.DbContextTypes);
             if (result > 0)

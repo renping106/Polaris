@@ -21,6 +21,40 @@ namespace Nerd.Abp.PluginManagement.Domain
             _hostServiceProvider = hostServiceProvider;
         }
 
+        public IServiceProvider? ServiceProvider => _context?.Services;
+
+        public WebAppShellContext GetContext()
+        {
+            if (_context == null)
+            {
+                lock (instanceLock)
+                {
+                    if (_context == null)
+                    {
+                        _context = InitShellAsync().GetAwaiter().GetResult();
+                    }
+                }
+            }
+            return _context!;
+        }
+
+        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
+        {
+            try
+            {
+                var newShell = await InitShellAsync();
+                if (newShell != null)
+                {
+                    _context = newShell;
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+            return (true, string.Empty);
+        }
+
         private async ValueTask<WebAppShellContext> InitShellAsync()
         {
             var shellAppBuilder = _options.InitBuilder();
@@ -82,39 +116,5 @@ namespace Nerd.Abp.PluginManagement.Domain
 
             shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
         }
-
-        public WebAppShellContext GetContext()
-        {
-            if (_context == null)
-            {
-                lock (instanceLock)
-                {
-                    if (_context == null)
-                    {
-                        _context = InitShellAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
-            return _context!;
-        }
-
-        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
-        {
-            try
-            {
-                var newShell = await InitShellAsync();
-                if (newShell != null)
-                {
-                    _context = newShell;
-                }
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-            return (true, string.Empty);
-        }
-
-        public IServiceProvider? ShellServiceProvider => _context?.Services;
     }
 }
