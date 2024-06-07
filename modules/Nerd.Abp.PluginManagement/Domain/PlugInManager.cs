@@ -16,59 +16,6 @@ namespace Nerd.Abp.PluginManagement.Domain
             LoadData();
         }
 
-        private void LoadData()
-        {
-            var plugInList = PlugInUtil.LoadFromFolder();
-            var previousStates = LoadState();
-
-            foreach (var plugIn in plugInList)
-            {
-                var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugIn.Name);
-                var exist = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
-                if (exist != null)
-                {
-                    exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
-                    exist.Version = plugIn.Version;
-                    exist.Description = plugIn.Description;
-                }
-                else
-                {
-                    _plugInDescriptors.Add(plugIn);
-                }
-            }
-
-            SaveState();
-        }
-
-        private IReadOnlyList<IPlugInDescriptor> LoadState()
-        {
-            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
-            var plugInStates = new List<PlugInDescriptor>();
-
-            if (File.Exists(filePath))
-            {
-                using StreamReader reader = new(filePath);
-                var json = reader.ReadToEnd();
-                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-                plugInStates = JsonSerializer.Deserialize<List<PlugInDescriptor>>(json, options)
-                    ?? new List<PlugInDescriptor>();
-            }
-
-            return plugInStates.AsReadOnly();
-        }
-
-        private void SaveState()
-        {
-            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true
-            };
-
-            var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
-            File.WriteAllText(filePath, jsonString, Encoding.UTF8);
-        }
-
         public void ClearPreEnabledPlugIn()
         {
             _preEnabledPlugIn = null;
@@ -132,6 +79,59 @@ namespace Nerd.Abp.PluginManagement.Domain
         public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
         {
             _preEnabledPlugIn = plugIn;
+        }
+
+        private void LoadData()
+        {
+            var plugInList = PlugInPackageUtil.LoadFromFolder();
+            var previousStates = LoadState();
+
+            foreach (var plugIn in plugInList)
+            {
+                var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugIn.Name);
+                var exist = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+                if (exist != null)
+                {
+                    exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
+                    exist.Version = plugIn.Version;
+                    exist.Description = plugIn.Description;
+                }
+                else
+                {
+                    _plugInDescriptors.Add(plugIn);
+                }
+            }
+
+            SaveState();
+        }
+
+        private IReadOnlyList<IPlugInDescriptor> LoadState()
+        {
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
+            var plugInStates = new List<PlugInDescriptor>();
+
+            if (File.Exists(filePath))
+            {
+                using StreamReader reader = new(filePath);
+                var json = reader.ReadToEnd();
+                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+                plugInStates = JsonSerializer.Deserialize<List<PlugInDescriptor>>(json, options)
+                    ?? new List<PlugInDescriptor>();
+            }
+
+            return plugInStates.AsReadOnly();
+        }
+
+        private void SaveState()
+        {
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
+            var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
+            File.WriteAllText(filePath, jsonString, Encoding.UTF8);
         }
     }
 }
