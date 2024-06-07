@@ -1,10 +1,16 @@
 ﻿using Nerd.Abp.NewFireTheme.Domain;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.Ui.Branding;
 
 namespace Nerd.Abp.NewFireTheme
 {
-    public class NerdNewFireBrandingProvider : IBrandingProvider
+    public interface INewFireBrandingProvider : IBrandingProvider
+    {
+
+    }
+
+    public class NerdNewFireBrandingProvider : INewFireBrandingProvider, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
 

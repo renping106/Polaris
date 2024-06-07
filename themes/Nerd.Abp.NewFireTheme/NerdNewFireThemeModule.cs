@@ -77,10 +77,5 @@ namespace Nerd.Abp.NewFireTheme
 
             });
         }
-
-        public override void PostConfigureServices(ServiceConfigurationContext context)
-        {
-            context.Services.Replace(ServiceDescriptor.Transient<IBrandingProvider, NerdNewFireBrandingProvider>());
-        }
     }
 }

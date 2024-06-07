@@ -2,14 +2,22 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Nerd.BookStore.Localization
 @using Volo.Abp.Users
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
 @model Nerd.BookStore.Web.Pages.IndexModel
 @inject IHtmlLocalizer<BookStoreResource> L
 @inject ICurrentUser CurrentUser
+@inject IThemeManager ThemeManager
+@inject Volo.Abp.AspNetCore.Mvc.UI.Layout.IPageLayout PageLayout
+
+@{
+    Layout = ThemeManager.CurrentTheme.GetPublicLayout();
+}
+
 @section styles {
-<abp-style src="/Pages/Index.css" />
+    <abp-style src="/Pages/Index.css" />
 }
 @section scripts {
-<abp-script src="/Pages/Index.js" />
+    <abp-script src="/Pages/Index.js" />
 }
 <div class="container">
     <div class="p-5 text-center">
@@ -23,6 +31,10 @@
         @if (!CurrentUser.IsAuthenticated)
         {
             <a abp-button="Primary" href="~/Account/Login"><i class="fa fa-sign-in"></i> @L["Login"]</a>
+        }
+        else
+        {
+            <a abp-button="Primary" href="~/Account/Manage"><i class="fa fa-sign-in"></i> @L["Manage"]</a>
         }
 
     </div>
