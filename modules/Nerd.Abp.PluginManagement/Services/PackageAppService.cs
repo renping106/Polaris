@@ -68,8 +68,8 @@ namespace Nerd.Abp.PluginManagement.Services
                     {
                         using StreamReader reader = new(nuspecFile.Open());
                         var packageInfo = XDocument.Load(reader);
-                        var pluginName = NuGetUtil.GetMetaValue(packageInfo, "id");
-                        var version = NuGetUtil.GetMetaValue(packageInfo, "version");
+                        var pluginName = PlugInUtil.GetMetaValue(packageInfo, "id");
+                        var version = PlugInUtil.GetMetaValue(packageInfo, "version");
                         var pluginFolder = Path.Combine(AppContext.BaseDirectory, "PlugIns", pluginName);
 
                         if (!Directory.Exists(pluginFolder))

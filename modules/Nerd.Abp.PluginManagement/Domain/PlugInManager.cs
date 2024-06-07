@@ -2,20 +2,76 @@
 using Nerd.Abp.PluginManagement.Domain.Models;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace Nerd.Abp.PluginManagement.Domain
 {
     internal class PlugInManager : IPlugInManager
     {
-        private readonly string folderName = "PlugIns";
-        private readonly string settingFileName = "plugInSettings.json";
         private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
         private IPlugInDescriptor? _preEnabledPlugIn;
+        private readonly string settingFileName = "plugInSettings.json";
 
         public PlugInManager()
         {
-            LoadFromFolder();
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            var plugInList = PlugInUtil.LoadFromFolder();
+            var previousStates = LoadState();
+
+            foreach (var plugIn in plugInList)
+            {
+                var stateInConfig = previousStates.FirstOrDefault(t => t.Name == plugIn.Name);
+                var exist = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+                if (exist != null)
+                {
+                    exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
+                    exist.Version = plugIn.Version;
+                    exist.Description = plugIn.Description;
+                }
+                else
+                {
+                    _plugInDescriptors.Add(plugIn);
+                }
+            }
+
+            SaveState();
+        }
+
+        private IReadOnlyList<IPlugInDescriptor> LoadState()
+        {
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
+            var plugInStates = new List<PlugInDescriptor>();
+
+            if (File.Exists(filePath))
+            {
+                using StreamReader reader = new(filePath);
+                var json = reader.ReadToEnd();
+                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+                plugInStates = JsonSerializer.Deserialize<List<PlugInDescriptor>>(json, options)
+                    ?? new List<PlugInDescriptor>();
+            }
+
+            return plugInStates.AsReadOnly();
+        }
+
+        private void SaveState()
+        {
+            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true
+            };
+
+            var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
+            File.WriteAllText(filePath, jsonString, Encoding.UTF8);
+        }
+
+        public void ClearPreEnabledPlugIn()
+        {
+            _preEnabledPlugIn = null;
         }
 
         public void DisablePlugIn(IPlugInDescriptor plugIn)
@@ -41,21 +97,11 @@ namespace Nerd.Abp.PluginManagement.Domain
             }
         }
 
-        public void RemovePlugIn(IPlugInDescriptor plugIn)
-        {
-            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
-            if (target != null)
-            {
-                _plugInDescriptors.Remove(target);
-                SaveState();
-            }
-        }
-
         public IReadOnlyList<IPlugInDescriptor> GetAllPlugIns(bool refresh = false)
         {
             if (refresh)
             {
-                LoadFromFolder();
+                LoadData();
             }
             return _plugInDescriptors.AsReadOnly();
         }
@@ -67,98 +113,25 @@ namespace Nerd.Abp.PluginManagement.Domain
             return enabledPlugIns;
         }
 
-        public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
-        {
-            _preEnabledPlugIn = plugIn;
-        }
-
-        public void ClearPreEnabledPlugIn()
-        {
-            _preEnabledPlugIn = null;
-        }
-
         public IPlugInDescriptor GetPlugIn(string name)
         {
             var plugins = GetAllPlugIns();
             return plugins.First(p => p.Name == name);
         }
 
-        //TODO move to a separate service or PackageAppService
-        private void LoadFromFolder()
+        public void RemovePlugIn(IPlugInDescriptor plugIn)
         {
-            var pluginPath = Path.Combine(AppContext.BaseDirectory, folderName);
-            if (Path.Exists(pluginPath))
+            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            if (target != null)
             {
-                var previousStates = LoadState();
-                foreach (var plugin in Directory.GetDirectories(pluginPath))
-                {
-                    if (plugin.EndsWith("_bak"))
-                    {
-                        continue;
-                    }
-
-                    var nuspecFile = Array.Find(Directory.GetFiles(plugin), t => t.EndsWith(".nuspec"));
-                    if (nuspecFile != null)
-                    {
-                        using StreamReader reader = new(nuspecFile);
-                        var nuspec = XDocument.Load(reader);
-                        var name = NuGetUtil.GetMetaValue(nuspec, "id");
-                        var version = NuGetUtil.GetMetaValue(nuspec, "version");
-                        var description = NuGetUtil.GetMetaValue(nuspec, "description");
-
-                        var stateInConfig = previousStates.FirstOrDefault(t => t.Name == name);
-                        var exist = _plugInDescriptors.Find(t => t.Name == name);
-                        if (exist != null)
-                        {
-                            exist.IsEnabled = stateInConfig?.IsEnabled ?? false;
-                            exist.Version = version;
-                            exist.Description = description;
-                        }
-                        else
-                        {
-                            _plugInDescriptors.Add(new PlugInDescriptor()
-                            {
-                                Name = name,
-                                Description = description,
-                                Version = version,
-                                IsEnabled = stateInConfig?.IsEnabled ?? false,
-                                PlugInSource = new FolderSource(plugin)
-                            });
-                        }
-                    }
-                }
+                _plugInDescriptors.Remove(target);
+                SaveState();
             }
-
-            SaveState();
         }
 
-        private void SaveState()
+        public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
         {
-            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                WriteIndented = true
-            };
-
-            var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
-            File.WriteAllText(filePath, jsonString, Encoding.UTF8);
-        }
-
-        private IReadOnlyList<IPlugInDescriptor> LoadState()
-        {
-            var filePath = Path.Combine(AppContext.BaseDirectory, settingFileName);
-            var plugInStates = new List<PlugInDescriptor>();
-
-            if (File.Exists(filePath))
-            {
-                using StreamReader reader = new(filePath);
-                var json = reader.ReadToEnd();
-                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-                plugInStates = JsonSerializer.Deserialize<List<PlugInDescriptor>>(json, options)
-                    ?? new List<PlugInDescriptor>();
-            }
-
-            return plugInStates.AsReadOnly();
+            _preEnabledPlugIn = plugIn;
         }
     }
 }
