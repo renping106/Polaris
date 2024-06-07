@@ -98,7 +98,7 @@ namespace Nerd.Abp.PluginManagement.Services
 
                                 await ExtractPackageAsync(archive, pluginFolder, nuspecFile);
 
-                                await ActivePluginAsync(pluginName, pluginFolder, existedPlugin);
+                                await ActivePluginAsync(pluginFolder, existedPlugin);
                             }
                             else
                             {
@@ -130,14 +130,26 @@ namespace Nerd.Abp.PluginManagement.Services
             return Task.CompletedTask;
         }
 
-        private async Task ActivePluginAsync(string pluginName, string pluginFolder, IPlugInDescriptor pluginState)
+        private async Task ActivePluginAsync(string pluginFolder, IPlugInDescriptor pluginState)
         {
             var pluginFolderBackup = pluginFolder + "_bak";
             try
             {
                 if (pluginState.IsEnabled)
                 {
-                    await UpdatePlugInAsync(pluginName);
+                    ((IPlugInContext)pluginState.PlugInSource).UnloadContext();
+                    var tryAddResult = await _webAppShell.UpdateWebApp();
+                    if (tryAddResult.Success)
+                    {
+                        await _localEventBus.PublishAsync(new DbContextChangedEvent()
+                        {
+                            DbContextTypes = ((IPlugInContext)pluginState.PlugInSource).DbContextTypes
+                        });
+                    }
+                    else
+                    {
+                        throw new AbpException(tryAddResult.Message);
+                    }
                 }
 
                 // Remove old directory
@@ -149,6 +161,10 @@ namespace Nerd.Abp.PluginManagement.Services
                 Directory.Delete(pluginFolder, true);
                 // Rollback old directory
                 Directory.Move(pluginFolderBackup, pluginFolder);
+
+                // Rollback shell
+                ((IPlugInContext)pluginState.PlugInSource).UnloadContext();
+                await _webAppShell.UpdateWebApp();
                 throw;
             }
         }
@@ -184,28 +200,6 @@ namespace Nerd.Abp.PluginManagement.Services
             }
 
             entry.ExtractToFile(filename, true);
-        }
-
-        private async Task UpdatePlugInAsync(string pluginName)
-        {
-            var plugin = _plugInManager.GetPlugIn(pluginName);
-            var pluginNew = plugin.Clone();
-            _plugInManager.DisablePlugIn(plugin);
-            var tryAddResult = await _webAppShell.UpdateWebApp();
-            if (tryAddResult.Success)
-            {          
-                await _localEventBus.PublishAsync(new DbContextChangedEvent()
-                {
-                    DbContextTypes = ((IPlugInContext)plugin.PlugInSource).DbContextTypes
-                });
-
-                _plugInManager.EnablePlugIn(pluginNew);
-                await _webAppShell.UpdateWebApp();
-            }
-            else
-            {
-                throw new UserFriendlyException(L["FailedToUpdatePlugin"]);
-            }
         }
     }
 }

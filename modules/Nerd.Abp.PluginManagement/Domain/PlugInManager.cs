@@ -92,6 +92,11 @@ namespace Nerd.Abp.PluginManagement.Domain
                 var previousStates = LoadState();
                 foreach (var plugin in Directory.GetDirectories(pluginPath))
                 {
+                    if (plugin.EndsWith("_bak"))
+                    {
+                        continue;
+                    }
+
                     var nuspecFile = Array.Find(Directory.GetFiles(plugin), t => t.EndsWith(".nuspec"));
                     if (nuspecFile != null)
                     {
