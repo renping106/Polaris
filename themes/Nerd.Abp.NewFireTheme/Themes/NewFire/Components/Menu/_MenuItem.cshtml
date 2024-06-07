@@ -1,0 +1,37 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout;
+@using Volo.Abp.UI.Navigation
+@model ApplicationMenuItem
+@inject PageLayout PageLayout
+@{
+    var elementId = string.IsNullOrEmpty(Model.ElementId) ? string.Empty : $"id=\"{Model.ElementId}\"";
+    var cssClass = string.IsNullOrEmpty(Model.CssClass) ? string.Empty : Model.CssClass;
+    var disabled = Model.IsDisabled ? "disabled" : string.Empty;
+    var url = string.IsNullOrEmpty(Model.Url) ? "#" : Url.IsLocalUrl(Model.Url) ? Url.Content(Model.Url.EnsureStartsWith('~')) : Model.Url;
+    var activeClass = Model.Name == PageLayout.Content.MenuItemName ? "active" : "";
+}
+@if (Model.IsLeaf)
+{
+    if (Model.Url != null)
+    {
+        <a class="nav_link @cssClass @activeClass @disabled" href="@url" target="@Model.Target" @Html.Raw(elementId)>
+            @if (Model.Icon != null)
+            {
+                if (Model.Icon.StartsWith("fa"))
+                {
+                    <i class="nav_icon @Model.Icon"></i>
+                }
+            }
+            <span>
+                @Model.DisplayName
+            </span>
+        </a>
+    }
+}
+else
+{
+    @foreach (var childMenuItem in Model.Items)
+    {
+        @await Html.PartialAsync("~/Themes/NewFire/Components/Menu/_MenuItem.cshtml", childMenuItem)
+    }
+}
