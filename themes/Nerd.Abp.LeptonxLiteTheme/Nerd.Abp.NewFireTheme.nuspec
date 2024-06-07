@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>Nerd.Abp.LeptonXLiteTheme</id>
+    <id>Nerd.Abp.NewFireTheme</id>
     <version>0.1.0</version>
-    <authors>Nerd.Abp.LeptonXLiteTheme</authors>
-    <description>Abp LeptonXLite Theme</description>
+    <authors>Nerd.Abp.NewFireTheme</authors>
+    <description>Nerd NewFireTheme Theme</description>
     <repository type="git" />
     <dependencies>
       <group targetFramework="net8.0">
-        <dependency id="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" version="3.1.3" />
+        <dependency id="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" version="3.1.3" />
       </group>
     </dependencies>
     <frameworkReferences>
@@ -18,7 +18,6 @@
     </frameworkReferences>
   </metadata>
 	<files>
-		<file src="bin\Release\net8.0\publish\Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.dll" target="lib\net8.0" />
 		<file src="bin\Release\net8.0\Nerd.Abp.*.dll" target="lib\net8.0" />
 	</files>
 </package>

@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.PluginManagement",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.ThemeManagement", "modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.LeptonxLiteTheme", "themes\Nerd.Abp.LeptonxLiteTheme\Nerd.Abp.LeptonxLiteTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.NewFireTheme", "themes\Nerd.Abp.LeptonxLiteTheme\Nerd.Abp.NewFireTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement", "modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
 EndProject
