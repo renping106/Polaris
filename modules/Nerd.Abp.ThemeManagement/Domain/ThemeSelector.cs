@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Nerd.Abp.ThemeManagement.Domain;
-using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
 
-namespace Nerd.Abp.ThemeManagement
+namespace Nerd.Abp.ThemeManagement.Domain
 {
     internal class ThemeSelector : DefaultThemeSelector, IThemeSelector, ITransientDependency
     {
