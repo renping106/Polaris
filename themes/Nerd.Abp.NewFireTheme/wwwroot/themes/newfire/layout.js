@@ -7,12 +7,11 @@ $(document).ready(function () {
         
         let $subMenu = $(this).next(".submenu");
         $subMenu.toggleClass('show');
-    });;
+    });
 
 });
 
 document.addEventListener("DOMContentLoaded", function (event) {
-
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
             nav = document.getElementById(navId),
@@ -33,13 +32,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
     showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
-
-    /*===== LINK ACTIVE =====*/
-    $('.nav_link').click(function () {
-        $('.nav_link').removeClass('active');
-        $(this).addClass('active');
-    });
-
-    // Your code to run since DOM is loaded and ready
 });
 

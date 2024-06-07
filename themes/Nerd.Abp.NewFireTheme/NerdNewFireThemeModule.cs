@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nerd.Abp.NewFireTheme.Bundling;
 using Nerd.Abp.NewFireTheme.Toolbars;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
@@ -8,6 +9,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Toolbars;
 using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.Modularity;
+using Volo.Abp.Ui.Branding;
 using Volo.Abp.VirtualFileSystem;
 
 namespace Nerd.Abp.NewFireTheme
@@ -74,6 +76,11 @@ namespace Nerd.Abp.NewFireTheme
                     });
 
             });
+        }
+
+        public override void PostConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.Replace(ServiceDescriptor.Transient<IBrandingProvider, NerdNewFireBrandingProvider>());
         }
     }
 }
