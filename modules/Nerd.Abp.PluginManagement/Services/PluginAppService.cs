@@ -34,7 +34,7 @@ namespace Nerd.Abp.PluginManagement.Services
         public async Task DisableAsync(string plugInName)
         {
             _plugInManager.DisablePlugIn(_plugInManager.GetPlugIn(plugInName));
-            await _webAppShell.UpdateWebApp();
+            await _webAppShell.UpdateShell();
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
@@ -45,7 +45,7 @@ namespace Nerd.Abp.PluginManagement.Services
 
             _plugInManager.SetPreEnabledPlugIn(targetPlugIn);
 
-            var tryAddResult = await _webAppShell.UpdateWebApp();
+            var tryAddResult = await _webAppShell.UpdateShell();
 
             if (tryAddResult.Success)
             {

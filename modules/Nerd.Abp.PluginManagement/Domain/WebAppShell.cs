@@ -38,7 +38,7 @@ namespace Nerd.Abp.PluginManagement.Domain
             return _context!;
         }
 
-        public async ValueTask<(bool Success, string Message)> UpdateWebApp()
+        public async ValueTask<(bool Success, string Message)> UpdateShell()
         {
             try
             {
@@ -78,9 +78,7 @@ namespace Nerd.Abp.PluginManagement.Domain
                 }
 
                 // Enabled plugins
-                var serviceProvider = shellAppBuilder.Services.BuildServiceProvider();
-                var plugInManager = serviceProvider.GetRequiredService<IPlugInManager>();
-
+                var plugInManager = _hostServiceProvider.GetRequiredService<IPlugInManager>();
                 var enabledPlugIns = plugInManager.GetEnabledPlugIns();
                 foreach (var enabledPlug in enabledPlugIns)
                 {

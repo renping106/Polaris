@@ -90,7 +90,7 @@ namespace Nerd.Abp.PluginManagement.Services
             try
             {
                 ((IPlugInContext)installedPlugIn.PlugInSource).UnloadContext();
-                var tryAddResult = await _webAppShell.UpdateWebApp();
+                var tryAddResult = await _webAppShell.UpdateShell();
 
                 if (tryAddResult.Success)
                 {
@@ -110,7 +110,7 @@ namespace Nerd.Abp.PluginManagement.Services
 
                 // Rollback shell
                 ((IPlugInContext)installedPlugIn.PlugInSource).UnloadContext();
-                await _webAppShell.UpdateWebApp();
+                await _webAppShell.UpdateShell();
                 throw;
             }
         }
