@@ -1,8 +1,16 @@
 ﻿@page
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Nerd.Abp.Host.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
+@using Volo.Abp.Users
 @inject IHtmlLocalizer<HostResource> L
+@inject ICurrentUser CurrentUser
+@inject IThemeManager ThemeManager
 @model Nerd.Abp.Host.Pages.IndexModel
+
+@{
+    Layout = ThemeManager.CurrentTheme.GetPublicLayout();
+}
 
 @section styles {
     <abp-style src="/Pages/Index.cshtml.css" />
@@ -19,6 +27,15 @@
         </abp-card-header>
         <abp-card-body>            
             @L["Welcome_Text"]
+
+            @if (!CurrentUser.IsAuthenticated)
+            {
+                <a abp-button="Primary" href="~/Account/Login"><i class="fa fa-sign-in"></i> @L["Login"]</a>
+            }
+            else
+            {
+                <a abp-button="Primary" href="~/Account/Manage"><i class="fa fa-sign-in"></i> @L["Manage"]</a>
+            }
         </abp-card-body>
     </abp-card>
 
