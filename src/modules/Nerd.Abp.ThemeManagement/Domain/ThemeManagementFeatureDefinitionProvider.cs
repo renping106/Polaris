@@ -14,7 +14,7 @@ namespace Nerd.Abp.ThemeManagement.Domain
 
             group.AddFeature(
                 ThemeManagementFeatures.Enable,
-                "false",
+                "true",
                 L("Feature:ThemeManagementEnable"),
                 L("Feature:ThemeManagementEnableDescription"),
                 new ToggleStringValueType(),

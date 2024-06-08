@@ -55,6 +55,8 @@ using Volo.Abp.VirtualFileSystem;
 using Nerd.Abp.DatabaseManagement.Extensions;
 using Nerd.Abp.DatabaseManagement;
 using Nerd.Abp.PluginManagement;
+using Nerd.Abp.NewFireTheme;
+using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 
 namespace Nerd.Abp.Host;
 
@@ -110,7 +112,9 @@ namespace Nerd.Abp.Host;
 
     typeof(DatabaseManagementModule),
     typeof(PluginManagementModule),
-    typeof(ThemeManagementModule)
+    typeof(ThemeManagementModule),
+    typeof(NerdNewFireThemeModule),
+    typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule)
 )]
 public class NerdAbpHostModule : AbpModule
 {
