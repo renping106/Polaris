@@ -252,14 +252,8 @@ paket-files/
 *.sln.iml
 
 # BookStore
-src/host/Nerd.BookStore.Web/Logs/*
-src/host/Nerd.BookStore.Web.Host/Logs/*
-src/host/Nerd.BookStore.AuthServer/Logs/*
-src/host/Nerd.BookStore.HttpApi.Host/Logs/*
-src/host/Nerd.BookStore.HttpApi.HostWithIds/Logs/*
-src/host/Nerd.BookStore.DbMigrator/Logs/*
-src/host/Nerd.BookStore.Blazor.Server/Logs/*
-src/host/Nerd.BookStore.Blazor.Server.Tiered/Logs/*
+/src/host/Nerd.Abp.Host/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+
