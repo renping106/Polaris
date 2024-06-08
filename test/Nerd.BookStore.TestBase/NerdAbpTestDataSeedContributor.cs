@@ -4,7 +4,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Nerd.Abp;
 
-public class BookStoreTestDataSeedContributor : IDataSeedContributor, ITransientDependency
+public class NerdAbpTestDataSeedContributor : IDataSeedContributor, ITransientDependency
 {
     public Task SeedAsync(DataSeedContext context)
     {

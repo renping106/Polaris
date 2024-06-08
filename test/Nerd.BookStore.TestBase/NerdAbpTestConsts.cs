@@ -1,6 +1,6 @@
 ﻿namespace Nerd.Abp;
 
-public static class BookStoreTestConsts
+public static class NerdAbpTestConsts
 {
     public const string CollectionDefinitionName = "BookStore collection";
 }
