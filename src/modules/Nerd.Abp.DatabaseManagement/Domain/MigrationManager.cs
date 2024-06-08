@@ -33,7 +33,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         private readonly DatabaseManagementDbContext _modelHistoryContext;
         private readonly IDbContextLocator _dbContextLocator;
         private readonly List<string> _pendingChanges = new List<string>();
-        private readonly List<ModelHistory> _snapshots = new List<ModelHistory>();
+        private readonly List<NerdModelHistory> _snapshots = new List<NerdModelHistory>();
         private bool _flag = true;
 
         public MigrationManager(IClock clock,
@@ -106,14 +106,14 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             {
                 // Read latest snapshot
                 // TODO Find a better way that not throwing exceptions
-                ModelHistory? lastSnapshot = null;
+                NerdModelHistory? lastSnapshot = null;
                 if (_modelHistoryContext.Database.CanConnect())
                 {
                     try
                     {
                         if (_flag)
                         {
-                            lastSnapshot = _modelHistoryContext.Set<ModelHistory>()
+                            lastSnapshot = _modelHistoryContext.Set<NerdModelHistory>()
                                                                .Where(t => t.DbContextFullName == dbContext.GetType().FullName)
                                                                .OrderByDescending(e => e.Id)
                                                                .FirstOrDefault();
@@ -151,7 +151,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
         private void GenerateSnapshot(IAbpEfCoreDbContext dbContext)
         {
             var snapshotCode = ModelSnapshotToString(dbContext, MigrationNamespace, MigrationClassName);
-            _snapshots.Add(new ModelHistory()
+            _snapshots.Add(new NerdModelHistory()
             {
                 DbContextFullName = dbContext.GetType().FullName ?? "Unknow",
                 Snapshot = snapshotCode,
@@ -176,7 +176,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             if (_pendingChanges.Count > 0)
             {
                 _modelHistoryContext.ExecuteListSqlCommand(_pendingChanges);
-                _modelHistoryContext.Set<ModelHistory>().AddRange(_snapshots);
+                _modelHistoryContext.Set<NerdModelHistory>().AddRange(_snapshots);
                 _modelHistoryContext.SaveChanges();
             }
             _pendingChanges.Clear();

@@ -2,7 +2,7 @@
 
 namespace Nerd.Abp.DatabaseManagement.Domain.Entities
 {
-    public class ModelHistory
+    public class NerdModelHistory
     {
         [Key]
         public int Id { get; set; }

@@ -48,7 +48,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
                 }
 
                 return filteredDbContexts.OrderBy(t => t.GetService<IDesignTimeModel>().Model
-                                .FindEntityType(typeof(ModelHistory)) != null ? 0 : 1);
+                                .FindEntityType(typeof(NerdModelHistory)) != null ? 0 : 1);
             }
         }
 
