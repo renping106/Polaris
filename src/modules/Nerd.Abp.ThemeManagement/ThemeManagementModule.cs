@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.PluginManagement.Services;
 using Nerd.Abp.ThemeManagement.Localization;

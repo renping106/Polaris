@@ -7,6 +7,9 @@
     "ThemeEnableConfirm": "Theme '{0}' will be enabled. Do you confirm that?",
     "SuccessfullyEnabled": "Theme is successully enabled.",
     "FailedToEnable": "Failed to enable.",
-    "Theme": "Themes"
+    "Theme": "Themes",
+    "Feature:ThemeManagementGroup": "Theme management",
+    "Feature:ThemeManagementEnable": "Enable theme management",
+    "Feature:ThemeManagementEnableDescription": "Allow user to change the UI theme."
   }
 }

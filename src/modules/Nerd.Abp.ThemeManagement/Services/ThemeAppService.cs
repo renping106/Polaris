@@ -6,11 +6,13 @@ using Nerd.Abp.ThemeManagement.Services.Dtos;
 using Nerd.Abp.ThemeManagement.Services.Interfaces;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc.UI.Theming;
+using Volo.Abp.Features;
 using Volo.Abp.SettingManagement;
 
 namespace Nerd.Abp.ThemeManagement.Services
 {
     [Authorize]
+    [RequiresFeature(ThemeManagementFeatures.Enable)]
     public class ThemeAppService : ThemeManagementAppServiceBase, IThemeAppServoce
     {
         private readonly AbpThemingOptions _options;

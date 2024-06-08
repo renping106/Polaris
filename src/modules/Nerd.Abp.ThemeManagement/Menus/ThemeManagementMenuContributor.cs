@@ -2,6 +2,8 @@
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.Authorization.Permissions;
 using Nerd.Abp.ThemeManagement.Permissions;
+using Volo.Abp.Features;
+using Nerd.Abp.ThemeManagement.Domain;
 
 namespace Nerd.Abp.ThemeManagement.Menus
 {
@@ -24,7 +26,9 @@ namespace Nerd.Abp.ThemeManagement.Menus
             var group = 
                 new ApplicationMenuItem(ThemeManagementMenus.Prefix, displayName: l["Menu:" + ThemeManagementMenus.Prefix], icon: "fa fa-camera");
             group.AddItem(
-                new ApplicationMenuItem(ThemeManagementMenus.List, displayName: l["Themes"], "~/ThemeManagement").RequirePermissions(ThemeManagementPermissions.GroupName)
+                new ApplicationMenuItem(ThemeManagementMenus.List, displayName: l["Themes"], "~/ThemeManagement")
+                .RequirePermissions(ThemeManagementPermissions.GroupName)
+                .RequireFeatures(ThemeManagementFeatures.Enable)
                 );
             administrationMenu.AddItem(group);
 

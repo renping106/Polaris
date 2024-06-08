@@ -1,6 +1,8 @@
-﻿using Nerd.Abp.ThemeManagement.Localization;
+﻿using Nerd.Abp.ThemeManagement.Domain;
+using Nerd.Abp.ThemeManagement.Localization;
 using Nerd.Abp.ThemeManagement.Permissions;
 using Volo.Abp.Authorization.Permissions;
+using Volo.Abp.Features;
 using Volo.Abp.Localization;
 using Volo.Abp.MultiTenancy;
 
@@ -12,6 +14,7 @@ public class ThemeManagementPermissionDefinitionProvider : PermissionDefinitionP
     {
         var myGroup = context.AddGroup(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName));
         var permission = myGroup.AddPermission(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName), multiTenancySide: MultiTenancySides.Both);
+        permission.RequireFeatures(ThemeManagementFeatures.Enable);
         permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
     }
 
