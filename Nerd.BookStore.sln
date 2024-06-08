@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain", "src\Nerd.BookStore.Domain\Nerd.BookStore.Domain.csproj", "{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain", "src\host\Nerd.BookStore.Domain\Nerd.BookStore.Domain.csproj", "{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Application", "src\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj", "{1A94A50E-06DC-43C1-80B5-B662820EC3EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Application", "src\host\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj", "{1A94A50E-06DC-43C1-80B5-B662820EC3EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.EntityFrameworkCore", "src\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj", "{C956DD76-69C8-4A9C-83EA-D17DF83340FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.EntityFrameworkCore", "src\host\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj", "{C956DD76-69C8-4A9C-83EA-D17DF83340FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Web", "src\Nerd.BookStore.Web\Nerd.BookStore.Web.csproj", "{068855E8-9240-4F1A-910B-CF825794513B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Web", "src\host\Nerd.BookStore.Web\Nerd.BookStore.Web.csproj", "{068855E8-9240-4F1A-910B-CF825794513B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CA9AC87F-097E-4F15-8393-4BC07735A5B0}"
 EndProject
@@ -19,13 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Application.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Web.Tests", "test\Nerd.BookStore.Web.Tests\Nerd.BookStore.Web.Tests.csproj", "{5F1B28C6-8D0C-4155-92D0-252F7EA5F674}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain.Shared", "src\Nerd.BookStore.Domain.Shared\Nerd.BookStore.Domain.Shared.csproj", "{42F719ED-8413-4895-B5B4-5AB56079BC66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain.Shared", "src\host\Nerd.BookStore.Domain.Shared\Nerd.BookStore.Domain.Shared.csproj", "{42F719ED-8413-4895-B5B4-5AB56079BC66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Application.Contracts", "src\Nerd.BookStore.Application.Contracts\Nerd.BookStore.Application.Contracts.csproj", "{520659C8-C734-4298-A3DA-B539DB9DFC0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Application.Contracts", "src\host\Nerd.BookStore.Application.Contracts\Nerd.BookStore.Application.Contracts.csproj", "{520659C8-C734-4298-A3DA-B539DB9DFC0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi", "src\Nerd.BookStore.HttpApi\Nerd.BookStore.HttpApi.csproj", "{4164BDF7-F527-4E85-9CE6-E3C2D7426A27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi", "src\host\Nerd.BookStore.HttpApi\Nerd.BookStore.HttpApi.csproj", "{4164BDF7-F527-4E85-9CE6-E3C2D7426A27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi.Client", "src\Nerd.BookStore.HttpApi.Client\Nerd.BookStore.HttpApi.Client.csproj", "{3B5A0094-670D-4BB1-BFDD-61B88A8773DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi.Client", "src\host\Nerd.BookStore.HttpApi.Client\Nerd.BookStore.HttpApi.Client.csproj", "{3B5A0094-670D-4BB1-BFDD-61B88A8773DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.EntityFrameworkCore.Tests", "test\Nerd.BookStore.EntityFrameworkCore.Tests\Nerd.BookStore.EntityFrameworkCore.Tests.csproj", "{1FE30EB9-74A9-47F5-A9F6-7B1FAB672D81}"
 EndProject
@@ -35,27 +35,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.Domain.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.HttpApi.Client.ConsoleTestApp", "test\Nerd.BookStore.HttpApi.Client.ConsoleTestApp\Nerd.BookStore.HttpApi.Client.ConsoleTestApp.csproj", "{EF480016-9127-4916-8735-D2466BDBC582}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.DbMigrator", "src\Nerd.BookStore.DbMigrator\Nerd.BookStore.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.BookStore.DbMigrator", "src\host\Nerd.BookStore.DbMigrator\Nerd.BookStore.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{3EAA36BB-FE34-459A-90AF-9129F7E04420}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "themes", "themes", "{176911B4-9C27-4FFC-A0EC-7941FF04A0BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.PluginManagement", "modules\Nerd.Abp.PluginManagement\Nerd.Abp.PluginManagement.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.PluginManagement", "src\modules\Nerd.Abp.PluginManagement\Nerd.Abp.PluginManagement.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.ThemeManagement", "modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.ThemeManagement", "src\modules\Nerd.Abp.ThemeManagement\Nerd.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.NewFireTheme", "themes\Nerd.Abp.NewFireTheme\Nerd.Abp.NewFireTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.NewFireTheme", "src\themes\Nerd.Abp.NewFireTheme\Nerd.Abp.NewFireTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement", "modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement", "src\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.SqlServer", "modules\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.SqlServer", "src\modules\Nerd.Abp.DatabaseManagement.SqlServer\Nerd.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.Extension.Abstractions", "modules\Nerd.Abp.Extension.Abstractions\Nerd.Abp.Extension.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.Extension.Abstractions", "src\modules\Nerd.Abp.Extension.Abstractions\Nerd.Abp.Extension.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Tests", "test\Nerd.Abp.DatabaseManagement.Tests\Nerd.Abp.DatabaseManagement.Tests.csproj", "{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Sqlite", "modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nerd.Abp.DatabaseManagement.Sqlite", "src\modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "host", "host", "{51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6}"
 EndProject

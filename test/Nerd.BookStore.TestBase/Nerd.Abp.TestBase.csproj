@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
+    <ProjectReference Include="..\..\src\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
   </ItemGroup>
 
 </Project>

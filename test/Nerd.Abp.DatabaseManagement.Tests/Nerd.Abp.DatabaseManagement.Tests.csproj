@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj" />
-    <ProjectReference Include="..\..\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
-    <ProjectReference Include="..\..\src\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\modules\Nerd.Abp.DatabaseManagement.Sqlite\Nerd.Abp.DatabaseManagement.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\modules\Nerd.Abp.DatabaseManagement\Nerd.Abp.DatabaseManagement.csproj" />
+    <ProjectReference Include="..\..\src\host\Nerd.BookStore.EntityFrameworkCore\Nerd.BookStore.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.TestBase\Nerd.Abp.TestBase.csproj" />
   </ItemGroup>
 

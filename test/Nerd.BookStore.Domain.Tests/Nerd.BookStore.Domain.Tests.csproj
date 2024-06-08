@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nerd.BookStore.Domain\Nerd.BookStore.Domain.csproj" />
+    <ProjectReference Include="..\..\src\host\Nerd.BookStore.Domain\Nerd.BookStore.Domain.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.TestBase\Nerd.Abp.TestBase.csproj" />
   </ItemGroup>
 

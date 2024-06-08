@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj" />
+    <ProjectReference Include="..\..\src\host\Nerd.BookStore.Application\Nerd.BookStore.Application.csproj" />
     <ProjectReference Include="..\Nerd.BookStore.Domain.Tests\Nerd.BookStore.Domain.Tests.csproj" />
   </ItemGroup>
 
