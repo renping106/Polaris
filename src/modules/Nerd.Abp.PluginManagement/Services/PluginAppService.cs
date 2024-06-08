@@ -6,61 +6,35 @@ using Nerd.Abp.PluginManagement.Services.Dtos;
 using Nerd.Abp.PluginManagement.Services.Interfaces;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.EventBus.Local;
 
 namespace Nerd.Abp.PluginManagement.Services
 {
     [Authorize(PluginManagementPermissions.Default)]
     public class PluginAppService : PluginManagementAppServiceBase, IPluginAppService
     {
-        private readonly ILocalEventBus _localEventBus;
         private readonly IPackageAppService _packageAppService;
         private readonly IPlugInManager _plugInManager;
-        private readonly IWebAppShell _webAppShell;
 
         public PluginAppService(
             IPlugInManager plugInManager,
             IWebAppShell webAppShell,
             IPackageAppService packageAppService,
-            ILocalEventBus localEventBus)
+            IDbContextUpdater dbContextUpdator)
         {
             _plugInManager = plugInManager;
-            _webAppShell = webAppShell;
             _packageAppService = packageAppService;
-            _localEventBus = localEventBus;
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task DisableAsync(string plugInName)
         {
-            _plugInManager.DisablePlugIn(_plugInManager.GetPlugIn(plugInName));
-            await _webAppShell.UpdateShell();
+            await _plugInManager.DisablePlugInAsync(plugInName);
         }
 
         [Authorize(PluginManagementPermissions.Edit)]
         public async Task<PluginStateDto> EnableAsync(string plugInName)
         {
-            var pluginDescriptor = _plugInManager.GetPlugIn(plugInName);
-            var targetPlugIn = pluginDescriptor.Clone();
-
-            _plugInManager.SetPreEnabledPlugIn(targetPlugIn);
-
-            var tryAddResult = await _webAppShell.UpdateShell();
-
-            if (tryAddResult.Success)
-            {
-                await _localEventBus.PublishAsync(new DbContextChangedEvent()
-                {
-                    DbContextTypes = ((IPlugInContext)targetPlugIn.PlugInSource).DbContextTypes
-                });
-                _plugInManager.EnablePlugIn(targetPlugIn);
-            }
-            else
-            {
-                ((IPlugInContext)targetPlugIn.PlugInSource).UnloadContext();
-                _plugInManager.ClearPreEnabledPlugIn();
-            }
-
+            var tryAddResult = await _plugInManager.EnablePlugInAsync(plugInName);
             return new PluginStateDto()
             {
                 Success = tryAddResult.Success,
@@ -85,7 +59,7 @@ namespace Nerd.Abp.PluginManagement.Services
             {
                 throw new UserFriendlyException(L["PluginCannotRemove"]);
             }
-            _plugInManager.RemovePlugIn(_plugInManager.GetPlugIn(plugInName));
+            _plugInManager.RemovePlugIn(plugInName);
             _packageAppService.RemovePlugIn(plugInName);
         }
     }

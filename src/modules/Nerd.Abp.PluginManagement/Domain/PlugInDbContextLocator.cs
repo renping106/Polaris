@@ -54,7 +54,7 @@ namespace Nerd.Abp.PluginManagement.Domain
 
         private string LocateAssemblyPath(IAbpEfCoreDbContext dbContext, AssemblyName assembly)
         {
-            var pluginAssemblyContexts = _plugInManager.GetAllPlugIns()
+            var pluginAssemblyContexts = _plugInManager.GetEnabledPlugIns()
                 .Select(t => new
                 {
                     ((DynamicPlugInSource)t.PlugInSource).Folder,

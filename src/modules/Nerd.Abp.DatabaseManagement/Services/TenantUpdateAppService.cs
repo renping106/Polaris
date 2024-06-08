@@ -3,6 +3,7 @@ using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;
 using Nerd.Abp.ThemeManagement.Domain;
 using Volo.Abp;
+using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
 
@@ -12,10 +13,12 @@ namespace Nerd.Abp.DatabaseManagement.Services
     public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantUpdateAppService, ITransientDependency
     {
         private readonly ISettingManager _settingManager;
+        private readonly IDataSeeder _dataSeeder;
 
-        public TenantUpdateAppService(ISettingManager settingManager)
+        public TenantUpdateAppService(ISettingManager settingManager, IDataSeeder dataSeeder)
         {
             _settingManager = settingManager;
+            _dataSeeder = dataSeeder;
         }
 
         public async Task<bool> HasUpdatesAsync()
@@ -42,6 +45,8 @@ namespace Nerd.Abp.DatabaseManagement.Services
         {
             var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
             await migrationManager.MigrateSchemaAsync();
+
+            await _dataSeeder.SeedAsync();
 
             var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
             await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseVersion, hostDbVersion, true);

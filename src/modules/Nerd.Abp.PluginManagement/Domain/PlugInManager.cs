@@ -1,7 +1,11 @@
-﻿using Nerd.Abp.PluginManagement.Domain.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Nerd.Abp.Extension.Abstractions.Database;
+using Nerd.Abp.Extension.Abstractions.Plugin;
 using Nerd.Abp.PluginManagement.Domain.Entities;
+using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using System.Text;
 using System.Text.Json;
+using Volo.Abp;
 
 namespace Nerd.Abp.PluginManagement.Domain
 {
@@ -9,39 +13,52 @@ namespace Nerd.Abp.PluginManagement.Domain
     {
         private readonly List<IPlugInDescriptor> _plugInDescriptors = new();
         private IPlugInDescriptor? _preEnabledPlugIn;
+        private readonly IShellServiceProvider _shellServiceProvider;
+        private readonly IWebAppShell _webAppShell;
         private readonly string settingFileName = "plugInSettings.json";
 
-        public PlugInManager()
+        public PlugInManager(IWebAppShell webAppShell, IShellServiceProvider shellServiceProvider)
         {
+            _webAppShell = webAppShell;
+            _shellServiceProvider = shellServiceProvider;
             LoadData();
         }
 
-        public void ClearPreEnabledPlugIn()
+        public async Task DisablePlugInAsync(string plugInName)
         {
-            _preEnabledPlugIn = null;
-        }
-
-        public void DisablePlugIn(IPlugInDescriptor plugIn)
-        {
-            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            var target = GetPlugIn(plugInName);
             if (target != null)
             {
-                target.IsEnabled = false;
-                ((IPlugInContext)target.PlugInSource).UnloadContext();
-                SaveState();
+                DisablePlugIn(target);
+                await _webAppShell.UpdateShell();
             }
         }
 
-        public void EnablePlugIn(IPlugInDescriptor plugIn)
+        public async Task<(bool, string)> EnablePlugInAsync(string plugInName)
         {
-            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
-            if (target != null)
+            var pluginDescriptor = GetPlugIn(plugInName);
+            var targetPlugIn = pluginDescriptor.Clone();
+
+            SetPreEnabledPlugIn(targetPlugIn);
+
+            var tryAddResult = await _webAppShell.UpdateShell();
+
+            if (tryAddResult.Success && _shellServiceProvider.ServiceProvider != null)
             {
-                target.IsEnabled = true;
-                target.PlugInSource = plugIn.PlugInSource;
+                var dbContextUpdator = _shellServiceProvider.ServiceProvider.GetRequiredService<IDbContextUpdater>();
+                await dbContextUpdator.UpdateAsync(new DbContextChangedEvent()
+                {
+                    DbContextTypes = ((IPlugInContext)targetPlugIn.PlugInSource).DbContextTypes
+                });
+                EnablePlugIn(targetPlugIn);
+            }
+            else
+            {
+                ((IPlugInContext)targetPlugIn.PlugInSource).UnloadContext();
                 ClearPreEnabledPlugIn();
-                SaveState();
             }
+
+            return tryAddResult;
         }
 
         public IReadOnlyList<IPlugInDescriptor> GetAllPlugIns(bool refresh = false)
@@ -66,9 +83,40 @@ namespace Nerd.Abp.PluginManagement.Domain
             return plugins.First(p => p.Name == name);
         }
 
-        public void RemovePlugIn(IPlugInDescriptor plugIn)
+        public async Task RefreshPlugInAsync(IPlugInDescriptor installedPlugIn)
         {
-            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            try
+            {
+                ((IPlugInContext)installedPlugIn.PlugInSource).UnloadContext();
+                var tryAddResult = await _webAppShell.UpdateShell();
+
+                if (tryAddResult.Success && _shellServiceProvider.ServiceProvider != null)
+                {
+                    var dbContextUpdator = _shellServiceProvider.ServiceProvider.GetRequiredService<IDbContextUpdater>();
+                    await dbContextUpdator.UpdateAsync(new DbContextChangedEvent()
+                    {
+                        DbContextTypes = ((IPlugInContext)installedPlugIn.PlugInSource).DbContextTypes
+                    });
+                }
+                else
+                {
+                    throw new AbpException(tryAddResult.Message);
+                }
+            }
+            catch (Exception)
+            {
+                PlugInPackageUtil.RollbackPackage(installedPlugIn);
+
+                // Rollback shell
+                ((IPlugInContext)installedPlugIn.PlugInSource).UnloadContext();
+                await _webAppShell.UpdateShell();
+                throw;
+            }
+        }
+
+        public void RemovePlugIn(string plugInName)
+        {
+            var target = _plugInDescriptors.Find(t => t.Name == plugInName);
             if (target != null)
             {
                 _plugInDescriptors.Remove(target);
@@ -76,9 +124,32 @@ namespace Nerd.Abp.PluginManagement.Domain
             }
         }
 
-        public void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
+        private void ClearPreEnabledPlugIn()
         {
-            _preEnabledPlugIn = plugIn;
+            _preEnabledPlugIn = null;
+        }
+
+        private void DisablePlugIn(IPlugInDescriptor plugIn)
+        {
+            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            if (target != null)
+            {
+                target.IsEnabled = false;
+                ((IPlugInContext)target.PlugInSource).UnloadContext();
+                SaveState();
+            }
+        }
+
+        private void EnablePlugIn(IPlugInDescriptor plugIn)
+        {
+            var target = _plugInDescriptors.Find(t => t.Name == plugIn.Name);
+            if (target != null)
+            {
+                target.IsEnabled = true;
+                target.PlugInSource = plugIn.PlugInSource;
+                ClearPreEnabledPlugIn();
+                SaveState();
+            }
         }
 
         private void LoadData()
@@ -134,6 +205,11 @@ namespace Nerd.Abp.PluginManagement.Domain
 
             var jsonString = JsonSerializer.Serialize(_plugInDescriptors, options);
             File.WriteAllText(filePath, jsonString, Encoding.UTF8);
+        }
+
+        private void SetPreEnabledPlugIn(IPlugInDescriptor plugIn)
+        {
+            _preEnabledPlugIn = plugIn;
         }
     }
 }
