@@ -8,5 +8,7 @@
         public const string ThemeType = Prefix + ".ThemeType";
         public const string LogoUrl = Prefix + ".LogoUrl";
         public const string LogoReverseUrl = Prefix + ".LogoReverseUrl";
+
+        public const string SiteName = "Nerd.Abp.DatabaseManagement.SiteName";
     }
 }

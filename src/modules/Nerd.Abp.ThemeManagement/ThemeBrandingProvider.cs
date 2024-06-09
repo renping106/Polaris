@@ -18,7 +18,7 @@ namespace Nerd.Abp.ThemeManagement
         {
             get
             {
-                var appName = _settingManager.GetOrNullForCurrentTenantAsync("Nerd.Abp.DatabaseManagement.SiteName").Result;
+                var appName = _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.SiteName).Result;
                 return appName;
             }
         }

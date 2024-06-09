@@ -19,18 +19,20 @@ namespace Nerd.Abp.ThemeManagement.Services
             _settingManager = settingManager;
         }
 
-        public async Task<ThemeSettingDto> GetAsync()
+        public async Task<BrandSettingDto> GetAsync()
         {
-            var themeSetting = new ThemeSettingDto()
+            var themeSetting = new BrandSettingDto()
             {
+                SiteName = await SettingProvider.GetOrNullAsync(ThemeManagementSettings.SiteName),
                 LogoUrl = await SettingProvider.GetOrNullAsync(ThemeManagementSettings.LogoUrl),
                 LogoReverseUrl = await SettingProvider.GetOrNullAsync(ThemeManagementSettings.LogoReverseUrl)
             };
             return themeSetting;
         }
 
-        public async Task UpdateAsync(ThemeSettingDto input)
+        public async Task UpdateAsync(BrandSettingDto input)
         {
+            await _settingManager.SetForCurrentTenantAsync(ThemeManagementSettings.SiteName, input.SiteName);
             await _settingManager.SetForCurrentTenantAsync(ThemeManagementSettings.LogoUrl, input.LogoUrl);
             await _settingManager.SetForCurrentTenantAsync(ThemeManagementSettings.LogoReverseUrl, input.LogoReverseUrl);
         }

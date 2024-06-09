@@ -8,7 +8,7 @@ namespace Nerd.Abp.PluginManagement.Services
     {
         public ThemeManagementAutoMapperProfile()
         {
-            CreateMap<ThemeSettingDto, ThemeSettingViewModel>();
+            CreateMap<BrandSettingDto, ThemeSettingViewModel>();
         }
     }
 }

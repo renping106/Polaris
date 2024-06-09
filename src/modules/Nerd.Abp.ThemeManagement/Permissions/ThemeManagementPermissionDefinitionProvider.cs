@@ -5,6 +5,7 @@ using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Features;
 using Volo.Abp.Localization;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.SettingManagement;
 
 namespace Nerd.Abp.PluginManagement.Permissions;
 
@@ -14,10 +15,12 @@ public class ThemeManagementPermissionDefinitionProvider : PermissionDefinitionP
     {
         var myGroup = context.AddGroup(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName));
         var permission = myGroup.AddPermission(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName), multiTenancySide: MultiTenancySides.Both);
-        permission.RequireFeatures(ThemeManagementFeatures.Enable);
-        
-        var edit = permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
-        edit.AddChild(ThemeManagementPermissions.EditBrandSettings, L("Permission:" + ThemeManagementPermissions.EditBrandSettings), multiTenancySide: MultiTenancySides.Both);
+        permission.RequireFeatures(ThemeManagementFeatures.Enable);        
+        permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
+
+        var settingGroup = context.GetGroup(SettingManagementPermissions.GroupName);
+        settingGroup.AddPermission(ThemeManagementPermissions.EditBrandSettings, L("Permission:" + ThemeManagementPermissions.EditBrandSettings), multiTenancySide: MultiTenancySides.Both)
+            .RequireFeatures(ThemeManagementFeatures.Enable);
     }
 
     private static LocalizableString L(string name)

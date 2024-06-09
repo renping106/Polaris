@@ -8,22 +8,26 @@ namespace Nerd.Abp.ThemeManagement.Pages.SettingManagement.Components.ThemeSetti
 {
     public class NerdThemeSettingViewComponent : AbpViewComponent
     {
-        private readonly IBrandSettingAppService _themeSettingAppService;
+        private readonly IBrandSettingAppService _brandSettingAppService;
 
-        public NerdThemeSettingViewComponent(IBrandSettingAppService themeSettingAppService)
+        public NerdThemeSettingViewComponent(IBrandSettingAppService brandSettingAppService)
         {
-            _themeSettingAppService = themeSettingAppService;
+            _brandSettingAppService = brandSettingAppService;
         }
         public virtual async Task<IViewComponentResult> InvokeAsync()
         {
-            var themeSetting = await _themeSettingAppService.GetAsync();
-            var model = ObjectMapper.Map<ThemeSettingDto, ThemeSettingViewModel>(themeSetting);
+            var brandSetting = await _brandSettingAppService.GetAsync();
+            var model = ObjectMapper.Map<BrandSettingDto, ThemeSettingViewModel>(brandSetting);
             return View("~/Pages/SettingManagement/Components/ThemeSettingGroup/Default.cshtml", model);
         }
 
 
         public class ThemeSettingViewModel
         {
+            [MaxLength(50)]
+            [Display(Name = "Site Name")]
+            public string? SiteName { get; set; }
+
             [MaxLength(200)]
             [Display(Name = "Logo Url")]
             public string? LogoUrl { get; set; }

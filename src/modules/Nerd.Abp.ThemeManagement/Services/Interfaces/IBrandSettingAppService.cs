@@ -4,8 +4,8 @@ namespace Nerd.Abp.ThemeManagement.Services.Interfaces
 {
     public interface IBrandSettingAppService
     {
-        Task<ThemeSettingDto> GetAsync();
+        Task<BrandSettingDto> GetAsync();
 
-        Task UpdateAsync(ThemeSettingDto input);
+        Task UpdateAsync(BrandSettingDto input);
     }
 }
