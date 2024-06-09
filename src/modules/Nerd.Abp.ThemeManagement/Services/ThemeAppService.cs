@@ -13,7 +13,7 @@ namespace Nerd.Abp.ThemeManagement.Services
 {
     [Authorize]
     [RequiresFeature(ThemeManagementFeatures.Enable)]
-    public class ThemeAppService : ThemeManagementAppServiceBase, IThemeAppServoce
+    public class ThemeAppService : ThemeManagementAppServiceBase, IThemeAppService
     {
         private readonly AbpThemingOptions _options;
         private readonly ISettingManager _settingManager;

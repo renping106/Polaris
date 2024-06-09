@@ -3,7 +3,7 @@ using Volo.Abp.Application.Dtos;
 
 namespace Nerd.Abp.ThemeManagement.Services.Interfaces
 {
-    public interface IThemeAppServoce
+    public interface IThemeAppService
     {
         Task<PagedResultDto<ThemeDto>> GetThemesAsync();
         Task<bool> EnableAsync(string typeName);

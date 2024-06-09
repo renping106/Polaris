@@ -15,7 +15,9 @@ public class ThemeManagementPermissionDefinitionProvider : PermissionDefinitionP
         var myGroup = context.AddGroup(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName));
         var permission = myGroup.AddPermission(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName), multiTenancySide: MultiTenancySides.Both);
         permission.RequireFeatures(ThemeManagementFeatures.Enable);
-        permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
+        
+        var edit = permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
+        edit.AddChild(ThemeManagementPermissions.EditBrandSettings, L("Permission:" + ThemeManagementPermissions.EditBrandSettings), multiTenancySide: MultiTenancySides.Both);
     }
 
     private static LocalizableString L(string name)

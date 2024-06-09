@@ -6,6 +6,7 @@ namespace Nerd.Abp.ThemeManagement.Permissions
     {
         public const string GroupName = "ThemeManagement";
         public const string Edit = GroupName + ".Edit";
+        public const string EditBrandSettings = GroupName + ".EditBrandSettings";
 
         public static string[] GetAll()
         {

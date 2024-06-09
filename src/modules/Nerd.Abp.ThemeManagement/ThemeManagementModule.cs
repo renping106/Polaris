@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nerd.Abp.PluginManagement.Services;
 using Nerd.Abp.ThemeManagement.Localization;
 using Nerd.Abp.ThemeManagement.Menus;
+using Nerd.Abp.ThemeManagement.Pages.SettingManagement.Components.ThemeSettingGroup;
 using Nerd.Abp.ThemeManagement.Permissions;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
@@ -10,6 +11,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
+using Volo.Abp.SettingManagement.Web.Pages.SettingManagement;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 
@@ -76,6 +78,11 @@ namespace Nerd.Abp.PluginManagement
             {
                 //Configure authorization.
                 options.Conventions.AuthorizePage("/ThemeManagement", ThemeManagementPermissions.GroupName);
+            });
+
+            Configure<SettingManagementPageOptions>(options =>
+            {
+                options.Contributors.Add(new NerdThemeSettingPageContributor());
             });
         }
     }

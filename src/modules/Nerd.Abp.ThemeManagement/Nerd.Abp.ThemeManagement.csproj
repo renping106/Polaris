@@ -16,11 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Pages\SettingManagement\Components\ThemeSettingGroup\Default.js" />
     <None Remove="Pages\ThemeManagement\Index.js" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\ThemeManagement\en.json" />
+    <EmbeddedResource Include="Pages\SettingManagement\Components\ThemeSettingGroup\Default.js" />
     <EmbeddedResource Include="Pages\ThemeManagement\Index.js" />
     <EmbeddedResource Include="wwwroot\images\logo\logo-dark-thumbnail.png" />
     <EmbeddedResource Include="wwwroot\images\logo\logo-dark.png" />
@@ -32,6 +34,7 @@
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="8.1.3" />
     <PackageReference Include="Volo.Abp.AutoMapper" Version="8.1.3" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="8.1.3" />
   </ItemGroup>
 
 </Project>
