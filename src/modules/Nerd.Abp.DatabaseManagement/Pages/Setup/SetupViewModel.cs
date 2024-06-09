@@ -39,7 +39,7 @@ namespace Nerd.Abp.DatabaseManagement.Pages.Setup
         public string PasswordConfirmation { get; set; } = string.Empty;
 
         [Display(Name = "Time Zone")]
-        public string Timezone { get; set; } = string.Empty;
+        public string Timezone { get; set; } = "UTC";
 
         public List<SelectListItem> TimeZoneItems { get; set; } = new List<SelectListItem>();
 
