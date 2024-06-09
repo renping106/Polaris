@@ -1,0 +1,19 @@
+﻿@using Volo.Abp.Ui.Branding
+@inject IBrandingProvider BrandingProvider
+@if (!BrandingProvider.LogoUrl.IsNullOrWhiteSpace())
+{
+    <style>
+        :root .lpx-brand-logo {
+            --lpx-logo: '';
+            --lpx-logo-icon: '';
+        }
+    </style>
+
+}
+<a class="lpx-brand-logo" href="~/">
+    @if (!BrandingProvider.LogoUrl.IsNullOrWhiteSpace())
+    {
+        <img src="@BrandingProvider.LogoUrl" alt="@BrandingProvider.AppName" style="height: 30px;margin-bottom: 2px;">
+    }
+    <span class="lpx-brand-name">@BrandingProvider.AppName</span>
+</a>
