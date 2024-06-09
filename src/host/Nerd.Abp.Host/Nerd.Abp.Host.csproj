@@ -126,4 +126,8 @@
     <ProjectReference Include="..\..\themes\Nerd.Abp.NewFireTheme\Nerd.Abp.NewFireTheme.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Themes\LeptonXLite\Components\Brand\" />
+  </ItemGroup>
+
 </Project>

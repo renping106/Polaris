@@ -8,6 +8,8 @@ namespace Nerd.Abp.ThemeManagement.Domain
         {
             //Define your own settings here. Example:
             context.Add(new SettingDefinition(ThemeManagementSettings.ThemeType, "Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.BasicTheme"));
+            context.Add(new SettingDefinition(ThemeManagementSettings.LogoUrl, "/images/logo/logo-dark-thumbnail.png"));
+            context.Add(new SettingDefinition(ThemeManagementSettings.LogoReverseUrl, "/images/logo/logo-light-thumbnail.png"));
         }
     }
 }

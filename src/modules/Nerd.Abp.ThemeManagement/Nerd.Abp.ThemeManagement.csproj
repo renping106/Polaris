@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <Content Remove="Localization\ThemeManagement\en.json" />
+    <Content Remove="wwwroot\images\logo\logo-dark-thumbnail.png" />
+    <Content Remove="wwwroot\images\logo\logo-dark.png" />
+    <Content Remove="wwwroot\images\logo\logo-light-thumbnail.png" />
+    <Content Remove="wwwroot\images\logo\logo-light.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +22,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Localization\ThemeManagement\en.json" />
     <EmbeddedResource Include="Pages\ThemeManagement\Index.js" />
+    <EmbeddedResource Include="wwwroot\images\logo\logo-dark-thumbnail.png" />
+    <EmbeddedResource Include="wwwroot\images\logo\logo-dark.png" />
+    <EmbeddedResource Include="wwwroot\images\logo\logo-light-thumbnail.png" />
+    <EmbeddedResource Include="wwwroot\images\logo\logo-light.png" />
   </ItemGroup>
 
   <ItemGroup>
