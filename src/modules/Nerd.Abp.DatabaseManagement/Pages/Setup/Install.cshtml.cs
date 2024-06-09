@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;
+using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
 
 namespace Nerd.Abp.DatabaseManagement.Pages.Setup;
@@ -10,6 +12,7 @@ public class InstallModel : DatabaseManagementPageModel
     [BindProperty]
     public SetupViewModel Config { get; set; } = new SetupViewModel();
     public List<DatabaseProviderDto> DatabaseProviders { get; set; }
+    public List<SelectListItem> TimeZoneItems { get; set; }
     public bool ShowUseHostSetting { get; set; } = true;
 
     private readonly ISetupAppService _setupAppService;
@@ -18,6 +21,7 @@ public class InstallModel : DatabaseManagementPageModel
     {
         _setupAppService = setupStatusAppService;
         DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
+        GetTimezoneItems();
     }
 
     public async Task<IActionResult> OnGet([FromQuery(Name = "tenant")] Guid? tenantId)
@@ -74,6 +78,13 @@ public class InstallModel : DatabaseManagementPageModel
         }
 
         return Page();
+    }
+
+    private void GetTimezoneItems()
+    {
+        TimeZoneItems = new List<SelectListItem>();
+        var timezones = _setupAppService.GetTimezonesAsync().Result;
+        TimeZoneItems.AddRange(timezones.Select(x => new SelectListItem(x.Name, x.Value)).ToList());
     }
 }
 

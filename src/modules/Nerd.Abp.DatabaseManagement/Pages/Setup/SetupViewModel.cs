@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -36,6 +37,11 @@ namespace Nerd.Abp.DatabaseManagement.Pages.Setup
         [Compare("Password")]
         [Display(Name = "Password Confirmation")]
         public string PasswordConfirmation { get; set; } = string.Empty;
+
+        [Display(Name = "Time Zone")]
+        public string Timezone { get; set; } = string.Empty;
+
+        public List<SelectListItem> TimeZoneItems { get; set; } = new List<SelectListItem>();
 
         [Display(Name = "User Host Setting")]
         public bool UseHostSetting { get; set; } = true;

@@ -1,4 +1,5 @@
 ﻿using Nerd.Abp.DatabaseManagement.Services.Dtos;
+using Volo.Abp;
 
 namespace Nerd.Abp.DatabaseManagement.Services.Interfaces
 {
@@ -8,5 +9,6 @@ namespace Nerd.Abp.DatabaseManagement.Services.Interfaces
         IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders();
         Task InstallAsync(SetupInputDto input, Guid? tenantId);
         Task<bool> TenantExistsAsync(Guid tenantId);
+        Task<List<NameValue>> GetTimezonesAsync();
     }
 }

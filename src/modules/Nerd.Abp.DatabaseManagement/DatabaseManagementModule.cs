@@ -16,6 +16,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
 using Nerd.Abp.Extension.Abstractions;
+using Volo.Abp.Timing;
 
 namespace Nerd.Abp.DatabaseManagement
 {
@@ -95,6 +96,11 @@ namespace Nerd.Abp.DatabaseManagement
                     {
                         bundle.AddFiles("/Pages/TenantManagement/Tenants/index-extension.js");
                     });
+            });
+
+            Configure<AbpClockOptions>(options =>
+            {
+                options.Kind = DateTimeKind.Utc;
             });
         }
     }
