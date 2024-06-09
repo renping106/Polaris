@@ -7,5 +7,6 @@ namespace Nerd.Abp.ThemeManagement.Services.Interfaces
         Task<BrandSettingDto> GetAsync();
 
         Task UpdateAsync(BrandSettingDto input);
+        Task ResetAsync();
     }
 }

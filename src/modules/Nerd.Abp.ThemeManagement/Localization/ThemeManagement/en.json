@@ -12,6 +12,8 @@
     "Theme": "Themes",
     "Feature:ThemeManagementGroup": "Theme management",
     "Feature:ThemeManagementEnable": "Enable theme management",
-    "Feature:ThemeManagementEnableDescription": "Allow user to change the UI theme."
+    "Feature:ThemeManagementEnableDescription": "Allow user to change the UI theme.",
+    "AreYouSureToResetToDefault": "Are you sure to reset to default?",
+    "ResetedToDefault": "Reseted to default"
   }
 }

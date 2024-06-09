@@ -5,6 +5,7 @@ using Nerd.Abp.ThemeManagement.Services.Dtos;
 using Nerd.Abp.ThemeManagement.Services.Interfaces;
 using Volo.Abp.Features;
 using Volo.Abp.SettingManagement;
+using Volo.Abp.Settings;
 
 namespace Nerd.Abp.ThemeManagement.Services
 {
@@ -13,10 +14,12 @@ namespace Nerd.Abp.ThemeManagement.Services
     public class BrandSettingAppService : ThemeManagementAppServiceBase, IBrandSettingAppService
     {
         private readonly ISettingManager _settingManager;
+        private readonly ISettingManagementStore _settingManagementStore;
 
-        public BrandSettingAppService(ISettingManager settingManager)
+        public BrandSettingAppService(ISettingManager settingManager, ISettingManagementStore settingManagementStore)
         {
             _settingManager = settingManager;
+            _settingManagementStore = settingManagementStore;
         }
 
         public async Task<BrandSettingDto> GetAsync()
@@ -28,6 +31,14 @@ namespace Nerd.Abp.ThemeManagement.Services
                 LogoReverseUrl = await SettingProvider.GetOrNullAsync(ThemeManagementSettings.LogoReverseUrl)
             };
             return themeSetting;
+        }
+
+        public async Task ResetAsync()
+        {
+            var providerName = TenantSettingValueProvider.ProviderName;
+            await _settingManagementStore.DeleteAsync(ThemeManagementSettings.SiteName, providerName, CurrentTenant.Id?.ToString());
+            await _settingManagementStore.DeleteAsync(ThemeManagementSettings.LogoUrl, providerName, CurrentTenant.Id?.ToString());
+            await _settingManagementStore.DeleteAsync(ThemeManagementSettings.LogoReverseUrl, providerName, CurrentTenant.Id?.ToString());
         }
 
         public async Task UpdateAsync(BrandSettingDto input)
