@@ -23,6 +23,11 @@
             columnList.addManyTail(
                 [
                     {
+                        title: l("Database"),
+                        data: 'extraProperties.Database',
+                        orderable: false
+                    },
+                    {
                         title: l("Initilized"),
                         data: 'extraProperties.Initilized',
                         orderable: false,

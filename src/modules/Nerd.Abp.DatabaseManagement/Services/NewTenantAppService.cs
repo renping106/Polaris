@@ -44,7 +44,8 @@ namespace Nerd.Abp.DatabaseManagement.Services
             var tenants = await base.GetListAsync(input);
             foreach (var item in tenants.Items)
             {
-                var dbSetting = await _settingManager.GetOrNullForTenantAsync(DatabaseManagementSettings.DatabaseProvider, item.Id); 
+                var dbSetting = await _settingManager.GetOrNullForTenantAsync(DatabaseManagementSettings.DatabaseProvider, item.Id);
+                item.SetProperty("Database", dbSetting);
                 item.SetProperty("Initilized", dbSetting != null);
             }
 
