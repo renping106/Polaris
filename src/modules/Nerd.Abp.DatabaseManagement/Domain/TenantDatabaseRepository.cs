@@ -11,7 +11,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 {
     internal class TenantDatabaseRepository : ITenantDatabaseRepository, ISingletonDependency
     {
-        private readonly ConcurrentDictionary<Guid, string?> _providerCache;
+        private static readonly ConcurrentDictionary<Guid, string?> _providerCache = new ConcurrentDictionary<Guid, string?>();
         private readonly IConfigFileManager _configFileManager;
         private readonly ICurrentTenant _currentTenant;
         private readonly IServiceProvider _serviceProvider;
@@ -20,7 +20,6 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             ICurrentTenant currentTenant,
             IServiceProvider serviceProvider)
         {
-            _providerCache = new ConcurrentDictionary<Guid, string?>();
             _configFileManager = configFileManager;
             _currentTenant = currentTenant;
             _serviceProvider = serviceProvider;
@@ -52,7 +51,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
                 {
                     var settingRepo = _serviceProvider.GetRequiredService<ISettingStore>();
                     var tenantDatabaseProvider =
-                        await settingRepo.GetOrNullAsync(DatabaseManagementSettings.DatabaseProvider, 
+                        await settingRepo.GetOrNullAsync(DatabaseManagementSettings.DatabaseProvider,
                             TenantSettingValueProvider.ProviderName, tenantId.Value.ToString());
 
                     databaseProvider = tenantDatabaseProvider;
