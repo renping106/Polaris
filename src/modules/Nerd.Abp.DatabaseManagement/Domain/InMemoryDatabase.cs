@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nerd.Abp.Extension.Abstractions.Database;
-using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore.DependencyInjection;
 using Volo.Abp.Guids;
+using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
@@ -18,7 +18,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public bool HasConnectionString => false;
 
-        public string SampleConnectionString => "InMemory";
+        public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmssfff")}";
 
         public bool IgnoreMigration => true;
 
@@ -26,10 +26,17 @@ namespace Nerd.Abp.DatabaseManagement.Domain
 
         public SequentialGuidType? SequentialGuidTypeOption => null;
 
+        private readonly IClock _clock;
+
+        public InMemoryDatabaseProvider(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
         {
             var connectionString = context.ConnectionString;
-            if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")}"; }
+            if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmssfff")}"; }
             return context.DbContextOptions.UseInMemoryDatabase(connectionString);
         }
     }

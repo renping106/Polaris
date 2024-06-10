@@ -1,24 +1,25 @@
 ﻿using Nerd.Abp.ThemeManagement.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
+using Volo.Abp.Settings;
 using Volo.Abp.Ui.Branding;
 
 namespace Nerd.Abp.ThemeManagement
 {
     public class ThemeBrandingProvider : IBrandingProvider, ITransientDependency
     {
-        private readonly ISettingManager _settingManager;
+        private readonly ISettingProvider _settingProvider;
 
-        public ThemeBrandingProvider(ISettingManager settingManager)
+        public ThemeBrandingProvider(ISettingProvider settingProvider)
         {
-            _settingManager = settingManager;
+            _settingProvider = settingProvider;
         }
 
         public string AppName
         {
             get
             {
-                var appName = _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.SiteName).Result;
+                var appName = _settingProvider.GetOrNullAsync(ThemeManagementSettings.SiteName).Result ?? "";
                 return appName;
             }
         }
@@ -27,7 +28,7 @@ namespace Nerd.Abp.ThemeManagement
         {
             get
             {
-                var logoUrl = _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.LogoUrl).Result;
+                var logoUrl = _settingProvider.GetOrNullAsync(ThemeManagementSettings.LogoUrl).Result ?? "";
                 return logoUrl;
             }
         }
@@ -36,7 +37,7 @@ namespace Nerd.Abp.ThemeManagement
         {
             get
             {
-                var logoUrl = _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.LogoReverseUrl).Result;
+                var logoUrl = _settingProvider.GetOrNullAsync(ThemeManagementSettings.LogoReverseUrl).Result ?? "";
                 return logoUrl;
             }
         }

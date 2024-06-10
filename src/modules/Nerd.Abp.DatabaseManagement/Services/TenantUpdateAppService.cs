@@ -14,11 +14,13 @@ namespace Nerd.Abp.DatabaseManagement.Services
     {
         private readonly ISettingManager _settingManager;
         private readonly IDataSeeder _dataSeeder;
+        private readonly ICurrentDatabase _currentDatabase;
 
-        public TenantUpdateAppService(ISettingManager settingManager, IDataSeeder dataSeeder)
+        public TenantUpdateAppService(ISettingManager settingManager, IDataSeeder dataSeeder, ICurrentDatabase currentDatabase)
         {
             _settingManager = settingManager;
             _dataSeeder = dataSeeder;
+            _currentDatabase = currentDatabase;
         }
 
         public async Task<bool> HasUpdatesAsync()
@@ -26,12 +28,10 @@ namespace Nerd.Abp.DatabaseManagement.Services
             if (CurrentTenant.Id.HasValue)
             {
                 var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion, false);
-                int hostDbVersionNum = 0;
-                int.TryParse(hostDbVersion, out hostDbVersionNum);
+                int.TryParse(hostDbVersion, out int hostDbVersionNum);
 
                 var tenantDbVersion = await _settingManager.GetOrNullForCurrentTenantAsync(DatabaseManagementSettings.DatabaseVersion, false);
-                int tenantDbVersionNum = 0;
-                int.TryParse(tenantDbVersion, out tenantDbVersionNum);
+                int.TryParse(tenantDbVersion, out int tenantDbVersionNum);
 
                 return tenantDbVersionNum < hostDbVersionNum;
             }
@@ -43,10 +43,13 @@ namespace Nerd.Abp.DatabaseManagement.Services
 
         public async Task UpdateDatabaseAsync()
         {
-            var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
-            await migrationManager.MigrateSchemaAsync();
+            if (!_currentDatabase.Provider.IgnoreMigration)
+            {
+                var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
+                await migrationManager.MigrateSchemaAsync();
+            }
 
-            await _dataSeeder.SeedAsync();
+            await _dataSeeder.SeedAsync(CurrentTenant.Id);
 
             var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
             await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseVersion, hostDbVersion, true);

@@ -10,11 +10,11 @@ using Volo.Abp.SettingManagement;
 
 namespace Nerd.Abp.DatabaseManagement.Domain
 {
-    internal class DbContextUpdater : IDbContextUpdater, ITransientDependency
+    internal class HostDbContextUpdater : IDbContextUpdater, ITransientDependency
     {
         private readonly IShellServiceProvider _shellEnvironment;
 
-        public DbContextUpdater(IShellServiceProvider shellEnvironment)
+        public HostDbContextUpdater(IShellServiceProvider shellEnvironment)
         {
             _shellEnvironment = shellEnvironment;
         }

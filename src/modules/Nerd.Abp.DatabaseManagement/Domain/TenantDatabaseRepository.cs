@@ -50,7 +50,6 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             {
                 using (_currentTenant.Change(null))
                 {
-                    //TODO try settingmanager
                     var settingRepo = _serviceProvider.GetRequiredService<ISettingStore>();
                     var tenantDatabaseProvider =
                         await settingRepo.GetOrNullAsync(DatabaseManagementSettings.DatabaseProvider, 

@@ -27,7 +27,7 @@ namespace Nerd.Abp.ThemeManagement.Services
         [Authorize(ThemeManagementPermissions.GroupName)]
         public async Task<PagedResultDto<ThemeDto>> GetThemesAsync()
         {
-            var currentTheme = await _settingManager.GetOrNullForCurrentTenantAsync(ThemeManagementSettings.ThemeType);
+            var currentTheme = await SettingProvider.GetOrNullAsync(ThemeManagementSettings.ThemeType) ?? "";
             var theme = FindTheme(currentTheme);
             var themes = _options.Themes.ToList();
             return new PagedResultDto<ThemeDto>(
