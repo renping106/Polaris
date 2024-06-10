@@ -18,6 +18,7 @@ namespace Nerd.Abp.DatabaseManagement.Services
         private readonly IDataSeeder _dataSeeder;
         private readonly IDistributedCache<DbVersionCache> _dbVersionCache;
         private readonly ISettingManager _settingManager;
+        private readonly object _locker = new object();
 
         public TenantUpdateAppService(
             ISettingManager settingManager,
@@ -48,17 +49,25 @@ namespace Nerd.Abp.DatabaseManagement.Services
             }
         }
 
-        public async Task UpdateDatabaseAsync()
+        public Task UpdateDatabaseAsync()
         {
-            if (!_currentDatabase.Provider.IgnoreMigration)
+            lock (_locker)
             {
-                var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
-                await migrationManager.MigrateSchemaAsync();
+                if (HasUpdatesAsync().GetAwaiter().GetResult())
+                {
+                    if (!_currentDatabase.Provider.IgnoreMigration)
+                    {
+                        var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
+                        migrationManager.MigrateSchemaAsync().GetAwaiter().GetResult();
+                    }
+
+                    _dataSeeder.SeedAsync(CurrentTenant.Id).GetAwaiter().GetResult();
+
+                    SyncTenantDbVersionAsync().GetAwaiter().GetResult();
+                }
             }
 
-            await _dataSeeder.SeedAsync(CurrentTenant.Id);
-
-            await SyncTenantDbVersionAsync();
+            return Task.CompletedTask;
         }
 
         private async Task<int> GetTenantDbVersionAsync()
