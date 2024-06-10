@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Nerd.Abp.Extension.Abstractions.Database;
 using Nerd.Abp.PluginManagement.Domain.Interfaces;
 using Nerd.Abp.PluginManagement.Permissions;
 using Nerd.Abp.PluginManagement.Services.Dtos;
@@ -15,11 +14,7 @@ namespace Nerd.Abp.PluginManagement.Services
         private readonly IPackageAppService _packageAppService;
         private readonly IPlugInManager _plugInManager;
 
-        public PluginAppService(
-            IPlugInManager plugInManager,
-            IWebAppShell webAppShell,
-            IPackageAppService packageAppService,
-            IDbContextUpdater dbContextUpdator)
+        public PluginAppService(IPlugInManager plugInManager, IPackageAppService packageAppService)
         {
             _plugInManager = plugInManager;
             _packageAppService = packageAppService;
