@@ -31,7 +31,7 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             _serviceProvider = serviceProvider;
         }
 
-        public async Task MigrateAsync(string email, string password)
+        public async Task MigrateAsync(string? email = null, string? password = null)
         {
             await MigrateDatabaseSchemaAsync();
             await SeedDataAsync(email, password);
@@ -52,15 +52,23 @@ namespace Nerd.Abp.DatabaseManagement.Domain
             Logger.LogInformation("Successfully completed {name} database migrations.", name);
         }
 
-        private async Task SeedDataAsync(string email, string password)
+        private async Task SeedDataAsync(string? email, string? password)
         {
             var name = _currentTenant == null ? "host" : _currentTenant.Id + " tenant";
             Logger.LogInformation("Executing {name} database seed...", name);
 
-            await _dataSeeder.SeedAsync(new DataSeedContext(_currentTenant?.Id)
-                .WithProperty("AdminEmail", email)
-                .WithProperty("AdminPassword", password)
-            );
+            var seedContext = new DataSeedContext(_currentTenant?.Id);
+
+            if (!email.IsNullOrWhiteSpace())
+            {
+                seedContext.WithProperty("AdminEmail", email);
+            }
+
+            if (!password.IsNullOrWhiteSpace())
+            {
+                seedContext.WithProperty("AdminPassword", password);
+            }
+            await _dataSeeder.SeedAsync(seedContext);
 
             Logger.LogInformation("Successfully seeded {name} database migrations.", name);
         }

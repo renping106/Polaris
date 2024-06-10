@@ -8,5 +8,8 @@
         public const string DatabaseProvider = Prefix + ".DatabaseProvider";
         public const string SiteName = Prefix + ".SiteName";
         public const string DatabaseVersion = Prefix + ".DatabaseVersion";
+
+        public const string DefaultAdminEmail = Prefix + ".DefaultAdminEmail";
+        public const string DefaultAdminPassword = Prefix + ".DefaultAdminPassword";
     }
 }

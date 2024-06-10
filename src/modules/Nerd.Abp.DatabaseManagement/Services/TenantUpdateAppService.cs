@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Nerd.Abp.DatabaseManagement.Domain;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.DatabaseManagement.Extensions;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;
 using Nerd.Abp.ThemeManagement.Domain;
+using System.Collections.Concurrent;
 using Volo.Abp;
-using Volo.Abp.Caching;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
@@ -14,22 +14,21 @@ namespace Nerd.Abp.DatabaseManagement.Services
     [RemoteService(false)]
     public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantUpdateAppService, ITransientDependency
     {
+        private static readonly ConcurrentDictionary<string, DbVersionCache> _dbVersionCache
+            = new ConcurrentDictionary<string, DbVersionCache>();
         private readonly ICurrentDatabase _currentDatabase;
-        private readonly IDataSeeder _dataSeeder;
-        private readonly IDistributedCache<DbVersionCache> _dbVersionCache;
-        private readonly ISettingManager _settingManager;
         private readonly object _locker = new object();
+        private readonly ISettingManager _settingManager;
+        private readonly IDatabaseMigrationService _migrationService;
 
         public TenantUpdateAppService(
             ISettingManager settingManager,
-            IDataSeeder dataSeeder,
             ICurrentDatabase currentDatabase,
-            IDistributedCache<DbVersionCache> dbVersionCache)
+            IDatabaseMigrationService migrationService)
         {
             _settingManager = settingManager;
-            _dataSeeder = dataSeeder;
             _currentDatabase = currentDatabase;
-            _dbVersionCache = dbVersionCache;
+            _migrationService = migrationService;
         }
 
         public async Task<bool> HasUpdatesAsync()
@@ -55,13 +54,16 @@ namespace Nerd.Abp.DatabaseManagement.Services
             {
                 if (HasUpdatesAsync().GetAwaiter().GetResult())
                 {
-                    if (!_currentDatabase.Provider.IgnoreMigration)
+                    if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
                     {
-                        var migrationManager = LazyServiceProvider.GetRequiredService<IMigrationManager>();
-                        migrationManager.MigrateSchemaAsync().GetAwaiter().GetResult();
+                        var email = _settingManager.GetOrNullForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminEmail).GetAwaiter().GetResult();
+                        var password = _settingManager.GetOrNullForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminPassword).GetAwaiter().GetResult();
+                        _migrationService.MigrateAsync(email, password);
                     }
-
-                    _dataSeeder.SeedAsync(CurrentTenant.Id).GetAwaiter().GetResult();
+                    else
+                    {
+                        _migrationService.MigrateAsync();
+                    }
 
                     SyncTenantDbVersionAsync().GetAwaiter().GetResult();
                 }
@@ -72,7 +74,7 @@ namespace Nerd.Abp.DatabaseManagement.Services
 
         private async Task<int> GetTenantDbVersionAsync()
         {
-            if (_currentDatabase.Provider.IgnoreMigration)
+            if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
             {
                 var cacheItem = InitCache();
                 return cacheItem.DatabaseVersion;
@@ -88,18 +90,17 @@ namespace Nerd.Abp.DatabaseManagement.Services
             return _dbVersionCache.GetOrAdd(CurrentTenant.Id.Normalize().ToString(), () =>
             {
                 return new DbVersionCache();
-            }) ?? new DbVersionCache();
+            });
         }
 
         private async Task SyncTenantDbVersionAsync()
         {
             var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
 
-            if (_currentDatabase.Provider.IgnoreMigration)
+            if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
             {
                 var cacheItem = InitCache();
                 cacheItem.DatabaseVersion = int.Parse(hostDbVersion);
-                _dbVersionCache.Set(CurrentTenant.Id.Normalize().ToString(), cacheItem);
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace Nerd.Abp.DatabaseManagement.Services
 
         public class DbVersionCache
         {
-            public int DatabaseVersion { get; set; }
+            public int DatabaseVersion { get; set; } = -1;
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IDatabaseMigrationService
     {
-        Task MigrateAsync(string email, string password);
+        Task MigrateAsync(string? email = null, string? password = null);
     }
 }

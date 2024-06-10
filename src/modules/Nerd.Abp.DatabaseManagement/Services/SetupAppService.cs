@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Nerd.Abp.DatabaseManagement.Domain;
 using Nerd.Abp.DatabaseManagement.Domain.Interfaces;
 using Nerd.Abp.DatabaseManagement.Services.Dtos;
 using Nerd.Abp.DatabaseManagement.Services.Interfaces;
@@ -137,6 +138,12 @@ namespace Nerd.Abp.DatabaseManagement.Services
                     await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
                     await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseProvider, input.DatabaseProvider);
                     await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.Timezone);
+
+                    if (input.DatabaseProvider == InMemoryDatabaseProvider.ProviderKey)
+                    {
+                        await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminEmail, input.Email);
+                        await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminPassword, input.Password);
+                    }
 
                     await unitOfWork.CompleteAsync();
                 }
