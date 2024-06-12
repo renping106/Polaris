@@ -3,9 +3,8 @@ using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
 using Polaris.Abp.DatabaseManagement.Extensions;
 using Polaris.Abp.DatabaseManagement.Services.Interfaces;
 using Polaris.Abp.ThemeManagement.Domain;
-using System.Collections.Concurrent;
 using Volo.Abp;
-using Volo.Abp.Data;
+using Volo.Abp.Caching;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.SettingManagement;
 
@@ -14,21 +13,22 @@ namespace Polaris.Abp.DatabaseManagement.Services
     [RemoteService(false)]
     public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantUpdateAppService, ITransientDependency
     {
-        private static readonly ConcurrentDictionary<string, DbVersionCache> _dbVersionCache
-            = new ConcurrentDictionary<string, DbVersionCache>();
         private readonly ICurrentDatabase _currentDatabase;
+        private readonly IDistributedCache<DbVersionCache> _dbVersionCacheForInMemory;
         private readonly object _locker = new object();
-        private readonly ISettingManager _settingManager;
         private readonly IDatabaseMigrationService _migrationService;
+        private readonly ISettingManager _settingManager;
 
         public TenantUpdateAppService(
             ISettingManager settingManager,
             ICurrentDatabase currentDatabase,
-            IDatabaseMigrationService migrationService)
+            IDatabaseMigrationService migrationService,
+            IDistributedCache<DbVersionCache> dbVersionCache)
         {
             _settingManager = settingManager;
             _currentDatabase = currentDatabase;
             _migrationService = migrationService;
+            _dbVersionCacheForInMemory = dbVersionCache;
         }
 
         public async Task<bool> HasUpdatesAsync()
@@ -76,7 +76,11 @@ namespace Polaris.Abp.DatabaseManagement.Services
         {
             if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
             {
-                var cacheItem = InitCache();
+                var cacheItem = _dbVersionCacheForInMemory.GetOrAdd(CurrentTenant.Id.Normalize().ToString(), () =>
+                {
+                    return new DbVersionCache(-1);
+                }) ?? new DbVersionCache(-1);
+
                 return cacheItem.DatabaseVersion;
             }
 
@@ -85,31 +89,19 @@ namespace Polaris.Abp.DatabaseManagement.Services
             return tenantDbVersionNum;
         }
 
-        private DbVersionCache InitCache()
-        {
-            return _dbVersionCache.GetOrAdd(CurrentTenant.Id.Normalize().ToString(), () =>
-            {
-                return new DbVersionCache();
-            });
-        }
-
         private async Task SyncTenantDbVersionAsync()
         {
             var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
 
             if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
             {
-                var cacheItem = InitCache();
-                cacheItem.DatabaseVersion = int.Parse(hostDbVersion);
+                _dbVersionCacheForInMemory.Set(CurrentTenant.Id.Normalize().ToString(), new DbVersionCache(int.Parse(hostDbVersion)));
                 return;
             }
 
             await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseVersion, hostDbVersion, true);
         }
 
-        public class DbVersionCache
-        {
-            public int DatabaseVersion { get; set; } = -1;
-        }
+        public record DbVersionCache(int DatabaseVersion);
     }
 }

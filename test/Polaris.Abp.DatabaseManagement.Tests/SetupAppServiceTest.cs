@@ -111,5 +111,24 @@ namespace Polaris.Abp.DatabaseManagement.Tests
             };
             await action.ShouldThrowAsync<Exception>();
         }
+
+        [Theory]
+        [InlineData("InMemory", "InMemory")]
+        public async Task Host_Should_Install_Successfully(string databaseProvider, string connectionString)
+        {
+            //Assert
+            var action = async () =>
+            {
+                await _setupAppService.InstallAsync(new SetupInputDto()
+                {
+                    SiteName = "Polaris",
+                    ConnectionString = connectionString,
+                    DatabaseProvider = databaseProvider,
+                    Email = "test@test.com",
+                    Password = "test"
+                }, null);
+            };
+            await action.ShouldNotThrowAsync();
+        }
     }
 }
