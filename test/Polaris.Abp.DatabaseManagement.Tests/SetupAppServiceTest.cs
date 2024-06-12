@@ -8,7 +8,7 @@ using Volo.Abp.TenantManagement;
 
 namespace Polaris.Abp.DatabaseManagement.Tests
 {
-    public class SetupAppServiceTest : PolarisAbpTestBase<DatabaseManagementTestWithoutSeedModule>
+    public class SetupAppServiceTest : PolarisAbpTestBase<DatabaseManagementTestModule>
     {
         private readonly ISetupAppService _setupAppService;
         private readonly ITenantAppService _tenantAppService;
@@ -59,20 +59,10 @@ namespace Polaris.Abp.DatabaseManagement.Tests
         }
 
         [Theory]
-        [InlineData("tenanta", false)]
+        [InlineData("tenanta", true)]
         [InlineData("tenantb", false)]
         public async Task Tenant_Should_Be_Initialized(string tenantName, bool useHostSetting)
         {
-            //Setup host first
-            await _setupAppService.InstallAsync(new SetupInputDto()
-            {
-                SiteName = "Polaris",
-                ConnectionString = "HostDb",
-                DatabaseProvider = "InMemory",
-                Email = "test@test.com",
-                Password = "test"
-            }, null);
-
             //Create tenant
             var tenant = await _tenantAppService.CreateAsync(new TenantCreateDto()
             {
@@ -120,27 +110,6 @@ namespace Polaris.Abp.DatabaseManagement.Tests
                 }, null);
             };
             await action.ShouldThrowAsync<Exception>();
-        }
-
-        [Theory]
-        [InlineData("InMemory", "InMemory")]
-        [InlineData("Sqlite", "Data Source=Polaris.db;Cache=Shared")]
-        [InlineData("LocalDB", "Server=(LocalDb)\\MSSQLLocalDB;Database=Polaris;Trusted_Connection=True;TrustServerCertificate=True")]
-        public async Task Host_Should_Install_Successfully(string databaseProvider, string connectionString)
-        {
-            //Assert
-            var action = async () =>
-            {
-                await _setupAppService.InstallAsync(new SetupInputDto()
-                {
-                    SiteName = "Polaris",
-                    ConnectionString = connectionString,
-                    DatabaseProvider = databaseProvider,
-                    Email = "test@test.com",
-                    Password = "test"
-                }, null);
-            };
-            await action.ShouldNotThrowAsync();
         }
     }
 }

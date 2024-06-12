@@ -50,7 +50,9 @@
     <ProjectReference Include="..\Polaris.Abp.DatabaseManagement.Sqlite\Polaris.Abp.DatabaseManagement.Sqlite.csproj" />
     <ProjectReference Include="..\Polaris.Abp.DatabaseManagement.SqlServer\Polaris.Abp.DatabaseManagement.SqlServer.csproj" />
   </ItemGroup>
-
-
+    
+  <ItemGroup>
+    <InternalsVisibleTo Include="Polaris.Abp.DatabaseManagement.Tests" />
+  </ItemGroup>
 
 </Project>

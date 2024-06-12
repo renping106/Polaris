@@ -18,7 +18,7 @@ namespace Polaris.Abp.DatabaseManagement.Domain
 
         public bool HasConnectionString => false;
 
-        public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmssfff")}";
+        public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}";
 
         public bool IgnoreMigration => true;
 
@@ -36,7 +36,7 @@ namespace Polaris.Abp.DatabaseManagement.Domain
         public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
         {
             var connectionString = context.ConnectionString;
-            if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmssfff")}"; }
+            if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}"; }
             return context.DbContextOptions.UseInMemoryDatabase(connectionString);
         }
     }

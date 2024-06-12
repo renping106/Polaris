@@ -11,7 +11,7 @@ namespace Polaris.Abp.DatabaseManagement.Domain
 {
     internal class TenantDatabaseRepository : ITenantDatabaseRepository, ISingletonDependency
     {
-        private static readonly ConcurrentDictionary<Guid, string?> _providerCache = new ConcurrentDictionary<Guid, string?>();
+        private readonly ConcurrentDictionary<Guid, string?> _providerCache = new ConcurrentDictionary<Guid, string?>();
         private readonly IConfigFileManager _configFileManager;
         private readonly ICurrentTenant _currentTenant;
         private readonly IServiceProvider _serviceProvider;

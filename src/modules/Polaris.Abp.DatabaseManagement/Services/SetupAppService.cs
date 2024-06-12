@@ -96,7 +96,7 @@ namespace Polaris.Abp.DatabaseManagement.Services
                 _options.ConnectionStrings.Default = input.ConnectionString;
                 await _migrationService.MigrateAsync(input.Email, input.Password);
                 await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
-                await _settingManager.SetGlobalAsync(TimingSettingNames.TimeZone, input.Timezone);
+                await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.Timezone);
                 // save to appSettings.json
                 _configManager.SetDatabaseProvider(input.DatabaseProvider);
                 _configManager.SetConnectionString(input.ConnectionString);
