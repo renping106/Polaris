@@ -1,0 +1,20 @@
+﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Polaris.Abp.PluginManagement.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model Polaris.Abp.PluginManagement.Pages.PluginManagement.UploadModel
+@inject IHtmlLocalizer<PluginManagementResource> L
+@{
+    Layout = null;
+}
+
+<form method="post" asp-page="/PluginManagement/Upload" enctype="multipart/form-data">
+    <abp-modal>
+        <abp-modal-header title="@L["Upload Package"].Value"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="UploadFileDto.Name"></abp-input>
+            <abp-input asp-for="UploadFileDto.File"></abp-input>
+        </abp-modal-body>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel|AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

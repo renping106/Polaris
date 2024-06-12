@@ -1,0 +1,110 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CA9AC87F-097E-4F15-8393-4BC07735A5B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{04DBDB01-70F4-4E06-B468-8F87850B22BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.TestBase", "test\Polaris.BookStore.TestBase\Polaris.Abp.TestBase.csproj", "{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{3EAA36BB-FE34-459A-90AF-9129F7E04420}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "themes", "themes", "{176911B4-9C27-4FFC-A0EC-7941FF04A0BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.PluginManagement", "src\modules\Polaris.Abp.PluginManagement\Polaris.Abp.PluginManagement.csproj", "{6078E600-A257-44EF-BB10-F060542EFBFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.ThemeManagement", "src\modules\Polaris.Abp.ThemeManagement\Polaris.Abp.ThemeManagement.csproj", "{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.NewFireTheme", "src\themes\Polaris.Abp.NewFireTheme\Polaris.Abp.NewFireTheme.csproj", "{FD38C52B-7424-4CE9-B67D-CC96411D50EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.DatabaseManagement", "src\modules\Polaris.Abp.DatabaseManagement\Polaris.Abp.DatabaseManagement.csproj", "{56686957-42F9-4CE6-824B-D8745E4E837C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.DatabaseManagement.SqlServer", "src\modules\Polaris.Abp.DatabaseManagement.SqlServer\Polaris.Abp.DatabaseManagement.SqlServer.csproj", "{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.Extension.Abstractions", "src\modules\Polaris.Abp.Extension.Abstractions\Polaris.Abp.Extension.Abstractions.csproj", "{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.DatabaseManagement.Tests", "test\Polaris.Abp.DatabaseManagement.Tests\Polaris.Abp.DatabaseManagement.Tests.csproj", "{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.DatabaseManagement.Sqlite", "src\modules\Polaris.Abp.DatabaseManagement.Sqlite\Polaris.Abp.DatabaseManagement.Sqlite.csproj", "{7A0FB669-28B6-4E5A-838E-D101D48CEF05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "host", "host", "{51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polaris.Abp.Host", "src\host\Polaris.Abp.Host\Polaris.Abp.Host.csproj", "{627F61C0-196E-4721-A508-68A9A6D4C326}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67A2CD74-D010-45F0-B26D-A203957932CB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6078E600-A257-44EF-BB10-F060542EFBFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6078E600-A257-44EF-BB10-F060542EFBFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6078E600-A257-44EF-BB10-F060542EFBFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6078E600-A257-44EF-BB10-F060542EFBFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56686957-42F9-4CE6-824B-D8745E4E837C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{627F61C0-196E-4721-A508-68A9A6D4C326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{627F61C0-196E-4721-A508-68A9A6D4C326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{627F61C0-196E-4721-A508-68A9A6D4C326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{627F61C0-196E-4721-A508-68A9A6D4C326}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91853F21-9CD9-4132-BC29-A7D5D84FFFE7} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{3EAA36BB-FE34-459A-90AF-9129F7E04420} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{176911B4-9C27-4FFC-A0EC-7941FF04A0BF} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{6078E600-A257-44EF-BB10-F060542EFBFF} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{CDFFDF8F-3321-400E-AA7C-20F6CCCB6EF3} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{FD38C52B-7424-4CE9-B67D-CC96411D50EC} = {176911B4-9C27-4FFC-A0EC-7941FF04A0BF}
+		{56686957-42F9-4CE6-824B-D8745E4E837C} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{A07EEDE9-C269-4BE3-8999-86F6E4EE8AE2} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{EE6C53DB-AA76-4BD4-8247-C975B6950C1F} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{32E119A2-4536-4EEC-97F8-D9BFA5775E8F} = {04DBDB01-70F4-4E06-B468-8F87850B22BE}
+		{7A0FB669-28B6-4E5A-838E-D101D48CEF05} = {3EAA36BB-FE34-459A-90AF-9129F7E04420}
+		{51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{627F61C0-196E-4721-A508-68A9A6D4C326} = {51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}
+	EndGlobalSection
+EndGlobal

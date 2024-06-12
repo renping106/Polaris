@@ -1,0 +1,207 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
+@using Polaris.Abp.DatabaseManagement.Localization
+@model Polaris.Abp.DatabaseManagement.Pages.Setup.InstallModel
+@inject IHtmlLocalizer<DatabaseManagementResource> L
+@inject IThemeManager ThemeManager
+@inject Microsoft.Extensions.Options.IOptions<IdentityOptions> IdentityOptions
+@inject Volo.Abp.AspNetCore.Mvc.UI.Layout.IPageLayout PageLayout
+@{
+    var options = IdentityOptions.Value;
+}
+
+@section styles {
+    <abp-style src="/Pages/Setup/install.css" />
+}
+@section scripts {
+    <abp-script src="/Pages/Setup/install.js" />
+    <abp-script src="/Pages/Setup/strength.js" />
+    <script>
+        $(function () {
+            $('#Config_Password').strength({
+                minLength: @(options.Password.RequiredLength),
+                upperCase: @(options.Password.RequireUppercase ? "true" : "false"),
+                lowerCase: @(options.Password.RequireLowercase ? "true" : "false"),
+                numbers: @(options.Password.RequireDigit ? "true" : "false"),
+                specialchars: @(options.Password.RequireNonAlphanumeric ? "true" : "false"),
+                target: '#passwordStrength',
+                style: "margin-top: 7px; height: 7px; border-radius: 5px"
+            });
+        })
+    </script>
+}
+
+@{
+    Layout = ThemeManager.CurrentTheme.GetEmptyLayout();
+}
+<div class="card mt-3 shadow-sm rounded">
+    <div class="card-body">
+        <form method="post">
+            <div class="container">
+                <div class="spinner-container">
+                    <div class="spinner-border text-primary"
+                         id="spinner" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="text-center">
+
+                    <h1>@L["Site is not initialized."]</h1>
+
+                    <p class="lead px-lg-5 mx-lg-5">@L["Please fill in the following form and let's install now."]</p>
+
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="card">
+                    <div class="card-body">
+                        @if (Model.ShowUseHostSetting)
+                        {
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
+                                    <div>
+                                        <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
+                                        <input asp-for="Config.SiteName" class="form-control" autofocus />
+                                        <span asp-validation-for="Config.SiteName"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Timezone">
+                                    <div>
+                                        <label asp-for="Config.Timezone">@L["What is the time zone?"]</label>
+                                        <select asp-for="Config.Timezone" class="form-select">
+                                            @foreach (var timezone in Model.TimeZoneItems)
+                                            {
+                                                <option value="@timezone.Value">@timezone.Text</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Config.Timezone"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="UseHostSetting">
+                                    <div>
+                                        <label asp-for="Config.UseHostSetting">@L["Store data in host database?"]</label>
+                                        <div>
+                                            <input asp-for="Config.UseHostSetting" class="form-check-input" />
+                                            <span asp-validation-for="Config.UseHostSetting"></span>
+                                            <span class="text-muted form-text small">@L["Yes"]</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6 dbselect" asp-validation-class-for="DatabaseProvider">
+                                    <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
+                                    <select asp-for="Config.DatabaseProvider" class="form-select">
+                                        @foreach (var provider in Model.DatabaseProviders)
+                                        {
+                                            <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
+                                                    data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
+                                                    data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Config.DatabaseProvider"></span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="SiteName">
+                                    <div>
+                                        <label asp-for="Config.SiteName">@L["What is the display name of your site?"]</label>
+                                        <input asp-for="Config.SiteName" class="form-control" autofocus />
+                                        <span asp-validation-for="Config.SiteName"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Timezone">
+                                    <div>
+                                        <label asp-for="Config.Timezone">@L["What is the time zone?"]</label>
+                                        <select asp-for="Config.Timezone" class="form-select">
+                                            @foreach (var timezone in Model.TimeZoneItems)
+                                            {
+                                                <option value="@timezone.Value">@timezone.Text</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Config.Timezone"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="mb-3 col-md-6 dbselect" asp-validation-class-for="DatabaseProvider">
+                                    <div>
+                                        <label asp-for="Config.DatabaseProvider">@L["What type of database to use?"]</label>
+                                        <select asp-for="Config.DatabaseProvider" class="form-select">
+                                            @foreach (var provider in Model.DatabaseProviders)
+                                            {
+                                                <option value="@provider.Value" data-connection-string="@provider.HasConnectionString"
+                                                        data-connection-string-sample="@L["The connection string to your database instance. e.g. {0}", provider.SampleConnectionString]"
+                                                        data-connection-string-value="@provider.SampleConnectionString">@provider.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Config.DatabaseProvider"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row connectionString" asp-validation-class-for="ConnectionString">
+                            <div class="mb-3 col-md-12">
+                                <label asp-for="Config.ConnectionString">@L["Connection string"]</label>
+                                <input asp-for="Config.ConnectionString" class="form-control" />
+                                <span asp-validation-for="Config.ConnectionString"></span>
+                                <span id="connectionStringHint" class="text-muted form-text small"></span>
+                            </div>
+                        </div>
+
+                        <fieldset>
+                            <legend>Default Admin</legend>
+                            <span class="text-muted form-text small">@L["The default admin has all the rights. It should be used carefully."]</span>
+                            <div class="row">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="UserName">
+                                    <label asp-for="Config.UserName">@L["User name"]</label>
+                                    <input asp-for="Config.UserName" class="form-control" disabled />
+                                    <span asp-validation-for="Config.UserName"></span>
+                                </div>
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Email">
+                                    <label asp-for="Config.Email">@L["Email"]</label>
+                                    <input asp-for="Config.Email" class="form-control" type="email" />
+                                    <span asp-validation-for="Config.Email"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-md-6" asp-validation-class-for="Password">
+                                    <label asp-for="Config.Password">@L["Password"]</label>
+                                    <div class="input-group">
+                                        <input asp-for="Config.Password" class="form-control" />
+                                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePassword"><i class="icon fa fa-eye"></i></button>
+                                    </div>
+                                    <div id="passwordStrength"></div>
+                                    <span asp-validation-for="Config.Password"></span>
+                                </div>
+
+                                <div class="mb-3 col-md-6" asp-validation-class-for="PasswordConfirmation">
+                                    <label asp-for="Config.PasswordConfirmation">@L["Password Confirmation"]</label>
+                                    <div class="input-group">
+                                        <input asp-for="Config.PasswordConfirmation" class="form-control" />
+                                        <button tabindex="-1" class="btn btn-secondary" type="button" id="togglePasswordConfirmation"><i class="icon fa fa-eye"></i></button>
+                                    </div>
+                                    <span asp-validation-for="Config.PasswordConfirmation"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <button class="btn btn-primary" type="submit">@L["Setup"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-# Nerd.Abp
+# Polaris.Abp
 
 ## About this solution
 
@@ -13,7 +13,7 @@ This is a layered startup solution based on [Domain Driven Design (DDD)](https:/
 
 The solution comes with a default configuration that works out of the box. However, you may consider to change the following configuration before running your solution:
 
-* Check the `ConnectionStrings` in `appsettings.json` files under the `Nerd.BookStore.Web` and `Nerd.BookStore.DbMigrator` projects and change it if you need.
+* Check the `ConnectionStrings` in `appsettings.json` files under the `Polaris.BookStore.Web` and `Polaris.BookStore.DbMigrator` projects and change it if you need.
 
 ### Before running the application
 
@@ -47,14 +47,14 @@ abp install-libs
 
 #### Create the Database
 
-Run `Nerd.BookStore.DbMigrator` to create the initial database. This should be done in the first run. It is also needed if a new database migration is added to the solution later.
+Run `Polaris.BookStore.DbMigrator` to create the initial database. This should be done in the first run. It is also needed if a new database migration is added to the solution later.
 
 ### Solution structure
 
 This is a layered monolith application that consists of the following applications:
 
-* `Nerd.BookStore.DbMigrator`: A console application which applies the migrations and also seeds the initial data. It is useful on development as well as on production environment.
-* `Nerd.BookStore.Web`: ASP.NET Core MVC / Razor Pages application that is the essential web application of the solution.
+* `Polaris.BookStore.DbMigrator`: A console application which applies the migrations and also seeds the initial data. It is useful on development as well as on production environment.
+* `Polaris.BookStore.Web`: ASP.NET Core MVC / Razor Pages application that is the essential web application of the solution.
 
 ### Deploying the application
 

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Polaris.Abp.NewFireTheme</id>
+    <version>0.1.0</version>
+    <authors>Polaris.Abp.NewFireTheme</authors>
+    <description>Polaris NewFireTheme Theme</description>
+    <repository type="git" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" version="3.1.3" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+	<files>
+		<file src="bin\Release\net8.0\Polaris.Abp.*.dll" target="lib\net8.0" />
+	</files>
+</package>

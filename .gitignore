@@ -252,7 +252,7 @@ paket-files/
 *.sln.iml
 
 # BookStore
-/src/host/Nerd.Abp.Host/Logs/*
+/src/host/Polaris.Abp.Host/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*

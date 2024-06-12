@@ -1,0 +1,30 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using Polaris.Abp.ThemeManagement.Localization
+@using Polaris.Abp.ThemeManagement.Menus
+@using Polaris.Abp.ThemeManagement.Pages.ThemeManagement
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Pages.Shared.Components.AbpPageToolbar
+@using Polaris.Abp.ThemeManagement.Permissions
+@model Polaris.Abp.ThemeManagement.Pages.ThemeManagement.IndexModel
+@inject IHtmlLocalizer<ThemeManagementResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Menu:" + ThemeManagementMenus.Prefix].Value;
+    PageLayout.Content.MenuItemName = ThemeManagementMenus.List;
+}
+
+@section scripts {
+    <abp-script-bundle name="@typeof(IndexModel).FullName">
+        <abp-script src="/Pages/ThemeManagement/Index.js" />
+    </abp-script-bundle>
+}
+
+<abp-card id="ThemeList">
+    <abp-card-body>
+        <abp-table class="nowrap">            
+        </abp-table>
+    </abp-card-body>
+</abp-card>
