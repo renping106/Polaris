@@ -189,7 +189,8 @@ internal class PlugInManager : IPlugInManager
         {
             using StreamReader reader = new(filePath);
             var json = reader.ReadToEnd();
-            plugInStates = JsonSerializer.Deserialize<List<IPlugInDescriptor>>(json, _jsonSerializerOptions)
+            var plugIns = JsonSerializer.Deserialize<List<PlugInDescriptor>>(json, _jsonSerializerOptions);
+            plugInStates = plugIns?.Select(t => (IPlugInDescriptor)t).ToList()
                 ?? [];
         }
 
