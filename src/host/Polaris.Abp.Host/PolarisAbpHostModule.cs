@@ -268,7 +268,7 @@ public class PolarisAbpHostModule : AbpModule
         services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Host API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Polaris API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             }
@@ -341,7 +341,7 @@ public class PolarisAbpHostModule : AbpModule
         app.UseSwagger();
         app.UseAbpSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Host API");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Polaris API");
         });
 
         app.UseAuditing();
