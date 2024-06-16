@@ -8,28 +8,18 @@ using Volo.Abp.MultiTenancy;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class DatabaseMigrationService : IDatabaseMigrationService, ITransientDependency
+internal class DatabaseMigrationService(
+    IDataSeeder dataSeeder,
+    ICurrentTenant currentTenant,
+    ICurrentDatabase currentDatabase,
+    IServiceProvider serviceProvider) : IDatabaseMigrationService, ITransientDependency
 {
-    public ILogger<DatabaseMigrationService> Logger { get; set; }
+    public ILogger<DatabaseMigrationService> Logger { get; set; } = NullLogger<DatabaseMigrationService>.Instance;
 
-    private readonly IDataSeeder _dataSeeder;
-    private readonly ICurrentTenant _currentTenant;
-    private readonly ICurrentDatabase _currentDatabase;
-    private readonly IServiceProvider _serviceProvider;
-
-    public DatabaseMigrationService(
-        IDataSeeder dataSeeder,
-        ICurrentTenant currentTenant,
-        ICurrentDatabase currentDatabase,
-        IServiceProvider serviceProvider)
-    {
-        _dataSeeder = dataSeeder;
-        _currentTenant = currentTenant;
-
-        Logger = NullLogger<DatabaseMigrationService>.Instance;
-        _currentDatabase = currentDatabase;
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IDataSeeder _dataSeeder = dataSeeder;
+    private readonly ICurrentTenant _currentTenant = currentTenant;
+    private readonly ICurrentDatabase _currentDatabase = currentDatabase;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task MigrateAsync(string? email = null, string? password = null)
     {
@@ -39,9 +29,9 @@ internal class DatabaseMigrationService : IDatabaseMigrationService, ITransientD
 
     private async Task MigrateDatabaseSchemaAsync()
     {
-        var name = _currentTenant == null ? "host" : _currentTenant.Id + " tenant";
+        var name = _currentTenant.Id == null ? "host" : _currentTenant.Id + " tenant";
         Logger.LogInformation(
-            "Migrating schema for {name} database...", name);
+            "Migrating schema for {Name} database...", name);
 
         if (!_currentDatabase.Provider.IgnoreMigration)
         {
@@ -49,15 +39,15 @@ internal class DatabaseMigrationService : IDatabaseMigrationService, ITransientD
             await migrationManager.MigrateSchemaAsync();
         }
 
-        Logger.LogInformation("Successfully completed {name} database migrations.", name);
+        Logger.LogInformation("Successfully completed {Name} database migrations.", name);
     }
 
     private async Task SeedDataAsync(string? email, string? password)
     {
-        var name = _currentTenant == null ? "host" : _currentTenant.Id + " tenant";
-        Logger.LogInformation("Executing {name} database seed...", name);
+        var name = _currentTenant.Id == null ? "host" : _currentTenant.Id + " tenant";
+        Logger.LogInformation("Executing {Name} database seed...", name);
 
-        var seedContext = new DataSeedContext(_currentTenant?.Id);
+        var seedContext = new DataSeedContext(_currentTenant.Id);
 
         if (!email.IsNullOrWhiteSpace())
         {
@@ -70,6 +60,6 @@ internal class DatabaseMigrationService : IDatabaseMigrationService, ITransientD
         }
         await _dataSeeder.SeedAsync(seedContext);
 
-        Logger.LogInformation("Successfully seeded {name} database migrations.", name);
+        Logger.LogInformation("Successfully seeded {Name} database migrations.", name);
     }
 }

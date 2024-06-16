@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Polaris.Abp.DatabaseManagement.Domain;
 using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
 using Polaris.Abp.DatabaseManagement.Services.Dtos;
@@ -17,35 +16,24 @@ using Volo.Abp.Uow;
 namespace Polaris.Abp.DatabaseManagement.Services;
 
 [RemoteService(false)]
-public class SetupAppService : DatabaseManagementAppServiceBase, ISetupAppService, ITransientDependency
+public class SetupAppService(IDatabaseProviderFactory databaseProviderFactory,
+    ITenantDatabaseRepository repository,
+    IDatabaseMigrationService migrationService,
+    ISettingManager settingManager,
+    IConfigFileManager configManager,
+    IOptionsMonitor<AbpDbConnectionOptions> options,
+    ITenantRepository tenantRepository,
+    ITimezoneProvider timezoneProvider) 
+    : DatabaseManagementAppServiceBase, ISetupAppService, ITransientDependency
 {
-    private readonly IConfigFileManager _configManager;
-    private readonly IDatabaseProviderFactory _databaseProviderFactory;
-    private readonly IDatabaseMigrationService _migrationService;
-    private readonly AbpDbConnectionOptions _options;
-    private readonly ITenantDatabaseRepository _repository;
-    private readonly ISettingManager _settingManager;
-    private readonly ITenantRepository _tenantRepository;
-    private readonly ITimezoneProvider _timezoneProvider;
-
-    public SetupAppService(IDatabaseProviderFactory databaseProviderFactory,
-        ITenantDatabaseRepository repository,
-        IDatabaseMigrationService migrationService,
-        ISettingManager settingManager,
-        IConfigFileManager configManager,
-        IOptionsMonitor<AbpDbConnectionOptions> options,
-        ITenantRepository tenantRepository,
-        ITimezoneProvider timezoneProvider)
-    {
-        _databaseProviderFactory = databaseProviderFactory;
-        _repository = repository;
-        _migrationService = migrationService;
-        _settingManager = settingManager;
-        _configManager = configManager;
-        _options = options.CurrentValue;
-        _tenantRepository = tenantRepository;
-        _timezoneProvider = timezoneProvider;
-    }
+    private readonly IConfigFileManager _configManager = configManager;
+    private readonly IDatabaseProviderFactory _databaseProviderFactory = databaseProviderFactory;
+    private readonly IDatabaseMigrationService _migrationService = migrationService;
+    private readonly AbpDbConnectionOptions _options = options.CurrentValue;
+    private readonly ITenantDatabaseRepository _repository = repository;
+    private readonly ISettingManager _settingManager = settingManager;
+    private readonly ITenantRepository _tenantRepository = tenantRepository;
+    private readonly ITimezoneProvider _timezoneProvider = timezoneProvider;
 
     public IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders()
     {
@@ -83,7 +71,7 @@ public class SetupAppService : DatabaseManagementAppServiceBase, ISetupAppServic
         return tenant != null;
     }
 
-    public Task<List<NameValue>> GetTimezonesAsync()
+    public Task<List<NameValue>> GetTimeZonesAsync()
     {
         return Task.FromResult(TimeZoneHelper.GetTimezones(_timezoneProvider.GetWindowsTimezones()));
     }
@@ -96,14 +84,13 @@ public class SetupAppService : DatabaseManagementAppServiceBase, ISetupAppServic
             _options.ConnectionStrings.Default = input.ConnectionString;
             await _migrationService.MigrateAsync(input.Email, input.Password);
             await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
-            await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.Timezone);
+            await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.TimeZone);
             // save to appSettings.json
             _configManager.SetDatabaseProvider(input.DatabaseProvider);
             _configManager.SetConnectionString(input.ConnectionString);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Logger.LogError(ex.Message);
             _repository.UpsertProviderForTenant(null, null);
             _options.ConnectionStrings.Default = null;
             throw;
@@ -121,36 +108,33 @@ public class SetupAppService : DatabaseManagementAppServiceBase, ISetupAppServic
         {
             _repository.UpsertProviderForTenant(CurrentTenant.Id, input.DatabaseProvider);
 
-            using (var unitOfWork = UnitOfWorkManager.Begin(true))
+            using var unitOfWork = UnitOfWorkManager.Begin(true);
+            var tenant = await _tenantRepository.GetAsync(CurrentTenant.Id!.Value);
+            if (!input.UseHostSetting)
             {
-                var tenant = await _tenantRepository.GetAsync(CurrentTenant.Id!.Value);
-                if (!input.UseHostSetting)
-                {
-                    tenant.SetDefaultConnectionString(input.ConnectionString);
-                }
-                else
-                {
-                    tenant.RemoveDefaultConnectionString();
-                }
-                await _tenantRepository.UpdateAsync(tenant);
-
-                await _migrationService.MigrateAsync(input.Email, input.Password);
-                await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
-                await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseProvider, input.DatabaseProvider);
-                await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.Timezone);
-
-                if (input.DatabaseProvider == InMemoryDatabaseProvider.ProviderKey)
-                {
-                    await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminEmail, input.Email);
-                    await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminPassword, input.Password);
-                }
-
-                await unitOfWork.CompleteAsync();
+                tenant.SetDefaultConnectionString(input.ConnectionString);
             }
+            else
+            {
+                tenant.RemoveDefaultConnectionString();
+            }
+            await _tenantRepository.UpdateAsync(tenant);
+
+            await _migrationService.MigrateAsync(input.Email, input.Password);
+            await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.SiteName, input.SiteName);
+            await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DatabaseProvider, input.DatabaseProvider);
+            await _settingManager.SetForCurrentTenantAsync(TimingSettingNames.TimeZone, input.TimeZone);
+
+            if (input.DatabaseProvider == InMemoryDatabaseProvider.ProviderKey)
+            {
+                await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminEmail, input.Email);
+                await _settingManager.SetForCurrentTenantAsync(DatabaseManagementSettings.DefaultAdminPassword, input.Password);
+            }
+
+            await unitOfWork.CompleteAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Logger.LogError(ex.Message);
             _repository.UpsertProviderForTenant(CurrentTenant.Id, null);
             throw;
         }

@@ -14,6 +14,6 @@ public class SetupInputDto
     public required string Password { get; set; }
     [Required]
     public required string Email { get; set; }
-    public string Timezone { get; set; } = string.Empty;
+    public string TimeZone { get; set; } = string.Empty;
     public bool UseHostSetting { get; set; }
 }

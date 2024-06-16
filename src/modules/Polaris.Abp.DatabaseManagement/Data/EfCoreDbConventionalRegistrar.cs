@@ -13,10 +13,10 @@ public class EfCoreDbConventionalRegistrar : DefaultConventionalRegistrar
 
     protected override List<Type> GetExposedServiceTypes(Type type)
     {
-        return new List<Type>()
-        {
+        return
+        [
             typeof(IAbpEfCoreDbContext)
-        };
+        ];
     }
 
     protected override ServiceLifetime? GetDefaultLifeTimeOrNull(Type type)

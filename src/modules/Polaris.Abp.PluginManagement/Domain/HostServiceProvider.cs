@@ -1,11 +1,6 @@
 ﻿namespace Polaris.Abp.PluginManagement.Domain;
 
-internal class HostServiceProvider
+internal class HostServiceProvider(IServiceProvider instance)
 {
-    public IServiceProvider Instance { get; }
-
-    public HostServiceProvider(IServiceProvider instance)
-    {
-        Instance = instance;
-    }
+    public IServiceProvider Instance { get; } = instance;
 }

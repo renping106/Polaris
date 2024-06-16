@@ -11,16 +11,11 @@ namespace Polaris.Abp.ThemeManagement.Services;
 
 [RequiresFeature(ThemeManagementFeatures.Enable)]
 [Authorize(ThemeManagementPermissions.EditBrandSettings)]
-public class BrandSettingAppService : ThemeManagementAppServiceBase, IBrandSettingAppService
+public class BrandSettingAppService(ISettingManager settingManager, ISettingManagementStore settingManagementStore) 
+    : ThemeManagementAppServiceBase, IBrandSettingAppService
 {
-    private readonly ISettingManager _settingManager;
-    private readonly ISettingManagementStore _settingManagementStore;
-
-    public BrandSettingAppService(ISettingManager settingManager, ISettingManagementStore settingManagementStore)
-    {
-        _settingManager = settingManager;
-        _settingManagementStore = settingManagementStore;
-    }
+    private readonly ISettingManager _settingManager = settingManager;
+    private readonly ISettingManagementStore _settingManagementStore = settingManagementStore;
 
     public async Task<BrandSettingDto> GetAsync()
     {

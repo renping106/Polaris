@@ -4,14 +4,9 @@ using Volo.Abp.DependencyInjection;
 
 namespace Ping.Polaris.Web.Filters;
 
-public class TenantUpdateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
+public class TenantUpdateAsyncPageFilter(ITenantUpdateAppService updateAppService) : IAsyncPageFilter, ITransientDependency
 {
-    private readonly ITenantUpdateAppService _updateAppService;
-
-    public TenantUpdateAsyncPageFilter(ITenantUpdateAppService updateAppService)
-    {
-        _updateAppService = updateAppService;
-    }
+    private readonly ITenantUpdateAppService _updateAppService = updateAppService;
 
     public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
     {

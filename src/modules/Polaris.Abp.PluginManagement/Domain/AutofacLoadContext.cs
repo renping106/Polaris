@@ -3,10 +3,10 @@ using System.Runtime.Loader;
 
 namespace Polaris.Abp.PluginManagement.Domain;
 
-internal class AutofacLoadContext : AssemblyLoadContext
+internal class AutoFacLoadContext : AssemblyLoadContext
 {
 
-    public AutofacLoadContext() : base(isCollectible: true)
+    public AutoFacLoadContext() : base(isCollectible: true)
     {
     }
 

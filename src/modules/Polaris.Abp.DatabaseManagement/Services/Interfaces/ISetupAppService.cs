@@ -9,5 +9,5 @@ public interface ISetupAppService
     IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders();
     Task InstallAsync(SetupInputDto input, Guid? tenantId);
     Task<bool> TenantExistsAsync(Guid tenantId);
-    Task<List<NameValue>> GetTimezonesAsync();
+    Task<List<NameValue>> GetTimeZonesAsync();
 }

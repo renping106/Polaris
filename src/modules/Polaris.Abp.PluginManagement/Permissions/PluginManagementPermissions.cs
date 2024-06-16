@@ -2,7 +2,7 @@
 
 namespace Polaris.Abp.PluginManagement.Permissions;
 
-public class PluginManagementPermissions
+public static class PluginManagementPermissions
 {
     public const string Default = "PluginManagement";
     public const string Edit = Default + ".Edit";

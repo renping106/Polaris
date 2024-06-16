@@ -19,7 +19,7 @@ public static class AutoFacHostBuilderExtension
     {
         try
         {
-            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
+            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutoFacLoadContext));
             if (context != null)
             {
                 var contextReference = new WeakReference(context, trackResurrection: true);
@@ -36,7 +36,7 @@ public static class AutoFacHostBuilderExtension
             }
 
             // Dynamic load them to make the generated proxies are in a collectable AssemblyLoadContext
-            var autofacContext = new AutofacLoadContext();
+            var autofacContext = new AutoFacLoadContext();
 
             var assembly = LoadAssembly(autofacContext, "Autofac.dll");
             // Find ContainerBuilder

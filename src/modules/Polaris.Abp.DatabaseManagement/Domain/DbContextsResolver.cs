@@ -9,17 +9,11 @@ using Volo.Abp.MultiTenancy;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class DbContextsResolver : IDbContextsResolver, ITransientDependency
+internal class DbContextsResolver(ICurrentTenant currentTenant,
+    IEnumerable<IAbpEfCoreDbContext> dbContexts) : IDbContextsResolver, ITransientDependency
 {
-    private readonly ICurrentTenant _currentTenant;
-    private readonly IEnumerable<IAbpEfCoreDbContext> _dbContexts;
-
-    public DbContextsResolver(ICurrentTenant currentTenant,
-        IEnumerable<IAbpEfCoreDbContext> dbContexts)
-    {
-        _currentTenant = currentTenant;
-        _dbContexts = dbContexts;
-    }
+    private readonly ICurrentTenant _currentTenant = currentTenant;
+    private readonly IEnumerable<IAbpEfCoreDbContext> _dbContexts = dbContexts;
 
     public IEnumerable<IAbpEfCoreDbContext> DbContexts {
         get {

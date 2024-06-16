@@ -5,20 +5,13 @@ using Volo.Abp.MultiTenancy;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class CurrentDatabase : ICurrentDatabase, ITransientDependency
+internal class CurrentDatabase(ICurrentTenant currentTenant,
+    IDatabaseProviderFactory databaseProviderFactory,
+    ITenantDatabaseRepository tenantDatabaseRepository) : ICurrentDatabase, ITransientDependency
 {
-    private readonly ICurrentTenant _currentTenant;
-    private readonly IDatabaseProviderFactory _databaseProviderFactory;
-    private readonly ITenantDatabaseRepository _tenantDatabaseRepository;
-
-    public CurrentDatabase(ICurrentTenant currentTenant,
-        IDatabaseProviderFactory databaseProviderFactory,
-        ITenantDatabaseRepository tenantDatabaseRepository)
-    {
-        _currentTenant = currentTenant;
-        _databaseProviderFactory = databaseProviderFactory;
-        _tenantDatabaseRepository = tenantDatabaseRepository;
-    }
+    private readonly ICurrentTenant _currentTenant = currentTenant;
+    private readonly IDatabaseProviderFactory _databaseProviderFactory = databaseProviderFactory;
+    private readonly ITenantDatabaseRepository _tenantDatabaseRepository = tenantDatabaseRepository;
 
     public IDatabaseProvider Provider => GetCurrent();
 

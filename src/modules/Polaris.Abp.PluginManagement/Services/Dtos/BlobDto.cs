@@ -2,7 +2,7 @@
 
 public class BlobDto
 {
-    public byte[] Content { get; set; } = new byte[0];
+    public byte[] Content { get; set; } = [];
 
     public string Name { get; set; } = string.Empty;
 }

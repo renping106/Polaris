@@ -1,6 +1,6 @@
 ﻿namespace Polaris.Abp.PluginManagement.Menus;
 
-public class PluginManagementMenus
+public static class PluginManagementMenus
 {
     public const string Prefix = "PluginManagement";
 

@@ -11,32 +11,25 @@ using Volo.Abp.SettingManagement;
 namespace Polaris.Abp.DatabaseManagement.Services;
 
 [RemoteService(false)]
-public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantUpdateAppService, ITransientDependency
+public class TenantUpdateAppService(
+    ISettingManager settingManager,
+    ICurrentDatabase currentDatabase,
+    IDatabaseMigrationService migrationService,
+    IDistributedCache<TenantUpdateAppService.DbVersionCache> dbVersionCache) 
+    : DatabaseManagementAppServiceBase, ITenantUpdateAppService, ITransientDependency
 {
-    private readonly ICurrentDatabase _currentDatabase;
-    private readonly IDistributedCache<DbVersionCache> _dbVersionCacheForInMemory;
-    private readonly object _locker = new object();
-    private readonly IDatabaseMigrationService _migrationService;
-    private readonly ISettingManager _settingManager;
-
-    public TenantUpdateAppService(
-        ISettingManager settingManager,
-        ICurrentDatabase currentDatabase,
-        IDatabaseMigrationService migrationService,
-        IDistributedCache<DbVersionCache> dbVersionCache)
-    {
-        _settingManager = settingManager;
-        _currentDatabase = currentDatabase;
-        _migrationService = migrationService;
-        _dbVersionCacheForInMemory = dbVersionCache;
-    }
+    private readonly ICurrentDatabase _currentDatabase = currentDatabase;
+    private readonly IDistributedCache<DbVersionCache> _dbVersionCacheForInMemory = dbVersionCache;
+    private readonly object _locker = new();
+    private readonly IDatabaseMigrationService _migrationService = migrationService;
+    private readonly ISettingManager _settingManager = settingManager;
 
     public async Task<bool> HasUpdatesAsync()
     {
         if (CurrentTenant.Id.HasValue)
         {
             var hostDbVersion = await _settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion, false);
-            int.TryParse(hostDbVersion, out var hostDbVersionNum);
+            _ = int.TryParse(hostDbVersion, out var hostDbVersionNum);
 
             var tenantDbVersionNum = await GetTenantDbVersionAsync();
 
@@ -85,7 +78,7 @@ public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantU
         }
 
         var tenantDbVersion = await _settingManager.GetOrNullForCurrentTenantAsync(DatabaseManagementSettings.DatabaseVersion, false);
-        int.TryParse(tenantDbVersion, out var tenantDbVersionNum);
+        _ = int.TryParse(tenantDbVersion, out var tenantDbVersionNum);
         return tenantDbVersionNum;
     }
 
@@ -95,7 +88,7 @@ public class TenantUpdateAppService : DatabaseManagementAppServiceBase, ITenantU
 
         if (_currentDatabase.Provider.Key == InMemoryDatabaseProvider.ProviderKey)
         {
-            _dbVersionCacheForInMemory.Set(CurrentTenant.Id.Normalize().ToString(), new DbVersionCache(int.Parse(hostDbVersion)));
+            await _dbVersionCacheForInMemory.SetAsync(CurrentTenant.Id.Normalize().ToString(), new DbVersionCache(int.Parse(hostDbVersion)));
             return;
         }
 

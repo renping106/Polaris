@@ -81,7 +81,7 @@ public class InstallModel : DatabaseManagementPageModel
     private void GetTimezoneItems()
     {
         TimeZoneItems = [];
-        var timezones = _setupAppService.GetTimezonesAsync().Result;
+        var timezones = _setupAppService.GetTimeZonesAsync().Result;
         TimeZoneItems.AddRange(timezones.Select(x => new SelectListItem(x.Name, x.Value)).ToList());
     }
 }

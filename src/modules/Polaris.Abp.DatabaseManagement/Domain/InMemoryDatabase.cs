@@ -8,7 +8,7 @@ using Volo.Abp.Uow;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class InMemoryDatabaseProvider : IDatabaseProvider, ITransientDependency
+internal class InMemoryDatabaseProvider(IClock clock) : IDatabaseProvider, ITransientDependency
 {
     public readonly static string ProviderKey = "InMemory";
 
@@ -18,7 +18,7 @@ internal class InMemoryDatabaseProvider : IDatabaseProvider, ITransientDependenc
 
     public bool HasConnectionString => false;
 
-    public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}";
+    public string SampleConnectionString => $"Temp{_clock.Now:yyyyMMddHHmmss}";
 
     public bool IgnoreMigration => true;
 
@@ -26,17 +26,12 @@ internal class InMemoryDatabaseProvider : IDatabaseProvider, ITransientDependenc
 
     public SequentialGuidType? SequentialGuidTypeOption => null;
 
-    private readonly IClock _clock;
-
-    public InMemoryDatabaseProvider(IClock clock)
-    {
-        _clock = clock;
-    }
+    private readonly IClock _clock = clock;
 
     public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
     {
         var connectionString = context.ConnectionString;
-        if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}"; }
+        if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now:yyyyMMddHHmmss}"; }
         return context.DbContextOptions.UseInMemoryDatabase(connectionString);
     }
 }

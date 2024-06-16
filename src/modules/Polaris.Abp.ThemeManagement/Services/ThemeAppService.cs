@@ -13,16 +13,11 @@ namespace Polaris.Abp.ThemeManagement.Services;
 
 [Authorize]
 [RequiresFeature(ThemeManagementFeatures.Enable)]
-public class ThemeAppService : ThemeManagementAppServiceBase, IThemeAppService
+public class ThemeAppService(IOptions<AbpThemingOptions> options, ISettingManager settingManager) 
+    : ThemeManagementAppServiceBase, IThemeAppService
 {
-    private readonly AbpThemingOptions _options;
-    private readonly ISettingManager _settingManager;
-
-    public ThemeAppService(IOptions<AbpThemingOptions> options, ISettingManager settingManager)
-    {
-        _options = options.Value;
-        _settingManager = settingManager;
-    }
+    private readonly AbpThemingOptions _options = options.Value;
+    private readonly ISettingManager _settingManager = settingManager;
 
     [Authorize(ThemeManagementPermissions.GroupName)]
     public async Task<PagedResultDto<ThemeDto>> GetThemesAsync()

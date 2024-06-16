@@ -13,13 +13,13 @@ public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
         return GetPrincipal();
     }
 
-    private ClaimsPrincipal GetPrincipal()
+    private static ClaimsPrincipal GetPrincipal()
     {
-        return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
-        {
+        return new ClaimsPrincipal(new ClaimsIdentity(
+        [
             new Claim(AbpClaimTypes.UserId, "2e701e62-0953-4dd3-910b-dc6cc93ccb0d"),
             new Claim(AbpClaimTypes.UserName, "admin"),
             new Claim(AbpClaimTypes.Email, "admin@abp.io")
-        }));
+        ]));
     }
 }

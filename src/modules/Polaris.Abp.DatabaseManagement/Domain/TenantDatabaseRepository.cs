@@ -9,21 +9,14 @@ using Volo.Abp.Settings;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class TenantDatabaseRepository : ITenantDatabaseRepository, ISingletonDependency
+internal class TenantDatabaseRepository(IConfigFileManager configFileManager,
+    ICurrentTenant currentTenant,
+    IServiceProvider serviceProvider) : ITenantDatabaseRepository, ISingletonDependency
 {
-    private readonly ConcurrentDictionary<Guid, string?> _providerCache = new ConcurrentDictionary<Guid, string?>();
-    private readonly IConfigFileManager _configFileManager;
-    private readonly ICurrentTenant _currentTenant;
-    private readonly IServiceProvider _serviceProvider;
-
-    public TenantDatabaseRepository(IConfigFileManager configFileManager,
-        ICurrentTenant currentTenant,
-        IServiceProvider serviceProvider)
-    {
-        _configFileManager = configFileManager;
-        _currentTenant = currentTenant;
-        _serviceProvider = serviceProvider;
-    }
+    private readonly ConcurrentDictionary<Guid, string?> _providerCache = new();
+    private readonly IConfigFileManager _configFileManager = configFileManager;
+    private readonly ICurrentTenant _currentTenant = currentTenant;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public string? GetProviderByTenant(Guid? tenantId)
     {
@@ -32,7 +25,9 @@ internal class TenantDatabaseRepository : ITenantDatabaseRepository, ISingletonD
         return databaseProvider;
     }
 
+#pragma warning disable CRRSP08 // A misspelled word has been found
     public void UpsertProviderForTenant(Guid? tenantId, string? databaseProvider)
+#pragma warning restore CRRSP08 // A misspelled word has been found
     {
         var key = tenantId.Normalize();
         _providerCache.AddOrUpdate(key, (_) => databaseProvider, (_, _) => databaseProvider);

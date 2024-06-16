@@ -5,14 +5,9 @@ using Volo.Abp.Ui.Branding;
 
 namespace Polaris.Abp.ThemeManagement;
 
-public class ThemeBrandingProvider : IBrandingProvider, ITransientDependency
+public class ThemeBrandingProvider(ISettingProvider settingProvider) : IBrandingProvider, ITransientDependency
 {
-    private readonly ISettingProvider _settingProvider;
-
-    public ThemeBrandingProvider(ISettingProvider settingProvider)
-    {
-        _settingProvider = settingProvider;
-    }
+    private readonly ISettingProvider _settingProvider = settingProvider;
 
     public string AppName {
         get {

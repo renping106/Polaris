@@ -5,18 +5,12 @@ using Volo.Abp.MultiTenancy;
 
 namespace Ping.Polaris.Web.Filters;
 
-public class TenantStateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
+public class TenantStateAsyncPageFilter(ISetupAppService setupAppService,
+    ICurrentTenant currentTenant) : IAsyncPageFilter, ITransientDependency
 {
-    private readonly ISetupAppService _setupAppService;
-    private readonly ICurrentTenant _currentTenant;
+    private readonly ISetupAppService _setupAppService = setupAppService;
+    private readonly ICurrentTenant _currentTenant = currentTenant;
     private readonly static string _setupPath = "/Setup/Install";
-
-    public TenantStateAsyncPageFilter(ISetupAppService setupAppService,
-        ICurrentTenant currentTenant)
-    {
-        _setupAppService = setupAppService;
-        _currentTenant = currentTenant;
-    }
 
     public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
     {

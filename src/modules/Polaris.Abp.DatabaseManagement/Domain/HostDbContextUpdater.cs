@@ -10,14 +10,9 @@ using Volo.Abp.SettingManagement;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class HostDbContextUpdater : IDbContextUpdater, ITransientDependency
+internal class HostDbContextUpdater(IShellServiceProvider shellEnvironment) : IDbContextUpdater, ITransientDependency
 {
-    private readonly IShellServiceProvider _shellEnvironment;
-
-    public HostDbContextUpdater(IShellServiceProvider shellEnvironment)
-    {
-        _shellEnvironment = shellEnvironment;
-    }
+    private readonly IShellServiceProvider _shellEnvironment = shellEnvironment;
 
     public async Task UpdateAsync(DbContextChangedEvent dbContextChangedEvent)
     {
@@ -35,7 +30,7 @@ internal class HostDbContextUpdater : IDbContextUpdater, ITransientDependency
 
         var settingManager = provider.GetRequiredService<ISettingManager>();
         var dbVersion = await settingManager.GetOrNullGlobalAsync(DatabaseManagementSettings.DatabaseVersion);
-        int.TryParse(dbVersion, out var versionNum);
+        _ = int.TryParse(dbVersion, out var versionNum);
         versionNum++;
         await settingManager.SetGlobalAsync(DatabaseManagementSettings.DatabaseVersion, versionNum.ToString());
     }

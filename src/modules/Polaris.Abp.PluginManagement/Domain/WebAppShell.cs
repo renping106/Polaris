@@ -9,18 +9,12 @@ using Volo.Abp.Modularity.PlugIns;
 
 namespace Polaris.Abp.PluginManagement.Domain;
 
-internal class WebAppShell : IWebAppShell
+internal class WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider) : IWebAppShell
 {
     private WebAppShellContext? _context;
-    private readonly IServiceProvider _hostServiceProvider;
-    private readonly WebShellOptions _options;
-    private readonly object instanceLock = new object();
-
-    public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
-    {
-        _options = webShellOptions.Value;
-        _hostServiceProvider = hostServiceProvider;
-    }
+    private readonly IServiceProvider _hostServiceProvider = hostServiceProvider;
+    private readonly WebShellOptions _options = webShellOptions.Value;
+    private readonly object instanceLock = new();
 
     public IServiceProvider? ServiceProvider => _context?.Services;
 
@@ -56,7 +50,7 @@ internal class WebAppShell : IWebAppShell
         return (true, string.Empty);
     }
 
-    private async ValueTask<WebAppShellContext> InitShellAsync()
+    private async Task<WebAppShellContext> InitShellAsync()
     {
         var shellAppBuilder = _options.InitBuilder();
 
@@ -65,7 +59,7 @@ internal class WebAppShell : IWebAppShell
         await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
         {
             // Core modules for dynamic
-            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
+            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutoFacLoadContext));
             if (context != null)
             {
                 foreach (var item in context.Assemblies)
@@ -90,10 +84,10 @@ internal class WebAppShell : IWebAppShell
 
         var shellApp = shellAppBuilder.Build();
 
-        Action<IApplicationBuilder> configure = async (builder) =>
+        static async void configure(IApplicationBuilder builder)
         {
-            await shellApp.InitializeApplicationAsync();
-        };
+            await builder.InitializeApplicationAsync();
+        }
 
         configure(shellApp);
 

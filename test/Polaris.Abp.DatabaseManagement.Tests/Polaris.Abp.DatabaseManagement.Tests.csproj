@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\modules\Polaris.Abp.DatabaseManagement.Sqlite\Polaris.Abp.DatabaseManagement.Sqlite.csproj" />
     <ProjectReference Include="..\..\src\modules\Polaris.Abp.DatabaseManagement\Polaris.Abp.DatabaseManagement.csproj" />
-    <ProjectReference Include="..\Polaris.BookStore.TestBase\Polaris.Abp.TestBase.csproj" />
+    <ProjectReference Include="..\Polaris.Abp.TestBase\Polaris.Abp.TestBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

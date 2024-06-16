@@ -10,16 +10,11 @@ using Volo.Abp.BlobStoring;
 namespace Polaris.Abp.PluginManagement.Services;
 
 [Authorize(PluginManagementPermissions.Upload)]
-public class PackageAppService : PluginManagementAppServiceBase, IPackageAppService
+public class PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager) 
+    : PluginManagementAppServiceBase, IPackageAppService
 {
-    private readonly IBlobContainer _fileContainer;
-    private readonly IPlugInManager _plugInManager;
-
-    public PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager)
-    {
-        _fileContainer = fileContainer;
-        _plugInManager = plugInManager;
-    }
+    private readonly IBlobContainer _fileContainer = fileContainer;
+    private readonly IPlugInManager _plugInManager = plugInManager;
 
     public async Task<BlobDto> GetAsync(GetBlobRequestDto input)
     {
@@ -46,13 +41,7 @@ public class PackageAppService : PluginManagementAppServiceBase, IPackageAppServ
     private async Task InstallPackageAsync(string packageName)
     {
         var content = await _fileContainer.GetAllBytesAsync(packageName);
-        var descriptor = PlugInPackageUtil.LoadPackage(content);
-
-        if (descriptor == null)
-        {
-            throw new UserFriendlyException(L["InvalidPlugin"]);
-        }
-
+        var descriptor = PlugInPackageUtil.LoadPackage(content) ?? throw new UserFriendlyException(L["InvalidPlugin"]);
         var installedPlugin = _plugInManager.GetAllPlugIns().FirstOrDefault(t => t.Name == descriptor.Name);
 
         if (installedPlugin != null)

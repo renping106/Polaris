@@ -6,17 +6,11 @@ using Volo.Abp.Settings;
 
 namespace Polaris.Abp.ThemeManagement.Domain;
 
-internal class ThemeSelector : DefaultThemeSelector, IThemeSelector, ITransientDependency
+internal class ThemeSelector(IOptions<AbpThemingOptions> options, ILogger<ThemeSelector> logger, ISettingProvider settingProvider) 
+    : DefaultThemeSelector(options), IThemeSelector, ITransientDependency
 {
-    private readonly ILogger<ThemeSelector> _logger;
-    private readonly ISettingProvider _settingProvider;
-
-    public ThemeSelector(IOptions<AbpThemingOptions> options, ILogger<ThemeSelector> logger, ISettingProvider settingProvider)
-        : base(options)
-    {
-        _logger = logger;
-        _settingProvider = settingProvider;
-    }
+    private readonly ILogger<ThemeSelector> _logger = logger;
+    private readonly ISettingProvider _settingProvider = settingProvider;
 
     public override ThemeInfo GetCurrentThemeInfo()
     {
@@ -25,7 +19,7 @@ internal class ThemeSelector : DefaultThemeSelector, IThemeSelector, ITransientD
         var theme = themes.FirstOrDefault(t => t.ThemeType.FullName == currentTheme);
         if (theme == null)
         {
-            _logger.LogWarning($"Cannot find the theme {currentTheme}. Use default theme.");
+            _logger.LogWarning("Cannot find the theme {CurrentTheme}. Use default theme.", currentTheme);
             return base.GetCurrentThemeInfo();
         }
         return theme;

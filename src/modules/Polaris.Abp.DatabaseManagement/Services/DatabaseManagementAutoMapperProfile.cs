@@ -24,7 +24,7 @@ internal class DatabaseManagementAutoMapperProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
             .ForMember(dest => dest.UseHostSetting, opt => opt.MapFrom(src => src.UseHostSetting))
-            .ForMember(dest => dest.Timezone, opt => opt.MapFrom(src => src.Timezone));
+            .ForMember(dest => dest.TimeZone, opt => opt.MapFrom(src => src.Timezone));
 
         CreateMap<TenantInfoModel, TenantCreateDto>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

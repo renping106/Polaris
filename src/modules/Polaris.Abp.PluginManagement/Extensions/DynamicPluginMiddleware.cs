@@ -9,14 +9,9 @@ using Polaris.Abp.PluginManagement.Domain.Interfaces;
 
 namespace Polaris.Abp.PluginManagement.Extensions;
 
-internal class PluginManagementMiddleware : IMiddleware
+internal class PluginManagementMiddleware(IWebAppShell appShell) : IMiddleware
 {
-    private readonly IWebAppShell _appShell;
-
-    public PluginManagementMiddleware(IWebAppShell appShell)
-    {
-        _appShell = appShell;
-    }
+    private readonly IWebAppShell _appShell = appShell;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -64,5 +59,7 @@ public static class PluginManagementMiddlewareExtensions
 
     public static IApplicationBuilder RunWithPluginManagement(
         this IApplicationBuilder app)
-        => app.UseMiddleware<PluginManagementMiddleware>();
+    {
+        return app.UseMiddleware<PluginManagementMiddleware>();
+    }
 }

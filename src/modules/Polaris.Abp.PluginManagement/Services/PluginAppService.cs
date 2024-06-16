@@ -9,16 +9,11 @@ using Volo.Abp.Application.Dtos;
 namespace Polaris.Abp.PluginManagement.Services;
 
 [Authorize(PluginManagementPermissions.Default)]
-public class PluginAppService : PluginManagementAppServiceBase, IPluginAppService
+public class PluginAppService(IPlugInManager plugInManager, IPackageAppService packageAppService) 
+    : PluginManagementAppServiceBase, IPluginAppService
 {
-    private readonly IPackageAppService _packageAppService;
-    private readonly IPlugInManager _plugInManager;
-
-    public PluginAppService(IPlugInManager plugInManager, IPackageAppService packageAppService)
-    {
-        _plugInManager = plugInManager;
-        _packageAppService = packageAppService;
-    }
+    private readonly IPackageAppService _packageAppService = packageAppService;
+    private readonly IPlugInManager _plugInManager = plugInManager;
 
     [Authorize(PluginManagementPermissions.Edit)]
     public async Task DisableAsync(string plugInName)
@@ -29,11 +24,11 @@ public class PluginAppService : PluginManagementAppServiceBase, IPluginAppServic
     [Authorize(PluginManagementPermissions.Edit)]
     public async Task<PluginStateDto> EnableAsync(string plugInName)
     {
-        var tryAddResult = await _plugInManager.EnablePlugInAsync(plugInName);
+        var (Success, Message) = await _plugInManager.EnablePlugInAsync(plugInName);
         return new PluginStateDto()
         {
-            Success = tryAddResult.Success,
-            Message = tryAddResult.Message
+            Success = Success,
+            Message = Message
         };
     }
 

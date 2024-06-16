@@ -2,7 +2,7 @@
 
 namespace Polaris.Abp.NewFireTheme.Domain;
 
-public class PolarisNEwFireThemeSettingDefinitionProvider : SettingDefinitionProvider
+public class PolarisNewFireThemeSettingDefinitionProvider : SettingDefinitionProvider
 {
     public override void Define(ISettingDefinitionContext context)
     {

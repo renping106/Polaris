@@ -13,21 +13,16 @@ namespace Polaris.Abp.DatabaseManagement.Services;
 
 [Dependency(ReplaceServices = true)]
 [RemoteService(false)]
-public class NewTenantAppService : TenantAppService
+public class NewTenantAppService(
+    ITenantRepository tenantRepository,
+    ITenantManager tenantManager,
+    IDataSeeder dataSeeder,
+    IDistributedEventBus distributedEventBus,
+    ILocalEventBus localEventBus,
+    ISettingManager settingManager) 
+    : TenantAppService(tenantRepository, tenantManager, dataSeeder, distributedEventBus, localEventBus)
 {
-    private readonly ISettingManager _settingManager;
-
-    public NewTenantAppService(
-        ITenantRepository tenantRepository,
-        ITenantManager tenantManager,
-        IDataSeeder dataSeeder,
-        IDistributedEventBus distributedEventBus,
-        ILocalEventBus localEventBus,
-        ISettingManager settingManager)
-        : base(tenantRepository, tenantManager, dataSeeder, distributedEventBus, localEventBus)
-    {
-        _settingManager = settingManager;
-    }
+    private readonly ISettingManager _settingManager = settingManager;
 
     public async override Task<TenantDto> CreateAsync(TenantCreateDto input)
     {

@@ -3,14 +3,9 @@ using Volo.Abp.DependencyInjection;
 
 namespace Polaris.Abp.DatabaseManagement.Domain;
 
-internal class DatabaseProviderFactory : IDatabaseProviderFactory, ITransientDependency
+internal class DatabaseProviderFactory(IEnumerable<IDatabaseProvider> providers) : IDatabaseProviderFactory, ITransientDependency
 {
-    private readonly IEnumerable<IDatabaseProvider> _providers;
-
-    public DatabaseProviderFactory(IEnumerable<IDatabaseProvider> providers)
-    {
-        _providers = providers;
-    }
+    private readonly IEnumerable<IDatabaseProvider> _providers = providers;
 
     public IDatabaseProvider GetDatabaseProvider(string providerKey)
     {
