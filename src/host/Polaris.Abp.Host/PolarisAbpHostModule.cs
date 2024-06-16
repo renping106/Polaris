@@ -119,7 +119,6 @@ public class PolarisAbpHostModule : AbpModule
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-        var configuration = context.Services.GetConfiguration();
 
         context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
         {
@@ -175,7 +174,7 @@ public class PolarisAbpHostModule : AbpModule
         ConfigureEfCore(context);
     }
 
-    private void ConfigureAuthentication(ServiceConfigurationContext context)
+    private static void ConfigureAuthentication(ServiceConfigurationContext context)
     {
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
@@ -264,7 +263,7 @@ public class PolarisAbpHostModule : AbpModule
         });
     }
 
-    private void ConfigureSwagger(IServiceCollection services)
+    private static void ConfigureSwagger(IServiceCollection services)
     {
         services.AddAbpSwaggerGen(
             options =>
