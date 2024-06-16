@@ -1,46 +1,40 @@
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.Validation;
 
-namespace Polaris.Abp.DatabaseManagement.Pages.TenantManagement.Tenants
+namespace Polaris.Abp.DatabaseManagement.Pages.TenantManagement.Tenants;
+
+public class CreateModalModel(ITenantAppService tenantAppService) : DatabaseManagementPageModel
 {
-    public class CreateModalModel : DatabaseManagementPageModel
+    [BindProperty]
+    public TenantInfoModel Tenant { get; set; } = new TenantInfoModel();
+
+    protected ITenantAppService TenantAppService { get; } = tenantAppService;
+
+    public virtual Task<IActionResult> OnGetAsync()
     {
-        [BindProperty]
-        public TenantInfoModel Tenant { get; set; }
 
-        protected ITenantAppService TenantAppService { get; }
+        return Task.FromResult<IActionResult>(Page());
+    }
 
-        public CreateModalModel(ITenantAppService tenantAppService)
-        {
-            TenantAppService = tenantAppService;
-        }
+    public virtual async Task<IActionResult> OnPostAsync()
+    {
+        ValidateModel();
 
-        public virtual Task<IActionResult> OnGetAsync()
-        {
-            Tenant = new TenantInfoModel();
-            return Task.FromResult<IActionResult>(Page());
-        }
+        var input = ObjectMapper.Map<TenantInfoModel, TenantCreateDto>(Tenant);
+        await TenantAppService.CreateAsync(input);
 
-        public virtual async Task<IActionResult> OnPostAsync()
-        {
-            ValidateModel();
+        return NoContent();
+    }
 
-            var input = ObjectMapper.Map<TenantInfoModel, TenantCreateDto>(Tenant);
-            await TenantAppService.CreateAsync(input);
+    public class TenantInfoModel : ExtensibleObject
+    {
+        [Required]
+        [DynamicStringLength(typeof(TenantConsts), nameof(TenantConsts.MaxNameLength))]
+        [Display(Name = "Tenant Name")]
+        public string Name { get; set; } = string.Empty;
 
-            return NoContent();
-        }
-
-        public class TenantInfoModel : ExtensibleObject
-        {
-            [Required]
-            [DynamicStringLength(typeof(TenantConsts), nameof(TenantConsts.MaxNameLength))]
-            [Display(Name = "Tenant Name")]
-            public string Name { get; set; }
-
-        }
     }
 }

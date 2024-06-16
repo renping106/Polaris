@@ -1,7 +1,6 @@
-﻿namespace Polaris.Abp.Extension.Abstractions.Database
+﻿namespace Polaris.Abp.Extension.Abstractions.Database;
+
+public class DbContextChangedEvent
 {
-    public class DbContextChangedEvent
-    {
-        public required IReadOnlyList<Type> DbContextTypes { get; set; }
-    }
+    public required IReadOnlyList<Type> DbContextTypes { get; set; }
 }

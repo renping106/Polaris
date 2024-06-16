@@ -6,29 +6,28 @@ using Volo.Abp.EntityFrameworkCore.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Uow;
 
-namespace Polaris.Abp.DatabaseManagement.Sqlite
+namespace Polaris.Abp.DatabaseManagement.Sqlite;
+
+public class SqliteDatabaseProvider : IDatabaseProvider, ITransientDependency
 {
-    public class SqliteDatabaseProvider : IDatabaseProvider, ITransientDependency
+    public readonly static string ProviderKey = "Sqlite";
+
+    public string Name => "Sqlite";
+
+    public string Key => ProviderKey;
+
+    public bool HasConnectionString => true;
+
+    public string SampleConnectionString => "Data Source=Polaris.db;Cache=Shared";
+
+    public bool IgnoreMigration => false;
+
+    public UnitOfWorkTransactionBehavior UnitOfWorkTransactionBehaviorOption => UnitOfWorkTransactionBehavior.Disabled;
+
+    public SequentialGuidType? SequentialGuidTypeOption => null;
+
+    public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
     {
-        public static readonly string ProviderKey = "Sqlite";
-
-        public string Name => "Sqlite";
-
-        public string Key => ProviderKey;
-
-        public bool HasConnectionString => true;
-
-        public string SampleConnectionString => "Data Source=Polaris.db;Cache=Shared";
-
-        public bool IgnoreMigration => false;
-
-        public UnitOfWorkTransactionBehavior UnitOfWorkTransactionBehaviorOption => UnitOfWorkTransactionBehavior.Disabled;
-
-        public SequentialGuidType? SequentialGuidTypeOption => null;
-
-        public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
-        {
-            return context.UseSqlite();
-        }
+        return context.UseSqlite();
     }
 }

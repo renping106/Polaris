@@ -1,9 +1,8 @@
 ﻿using Volo.Abp.Localization;
 
-namespace Polaris.Abp.DatabaseManagement.Localization
+namespace Polaris.Abp.DatabaseManagement.Localization;
+
+[LocalizationResourceName("DatabaseManagement")]
+public class DatabaseManagementResource
 {
-    [LocalizationResourceName("DatabaseManagement")]
-    public class DatabaseManagementResource
-    {
-    }
 }

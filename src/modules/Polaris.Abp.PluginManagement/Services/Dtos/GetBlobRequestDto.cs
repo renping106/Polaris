@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Polaris.Abp.PluginManagement.Services.Dtos
+namespace Polaris.Abp.PluginManagement.Services.Dtos;
+
+public class GetBlobRequestDto
 {
-    public class GetBlobRequestDto
-    {
-        [Required]
-        public string Name { get; set; } = string.Empty;
-    }
+    [Required]
+    public string Name { get; set; } = string.Empty;
 }

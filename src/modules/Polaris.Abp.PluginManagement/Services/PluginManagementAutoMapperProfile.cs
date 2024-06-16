@@ -2,13 +2,12 @@
 using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Polaris.Abp.PluginManagement.Services.Dtos;
 
-namespace Polaris.Abp.PluginManagement.Services
+namespace Polaris.Abp.PluginManagement.Services;
+
+public class PluginManagementAutoMapperProfile : Profile
 {
-    public class PluginManagementAutoMapperProfile : Profile
+    public PluginManagementAutoMapperProfile()
     {
-        public PluginManagementAutoMapperProfile()
-        {
-            CreateMap<IPlugInDescriptor, PlugInDescriptorDto>();
-        }
+        CreateMap<IPlugInDescriptor, PlugInDescriptorDto>();
     }
 }

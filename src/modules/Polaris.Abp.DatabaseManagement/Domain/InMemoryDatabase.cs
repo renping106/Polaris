@@ -6,38 +6,37 @@ using Volo.Abp.Guids;
 using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 
-namespace Polaris.Abp.DatabaseManagement.Domain
+namespace Polaris.Abp.DatabaseManagement.Domain;
+
+internal class InMemoryDatabaseProvider : IDatabaseProvider, ITransientDependency
 {
-    internal class InMemoryDatabaseProvider : IDatabaseProvider, ITransientDependency
+    public readonly static string ProviderKey = "InMemory";
+
+    public string Name => "In Memory";
+
+    public string Key => ProviderKey;
+
+    public bool HasConnectionString => false;
+
+    public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}";
+
+    public bool IgnoreMigration => true;
+
+    public UnitOfWorkTransactionBehavior UnitOfWorkTransactionBehaviorOption => UnitOfWorkTransactionBehavior.Disabled;
+
+    public SequentialGuidType? SequentialGuidTypeOption => null;
+
+    private readonly IClock _clock;
+
+    public InMemoryDatabaseProvider(IClock clock)
     {
-        public static readonly string ProviderKey = "InMemory";
+        _clock = clock;
+    }
 
-        public string Name => "In Memory";
-
-        public string Key => ProviderKey;
-
-        public bool HasConnectionString => false;
-
-        public string SampleConnectionString => $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}";
-
-        public bool IgnoreMigration => true;
-
-        public UnitOfWorkTransactionBehavior UnitOfWorkTransactionBehaviorOption => UnitOfWorkTransactionBehavior.Disabled;
-
-        public SequentialGuidType? SequentialGuidTypeOption => null;
-
-        private readonly IClock _clock;
-
-        public InMemoryDatabaseProvider(IClock clock)
-        {
-            _clock = clock;
-        }
-
-        public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
-        {
-            var connectionString = context.ConnectionString;
-            if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}"; }
-            return context.DbContextOptions.UseInMemoryDatabase(connectionString);
-        }
+    public DbContextOptionsBuilder UseDatabase(AbpDbContextConfigurationContext context)
+    {
+        var connectionString = context.ConnectionString;
+        if (connectionString.IsNullOrEmpty()) { connectionString = $"Temp{_clock.Now.ToString("yyyyMMddHHmmss")}"; }
+        return context.DbContextOptions.UseInMemoryDatabase(connectionString);
     }
 }

@@ -1,10 +1,9 @@
-namespace Polaris.Abp.PluginManagement.Pages.PluginManagement
+namespace Polaris.Abp.PluginManagement.Pages.PluginManagement;
+
+public class IndexModel : PluginManagementPageModel
 {
-    public class IndexModel : PluginManagementPageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-            
-        }
+
     }
 }

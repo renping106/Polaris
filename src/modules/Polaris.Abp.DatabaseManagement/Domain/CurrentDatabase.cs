@@ -1,31 +1,30 @@
-﻿using Polaris.Abp.Extension.Abstractions.Database;
-using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+﻿using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+using Polaris.Abp.Extension.Abstractions.Database;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
 
-namespace Polaris.Abp.DatabaseManagement.Domain
+namespace Polaris.Abp.DatabaseManagement.Domain;
+
+internal class CurrentDatabase : ICurrentDatabase, ITransientDependency
 {
-    internal class CurrentDatabase : ICurrentDatabase, ITransientDependency
+    private readonly ICurrentTenant _currentTenant;
+    private readonly IDatabaseProviderFactory _databaseProviderFactory;
+    private readonly ITenantDatabaseRepository _tenantDatabaseRepository;
+
+    public CurrentDatabase(ICurrentTenant currentTenant,
+        IDatabaseProviderFactory databaseProviderFactory,
+        ITenantDatabaseRepository tenantDatabaseRepository)
     {
-        private readonly ICurrentTenant _currentTenant;
-        private readonly IDatabaseProviderFactory _databaseProviderFactory;
-        private readonly ITenantDatabaseRepository _tenantDatabaseRepository;
+        _currentTenant = currentTenant;
+        _databaseProviderFactory = databaseProviderFactory;
+        _tenantDatabaseRepository = tenantDatabaseRepository;
+    }
 
-        public CurrentDatabase(ICurrentTenant currentTenant,
-            IDatabaseProviderFactory databaseProviderFactory,
-            ITenantDatabaseRepository tenantDatabaseRepository)
-        {
-            _currentTenant = currentTenant;
-            _databaseProviderFactory = databaseProviderFactory;
-            _tenantDatabaseRepository = tenantDatabaseRepository;
-        }
+    public IDatabaseProvider Provider => GetCurrent();
 
-        public IDatabaseProvider Provider => GetCurrent();
-
-        private IDatabaseProvider GetCurrent()
-        {
-            var providerKey = _tenantDatabaseRepository.GetProviderByTenant(_currentTenant.Id);
-            return _databaseProviderFactory.GetDatabaseProvider(providerKey ?? InMemoryDatabaseProvider.ProviderKey);
-        }
+    private IDatabaseProvider GetCurrent()
+    {
+        var providerKey = _tenantDatabaseRepository.GetProviderByTenant(_currentTenant.Id);
+        return _databaseProviderFactory.GetDatabaseProvider(providerKey ?? InMemoryDatabaseProvider.ProviderKey);
     }
 }

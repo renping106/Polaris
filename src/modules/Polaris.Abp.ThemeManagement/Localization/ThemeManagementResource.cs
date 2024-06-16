@@ -1,9 +1,8 @@
 ﻿using Volo.Abp.Localization;
 
-namespace Polaris.Abp.ThemeManagement.Localization
+namespace Polaris.Abp.ThemeManagement.Localization;
+
+[LocalizationResourceName("ThemeManagement")]
+public class ThemeManagementResource
 {
-    [LocalizationResourceName("ThemeManagement")]
-    public class ThemeManagementResource
-    {
-    }
 }

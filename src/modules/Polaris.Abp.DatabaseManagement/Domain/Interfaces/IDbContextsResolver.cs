@@ -1,9 +1,8 @@
 ﻿using Volo.Abp.EntityFrameworkCore;
 
-namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces
+namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+
+public interface IDbContextsResolver
 {
-    public interface IDbContextsResolver
-    {
-        IEnumerable<IAbpEfCoreDbContext> DbContexts { get; }
-    }
+    IEnumerable<IAbpEfCoreDbContext> DbContexts { get; }
 }

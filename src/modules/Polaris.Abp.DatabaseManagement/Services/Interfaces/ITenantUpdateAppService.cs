@@ -1,8 +1,7 @@
-﻿namespace Polaris.Abp.DatabaseManagement.Services.Interfaces
+﻿namespace Polaris.Abp.DatabaseManagement.Services.Interfaces;
+
+public interface ITenantUpdateAppService
 {
-    public interface ITenantUpdateAppService
-    {
-        Task<bool> HasUpdatesAsync();
-        Task UpdateDatabaseAsync();
-    }
+    Task<bool> HasUpdatesAsync();
+    Task UpdateDatabaseAsync();
 }

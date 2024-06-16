@@ -2,14 +2,13 @@
 using Polaris.Abp.ThemeManagement.Localization;
 using Volo.Abp.Application.Services;
 
-namespace Polaris.Abp.ThemeManagement.Services
+namespace Polaris.Abp.ThemeManagement.Services;
+
+public abstract class ThemeManagementAppServiceBase : ApplicationService
 {
-    public abstract class ThemeManagementAppServiceBase : ApplicationService
+    protected ThemeManagementAppServiceBase()
     {
-        protected ThemeManagementAppServiceBase()
-        {
-            ObjectMapperContext = typeof(ThemeManagementModule);
-            LocalizationResource = typeof(ThemeManagementResource);
-        }
+        ObjectMapperContext = typeof(ThemeManagementModule);
+        LocalizationResource = typeof(ThemeManagementResource);
     }
 }

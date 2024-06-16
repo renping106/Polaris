@@ -1,14 +1,13 @@
 ﻿using Polaris.Abp.PluginManagement.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
 
-namespace Polaris.Abp.PluginManagement.Pages
+namespace Polaris.Abp.PluginManagement.Pages;
+
+public abstract class PluginManagementPageModel : AbpPageModel
 {
-    public abstract class PluginManagementPageModel : AbpPageModel
+    protected PluginManagementPageModel()
     {
-        protected PluginManagementPageModel()
-        {
-            LocalizationResourceType = typeof(PluginManagementResource);
-            ObjectMapperContext = typeof(PluginManagementModule);
-        }
+        LocalizationResourceType = typeof(PluginManagementResource);
+        ObjectMapperContext = typeof(PluginManagementModule);
     }
 }

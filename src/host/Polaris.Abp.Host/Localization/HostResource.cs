@@ -5,5 +5,5 @@ namespace Polaris.Abp.Host.Localization;
 [LocalizationResourceName("Host")]
 public class HostResource
 {
-    
+
 }

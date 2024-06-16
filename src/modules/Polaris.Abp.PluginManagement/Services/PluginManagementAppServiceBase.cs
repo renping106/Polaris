@@ -1,14 +1,13 @@
 ﻿using Polaris.Abp.PluginManagement.Localization;
 using Volo.Abp.Application.Services;
 
-namespace Polaris.Abp.PluginManagement.Services
+namespace Polaris.Abp.PluginManagement.Services;
+
+public abstract class PluginManagementAppServiceBase : ApplicationService
 {
-    public abstract class PluginManagementAppServiceBase : ApplicationService
+    protected PluginManagementAppServiceBase()
     {
-        protected PluginManagementAppServiceBase()
-        {
-            ObjectMapperContext = typeof(PluginManagementModule);
-            LocalizationResource = typeof(PluginManagementResource);
-        }
+        ObjectMapperContext = typeof(PluginManagementModule);
+        LocalizationResource = typeof(PluginManagementResource);
     }
 }

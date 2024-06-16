@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.UI.Navigation;
 
@@ -7,7 +6,7 @@ namespace Polaris.Abp.NewFireTheme.Themes.NewFire.Components.Menu;
 
 public class MainNavbarMenuViewComponent : AbpViewComponent
 {
-    private static readonly List<string> _icons = new List<string>()
+    private readonly static List<string> _icons = new List<string>()
     {
         "crop",
         "compass",

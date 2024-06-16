@@ -1,15 +1,14 @@
-﻿namespace Polaris.Abp.ThemeManagement.Domain
+﻿namespace Polaris.Abp.ThemeManagement.Domain;
+
+public static class DatabaseManagementSettings
 {
-    public static class DatabaseManagementSettings
-    {
-        private const string Prefix = "Polaris.Abp.DatabaseManagement";
+    private const string Prefix = "Polaris.Abp.DatabaseManagement";
 
-        //Add your own setting names here. Example:
-        public const string DatabaseProvider = Prefix + ".DatabaseProvider";
-        public const string SiteName = Prefix + ".SiteName";
-        public const string DatabaseVersion = Prefix + ".DatabaseVersion";
+    //Add your own setting names here. Example:
+    public const string DatabaseProvider = Prefix + ".DatabaseProvider";
+    public const string SiteName = Prefix + ".SiteName";
+    public const string DatabaseVersion = Prefix + ".DatabaseVersion";
 
-        public const string DefaultAdminEmail = Prefix + ".DefaultAdminEmail";
-        public const string DefaultAdminPassword = Prefix + ".DefaultAdminPassword";
-    }
+    public const string DefaultAdminEmail = Prefix + ".DefaultAdminEmail";
+    public const string DefaultAdminPassword = Prefix + ".DefaultAdminPassword";
 }

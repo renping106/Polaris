@@ -4,5 +4,5 @@ namespace Polaris.Abp.Host.Pages;
 
 public class IndexModel : AbpPageModel
 {
-    
+
 }

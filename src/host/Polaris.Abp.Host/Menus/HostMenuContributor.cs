@@ -1,6 +1,4 @@
 ﻿using Polaris.Abp.Host.Localization;
-using Volo.Abp.Identity.Web.Navigation;
-using Volo.Abp.SettingManagement.Web.Navigation;
 using Volo.Abp.TenantManagement.Web.Navigation;
 using Volo.Abp.UI.Navigation;
 
@@ -16,7 +14,7 @@ public class HostMenuContributor : IMenuContributor
         }
     }
 
-    private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
+    private static Task ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
         var administration = context.Menu.GetAdministration();
         var l = context.GetLocalizer<HostResource>();
@@ -32,14 +30,7 @@ public class HostMenuContributor : IMenuContributor
             )
         );
 
-        if (PolarisAbpHostModule.IsMultiTenant)
-        {
-            administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
-        }
-        else
-        {
-            administration.TryRemoveMenuItem(TenantManagementMenuNames.GroupName);
-        }
+        administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
 
         return Task.CompletedTask;
     }

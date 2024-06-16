@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using System.Runtime.Loader;
+﻿using System.Runtime.Loader;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-namespace Polaris.Abp.PluginManagement.Domain.Interfaces
+namespace Polaris.Abp.PluginManagement.Domain.Interfaces;
+
+public interface IPlugInContext
 {
-    public interface IPlugInContext
-    {
-        AssemblyLoadContext? Context { get; }
-        void UnloadContext();
-        IReadOnlyList<Type> DbContextTypes { get; }
-        IReadOnlyList<CompiledRazorAssemblyPart> CompiledRazorAssemblyParts { get; }
-    }
+    AssemblyLoadContext? Context { get; }
+    void UnloadContext();
+    IReadOnlyList<Type> DbContextTypes { get; }
+    IReadOnlyList<CompiledRazorAssemblyPart> CompiledRazorAssemblyParts { get; }
 }

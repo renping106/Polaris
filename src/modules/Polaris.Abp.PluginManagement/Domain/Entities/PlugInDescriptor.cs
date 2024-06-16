@@ -2,27 +2,26 @@
 using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Polaris.Abp.PluginManagement.Domain.Entities
+namespace Polaris.Abp.PluginManagement.Domain.Entities;
+
+internal class PlugInDescriptor : IPlugInDescriptor
 {
-    internal class PlugInDescriptor : IPlugInDescriptor
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public bool IsEnabled { get; set; }
+    public string Version { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public IPlugInSource PlugInSource { get; set; } = new DynamicPlugInSource("");
+
+    public IPlugInDescriptor Clone()
     {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public bool IsEnabled { get; set; }
-        public string Version { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public IPlugInSource PlugInSource { get; set; }
-
-        public IPlugInDescriptor Clone()
+        var folderSource = new DynamicPlugInSource(((DynamicPlugInSource)PlugInSource).Folder);
+        return new PlugInDescriptor()
         {
-            var folderSource = new DynamicPlugInSource(((DynamicPlugInSource)PlugInSource).Folder);
-            return new PlugInDescriptor()
-            {
-                Name = Name,
-                Version = Version,
-                PlugInSource = folderSource
-            };
-        }
+            Name = Name,
+            Version = Version,
+            PlugInSource = folderSource
+        };
     }
 }

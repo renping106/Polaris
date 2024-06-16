@@ -2,26 +2,25 @@
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Polaris.Abp.DatabaseManagement.Data
+namespace Polaris.Abp.DatabaseManagement.Data;
+
+public class EfCoreDbConventionalRegistrar : DefaultConventionalRegistrar
 {
-    public class EfCoreDbConventionalRegistrar : DefaultConventionalRegistrar
+    protected override bool IsConventionalRegistrationDisabled(Type type)
     {
-        protected override bool IsConventionalRegistrationDisabled(Type type)
-        {
-            return !typeof(IAbpEfCoreDbContext).IsAssignableFrom(type) || base.IsConventionalRegistrationDisabled(type);
-        }
+        return !typeof(IAbpEfCoreDbContext).IsAssignableFrom(type) || base.IsConventionalRegistrationDisabled(type);
+    }
 
-        protected override List<Type> GetExposedServiceTypes(Type type)
+    protected override List<Type> GetExposedServiceTypes(Type type)
+    {
+        return new List<Type>()
         {
-            return new List<Type>()
-            {
-                typeof(IAbpEfCoreDbContext)
-            };
-        }
+            typeof(IAbpEfCoreDbContext)
+        };
+    }
 
-        protected override ServiceLifetime? GetDefaultLifeTimeOrNull(Type type)
-        {
-            return ServiceLifetime.Transient;
-        }
+    protected override ServiceLifetime? GetDefaultLifeTimeOrNull(Type type)
+    {
+        return ServiceLifetime.Transient;
     }
 }

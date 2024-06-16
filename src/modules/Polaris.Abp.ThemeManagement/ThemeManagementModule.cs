@@ -15,75 +15,74 @@ using Volo.Abp.SettingManagement.Web.Pages.SettingManagement;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 
-namespace Polaris.Abp.PluginManagement
+namespace Polaris.Abp.PluginManagement;
+
+[DependsOn(
+    typeof(AbpAspNetCoreMvcUiThemeSharedModule),
+    typeof(AbpAutoMapperModule)
+    )]
+public class ThemeManagementModule : AbpModule
 {
-    [DependsOn(
-        typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule)
-        )]
-    public class ThemeManagementModule : AbpModule
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        public override void PreConfigureServices(ServiceConfigurationContext context)
+        PreConfigure<AbpAspNetCoreMvcOptions>(options =>
         {
-            PreConfigure<AbpAspNetCoreMvcOptions>(options =>
-            {
-                options
-                    .ConventionalControllers
-                    .Create(typeof(ThemeManagementModule).Assembly);
-            });
+            options
+                .ConventionalControllers
+                .Create(typeof(ThemeManagementModule).Assembly);
+        });
 
-            context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
-            {
-                options.AddAssemblyResource(typeof(ThemeManagementResource), typeof(ThemeManagementModule).Assembly);
-            });
-
-            PreConfigure<IMvcBuilder>(mvcBuilder =>
-            {
-                mvcBuilder.AddApplicationPartIfNotExists(typeof(ThemeManagementModule).Assembly);
-            });
-        }
-
-        public override void ConfigureServices(ServiceConfigurationContext context)
+        context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
         {
-            Configure<AbpNavigationOptions>(options =>
-            {
-                options.MenuContributors.Add(new ThemeManagementMenuContributor());
-            });
+            options.AddAssemblyResource(typeof(ThemeManagementResource), typeof(ThemeManagementModule).Assembly);
+        });
 
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.AddEmbedded<ThemeManagementModule>("Polaris.Abp.ThemeManagement");
-            });
+        PreConfigure<IMvcBuilder>(mvcBuilder =>
+        {
+            mvcBuilder.AddApplicationPartIfNotExists(typeof(ThemeManagementModule).Assembly);
+        });
+    }
 
-            context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<ThemeManagementModule>(validate: true);
-            });
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        Configure<AbpNavigationOptions>(options =>
+        {
+            options.MenuContributors.Add(new ThemeManagementMenuContributor());
+        });
 
-            Configure<AbpLocalizationOptions>(options =>
-            {
-                options.Resources
-                    .Add<ThemeManagementResource>("en")
-                    .AddVirtualJson("/Localization/ThemeManagement");
-            });
+        Configure<AbpVirtualFileSystemOptions>(options =>
+        {
+            options.FileSets.AddEmbedded<ThemeManagementModule>("Polaris.Abp.ThemeManagement");
+        });
 
-            context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<ThemeManagementAutoMapperProfile>(validate: true);
-            });
+        context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddMaps<ThemeManagementModule>(validate: true);
+        });
 
-            Configure<RazorPagesOptions>(options =>
-            {
-                //Configure authorization.
-                options.Conventions.AuthorizePage("/ThemeManagement", ThemeManagementPermissions.GroupName);
-            });
+        Configure<AbpLocalizationOptions>(options =>
+        {
+            options.Resources
+                .Add<ThemeManagementResource>("en")
+                .AddVirtualJson("/Localization/ThemeManagement");
+        });
 
-            Configure<SettingManagementPageOptions>(options =>
-            {
-                options.Contributors.Add(new PolarisThemeSettingPageContributor());
-            });
-        }
+        context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddProfile<ThemeManagementAutoMapperProfile>(validate: true);
+        });
+
+        Configure<RazorPagesOptions>(options =>
+        {
+            //Configure authorization.
+            options.Conventions.AuthorizePage("/ThemeManagement", ThemeManagementPermissions.GroupName);
+        });
+
+        Configure<SettingManagementPageOptions>(options =>
+        {
+            options.Contributors.Add(new PolarisThemeSettingPageContributor());
+        });
     }
 }

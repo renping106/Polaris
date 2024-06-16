@@ -2,34 +2,32 @@
 using Microsoft.Extensions.Options;
 using Volo.Abp.AspNetCore.Mvc.UI.Theming;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.SettingManagement;
 using Volo.Abp.Settings;
 
-namespace Polaris.Abp.ThemeManagement.Domain
+namespace Polaris.Abp.ThemeManagement.Domain;
+
+internal class ThemeSelector : DefaultThemeSelector, IThemeSelector, ITransientDependency
 {
-    internal class ThemeSelector : DefaultThemeSelector, IThemeSelector, ITransientDependency
+    private readonly ILogger<ThemeSelector> _logger;
+    private readonly ISettingProvider _settingProvider;
+
+    public ThemeSelector(IOptions<AbpThemingOptions> options, ILogger<ThemeSelector> logger, ISettingProvider settingProvider)
+        : base(options)
     {
-        private readonly ILogger<ThemeSelector> _logger;
-        private readonly ISettingProvider _settingProvider;
+        _logger = logger;
+        _settingProvider = settingProvider;
+    }
 
-        public ThemeSelector(IOptions<AbpThemingOptions> options, ILogger<ThemeSelector> logger, ISettingProvider settingProvider)
-            : base(options)
+    public override ThemeInfo GetCurrentThemeInfo()
+    {
+        var themes = Options.Themes.Values;
+        var currentTheme = _settingProvider.GetOrNullAsync(ThemeManagementSettings.ThemeType).GetAwaiter().GetResult();
+        var theme = themes.FirstOrDefault(t => t.ThemeType.FullName == currentTheme);
+        if (theme == null)
         {
-            _logger = logger;
-            _settingProvider = settingProvider;
+            _logger.LogWarning($"Cannot find the theme {currentTheme}. Use default theme.");
+            return base.GetCurrentThemeInfo();
         }
-
-        public override ThemeInfo GetCurrentThemeInfo()
-        {
-            var themes = Options.Themes.Values;
-            var currentTheme = _settingProvider.GetOrNullAsync(ThemeManagementSettings.ThemeType).GetAwaiter().GetResult();
-            var theme = themes.FirstOrDefault(t => t.ThemeType.FullName == currentTheme);
-            if (theme == null)
-            {
-                _logger.LogWarning($"Cannot find the theme {currentTheme}. Use default theme.");
-                return base.GetCurrentThemeInfo();
-            }
-            return theme;
-        }
+        return theme;
     }
 }

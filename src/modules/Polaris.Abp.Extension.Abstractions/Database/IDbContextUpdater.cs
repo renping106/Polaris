@@ -1,7 +1,6 @@
-﻿namespace Polaris.Abp.Extension.Abstractions.Database
+﻿namespace Polaris.Abp.Extension.Abstractions.Database;
+
+public interface IDbContextUpdater
 {
-    public interface IDbContextUpdater
-    {
-        Task UpdateAsync(DbContextChangedEvent dbContextChangedEvent);
-    }
+    Task UpdateAsync(DbContextChangedEvent dbContextChangedEvent);
 }

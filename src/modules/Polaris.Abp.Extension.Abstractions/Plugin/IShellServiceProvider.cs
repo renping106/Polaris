@@ -1,7 +1,6 @@
-﻿namespace Polaris.Abp.Extension.Abstractions.Plugin
+﻿namespace Polaris.Abp.Extension.Abstractions.Plugin;
+
+public interface IShellServiceProvider
 {
-    public interface IShellServiceProvider
-    {
-        IServiceProvider? ServiceProvider { get; }
-    }
+    IServiceProvider? ServiceProvider { get; }
 }

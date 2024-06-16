@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Polaris.Abp.DatabaseManagement.Services.Dtos;
 using Polaris.Abp.DatabaseManagement.Services.Interfaces;
-using Volo.Abp.SettingManagement;
-using Volo.Abp.TenantManagement;
 
 namespace Polaris.Abp.DatabaseManagement.Pages.Setup;
 
@@ -12,7 +10,7 @@ public class InstallModel : DatabaseManagementPageModel
     [BindProperty]
     public SetupViewModel Config { get; set; } = new SetupViewModel();
     public List<DatabaseProviderDto> DatabaseProviders { get; set; }
-    public List<SelectListItem> TimeZoneItems { get; set; }
+    public List<SelectListItem> TimeZoneItems { get; set; } = [];
     public bool ShowUseHostSetting { get; set; } = true;
 
     private readonly ISetupAppService _setupAppService;
@@ -20,7 +18,7 @@ public class InstallModel : DatabaseManagementPageModel
     public InstallModel(ISetupAppService setupStatusAppService)
     {
         _setupAppService = setupStatusAppService;
-        DatabaseProviders = _setupAppService.GetSupportedDatabaseProviders().ToList();
+        DatabaseProviders = [.. _setupAppService.GetSupportedDatabaseProviders()];
         GetTimezoneItems();
     }
 
@@ -82,7 +80,7 @@ public class InstallModel : DatabaseManagementPageModel
 
     private void GetTimezoneItems()
     {
-        TimeZoneItems = new List<SelectListItem>();
+        TimeZoneItems = [];
         var timezones = _setupAppService.GetTimezonesAsync().Result;
         TimeZoneItems.AddRange(timezones.Select(x => new SelectListItem(x.Name, x.Value)).ToList());
     }

@@ -1,14 +1,13 @@
 ﻿using Polaris.Abp.DatabaseManagement.Localization;
 using Volo.Abp.Application.Services;
 
-namespace Polaris.Abp.DatabaseManagement.Services
+namespace Polaris.Abp.DatabaseManagement.Services;
+
+public abstract class DatabaseManagementAppServiceBase : ApplicationService
 {
-    public abstract class DatabaseManagementAppServiceBase : ApplicationService
+    protected DatabaseManagementAppServiceBase()
     {
-        protected DatabaseManagementAppServiceBase()
-        {
-            ObjectMapperContext = typeof(DatabaseManagementModule);
-            LocalizationResource = typeof(DatabaseManagementResource);
-        }
+        ObjectMapperContext = typeof(DatabaseManagementModule);
+        LocalizationResource = typeof(DatabaseManagementResource);
     }
 }

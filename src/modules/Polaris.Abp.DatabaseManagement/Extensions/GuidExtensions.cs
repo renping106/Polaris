@@ -1,10 +1,9 @@
-﻿namespace Polaris.Abp.DatabaseManagement.Extensions
+﻿namespace Polaris.Abp.DatabaseManagement.Extensions;
+
+public static class GuidExtensions
 {
-    public static class GuidExtensions
+    public static Guid Normalize(this Guid? guid)
     {
-        public static Guid Normalize(this Guid? guid)
-        {
-            return guid ?? Guid.Empty;
-        }
+        return guid ?? Guid.Empty;
     }
 }

@@ -1,119 +1,118 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Runtime.Loader;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Polaris.Abp.PluginManagement.Domain.Entities;
-using System.Runtime.Loader;
+using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
 
-namespace Polaris.Abp.PluginManagement.Domain
+namespace Polaris.Abp.PluginManagement.Domain;
+
+internal class WebAppShell : IWebAppShell
 {
-    internal class WebAppShell : IWebAppShell
+    private WebAppShellContext? _context;
+    private readonly IServiceProvider _hostServiceProvider;
+    private readonly WebShellOptions _options;
+    private readonly object instanceLock = new object();
+
+    public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
     {
-        private WebAppShellContext? _context;
-        private readonly IServiceProvider _hostServiceProvider;
-        private readonly WebShellOptions _options;
-        private readonly object instanceLock = new object();
+        _options = webShellOptions.Value;
+        _hostServiceProvider = hostServiceProvider;
+    }
 
-        public WebAppShell(IOptions<WebShellOptions> webShellOptions, IServiceProvider hostServiceProvider)
+    public IServiceProvider? ServiceProvider => _context?.Services;
+
+    public WebAppShellContext GetContext()
+    {
+        if (_context == null)
         {
-            _options = webShellOptions.Value;
-            _hostServiceProvider = hostServiceProvider;
-        }
-
-        public IServiceProvider? ServiceProvider => _context?.Services;
-
-        public WebAppShellContext GetContext()
-        {
-            if (_context == null)
+            lock (instanceLock)
             {
-                lock (instanceLock)
+                if (_context == null)
                 {
-                    if (_context == null)
+                    _context = InitShellAsync().GetAwaiter().GetResult();
+                }
+            }
+        }
+        return _context!;
+    }
+
+    public async ValueTask<(bool Success, string Message)> UpdateShell()
+    {
+        try
+        {
+            var newShell = await InitShellAsync();
+            if (newShell != null)
+            {
+                _context = newShell;
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+        return (true, string.Empty);
+    }
+
+    private async ValueTask<WebAppShellContext> InitShellAsync()
+    {
+        var shellAppBuilder = _options.InitBuilder();
+
+        RegisterSharedServices(shellAppBuilder);
+
+        await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
+        {
+            // Core modules for dynamic
+            var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
+            if (context != null)
+            {
+                foreach (var item in context.Assemblies)
+                {
+                    var moduleTypes = item.GetTypes().Where(t => t.IsAssignableTo(typeof(AbpModule)));
+                    if (moduleTypes.Any())
                     {
-                        _context = InitShellAsync().GetAwaiter().GetResult();
+                        options.PlugInSources.AddTypes(moduleTypes.ToArray());
                     }
                 }
             }
-            return _context!;
-        }
 
-        public async ValueTask<(bool Success, string Message)> UpdateShell()
-        {
-            try
+            // Enabled plugins
+            var plugInManager = _hostServiceProvider.GetRequiredService<IPlugInManager>();
+            var enabledPlugIns = plugInManager.GetEnabledPlugIns();
+            foreach (var enabledPlug in enabledPlugIns)
             {
-                var newShell = await InitShellAsync();
-                if (newShell != null)
-                {
-                    _context = newShell;
-                }
+                options.PlugInSources.Add(enabledPlug.PlugInSource);
             }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-            return (true, string.Empty);
-        }
 
-        private async ValueTask<WebAppShellContext> InitShellAsync()
+        });
+
+        var shellApp = shellAppBuilder.Build();
+
+        Action<IApplicationBuilder> configure = async (builder) =>
         {
-            var shellAppBuilder = _options.InitBuilder();
+            await shellApp.InitializeApplicationAsync();
+        };
 
-            RegisterSharedServices(shellAppBuilder);
+        configure(shellApp);
 
-            await shellAppBuilder.AddApplicationAsync(_options.StartupModuleTyp, options =>
+        // Build the request pipeline.
+        var requestDelegate = ((IApplicationBuilder)shellApp).Build();
+
+        return new WebAppShellContext(shellApp.Services, requestDelegate);
+    }
+
+    private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
+    {
+        foreach (var item in _options.SharedServices)
+        {
+            shellAppBuilder.Services.AddSingleton(item, provider =>
             {
-                // Core modules for dynamic
-                var context = AssemblyLoadContext.All.FirstOrDefault(t => t.GetType().Name == nameof(AutofacLoadContext));
-                if (context != null)
-                {
-                    foreach (var item in context.Assemblies)
-                    {
-                        var moduleTypes = item.GetTypes().Where(t => t.IsAssignableTo(typeof(AbpModule)));
-                        if (moduleTypes.Any())
-                        {
-                            options.PlugInSources.AddTypes(moduleTypes.ToArray());
-                        }
-                    }
-                }
-
-                // Enabled plugins
-                var plugInManager = _hostServiceProvider.GetRequiredService<IPlugInManager>();
-                var enabledPlugIns = plugInManager.GetEnabledPlugIns();
-                foreach (var enabledPlug in enabledPlugIns)
-                {
-                    options.PlugInSources.Add(enabledPlug.PlugInSource);
-                }
-
+                return _hostServiceProvider.GetRequiredService(item);
             });
-
-            var shellApp = shellAppBuilder.Build();
-
-            Action<IApplicationBuilder> configure = async (builder) =>
-            {
-                await shellApp.InitializeApplicationAsync();
-            };
-
-            configure(shellApp);
-
-            // Build the request pipeline.
-            var requestDelegate = ((IApplicationBuilder)shellApp).Build();
-
-            return new WebAppShellContext(shellApp.Services, requestDelegate);
         }
 
-        private void RegisterSharedServices(WebApplicationBuilder shellAppBuilder)
-        {
-            foreach (var item in _options.SharedServices)
-            {
-                shellAppBuilder.Services.AddSingleton(item, provider =>
-                {
-                    return _hostServiceProvider.GetRequiredService(item);
-                });
-            }
-
-            shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
-        }
+        shellAppBuilder.Services.AddSingleton(new HostServiceProvider(_hostServiceProvider));
     }
 }

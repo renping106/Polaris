@@ -1,31 +1,30 @@
 ﻿using Shouldly;
 using Volo.Abp.TenantManagement;
 
-namespace Polaris.Abp.DatabaseManagement.Tests
+namespace Polaris.Abp.DatabaseManagement.Tests;
+
+public class NewTenantAppServiceTest : PolarisAbpTestBase<DatabaseManagementTestModule>
 {
-    public class NewTenantAppServiceTest : PolarisAbpTestBase<DatabaseManagementTestModule>
+    private readonly ITenantAppService _tenantAppService;
+
+    public NewTenantAppServiceTest()
     {
-        private readonly ITenantAppService _tenantAppService;
+        _tenantAppService = GetRequiredService<ITenantAppService>();
+    }
 
-        public NewTenantAppServiceTest()
+    [Theory]
+    [InlineData("Tenant1")]
+    public async Task Tenant_Should_Install_Successfully(string tenantName)
+    {
+        //Act
+        var tenant = await _tenantAppService.CreateAsync(new TenantCreateDto()
         {
-            _tenantAppService = GetRequiredService<ITenantAppService>();
-        }
+            Name = tenantName,
+            AdminEmailAddress = "test@test.com",
+            AdminPassword = "password",
+        });
 
-        [Theory]
-        [InlineData("Tenant1")]
-        public async Task Tenant_Should_Install_Successfully(string tenantName)
-        {
-            //Act
-            var tenant = await _tenantAppService.CreateAsync(new TenantCreateDto()
-            {
-                Name = tenantName,
-                AdminEmailAddress = "test@test.com",
-                AdminPassword = "password",
-            });
-
-            //Assert
-            tenant.ShouldNotBeNull();
-        }
+        //Assert
+        tenant.ShouldNotBeNull();
     }
 }

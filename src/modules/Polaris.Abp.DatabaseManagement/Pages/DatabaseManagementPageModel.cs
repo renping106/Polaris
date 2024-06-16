@@ -1,16 +1,12 @@
 ﻿using Polaris.Abp.DatabaseManagement.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
-using Volo.Abp.Modularity;
-using Volo.Abp.TenantManagement;
 
-namespace Polaris.Abp.DatabaseManagement.Pages
+namespace Polaris.Abp.DatabaseManagement.Pages;
+
+public abstract class DatabaseManagementPageModel : AbpPageModel
 {
-    public abstract class DatabaseManagementPageModel : AbpPageModel
+    protected DatabaseManagementPageModel()
     {
-        protected DatabaseManagementPageModel()
-        {
-            LocalizationResourceType = typeof(DatabaseManagementResource);
-        }
+        LocalizationResourceType = typeof(DatabaseManagementResource);
     }
-
 }

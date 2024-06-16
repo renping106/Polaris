@@ -3,42 +3,41 @@ using Polaris.Abp.DatabaseManagement.Services.Interfaces;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.MultiTenancy;
 
-namespace Ping.Polaris.Web.Filters
+namespace Ping.Polaris.Web.Filters;
+
+public class TenantStateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
 {
-    public class TenantStateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
+    private readonly ISetupAppService _setupAppService;
+    private readonly ICurrentTenant _currentTenant;
+    private readonly static string _setupPath = "/Setup/Install";
+
+    public TenantStateAsyncPageFilter(ISetupAppService setupAppService,
+        ICurrentTenant currentTenant)
     {
-        private readonly ISetupAppService _setupAppService;
-        private readonly ICurrentTenant _currentTenant;
-        private static readonly string _setupPath = "/Setup/Install";
+        _setupAppService = setupAppService;
+        _currentTenant = currentTenant;
+    }
 
-        public TenantStateAsyncPageFilter(ISetupAppService setupAppService,
-            ICurrentTenant currentTenant)
+    public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+    {
+        if (!_setupAppService.IsInitialized(_currentTenant.Id)
+            && context.HttpContext.Request.Path.Value?.IndexOf(_setupPath) < 0)
         {
-            _setupAppService = setupAppService;
-            _currentTenant = currentTenant;
-        }
-
-        public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
-        {
-            if (!_setupAppService.IsInitialized(_currentTenant.Id)
-                && context.HttpContext.Request.Path.Value?.IndexOf(_setupPath) < 0)
+            var queryString = "";
+            if (_currentTenant.Id.HasValue)
             {
-                var queryString = "";
-                if (_currentTenant.Id.HasValue)
-                {
-                    queryString = $"?tenant={_currentTenant.Id}";
-                }
-                context.HttpContext.Response.Redirect(_setupPath + queryString);
+                queryString = $"?tenant={_currentTenant.Id}";
             }
-
-            return Task.CompletedTask;
+            context.HttpContext.Response.Redirect(_setupPath + queryString);
         }
 
-        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
-                                                      PageHandlerExecutionDelegate next)
-        {
-            // Do post work.
-            await next.Invoke();
-        }
+        return Task.CompletedTask;
+    }
+
+    public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
+                                                  PageHandlerExecutionDelegate next)
+    {
+        // Do post work.
+        await next.Invoke();
     }
 }

@@ -1,37 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
+﻿using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Polaris.Abp.DatabaseManagement.Data
+namespace Polaris.Abp.DatabaseManagement.Data;
+
+public static class EfCoreDbContextExtensions
 {
-    public static class EfCoreDbContextExtensions
+    public static int ExecuteListSqlCommand(this IAbpEfCoreDbContext dbContext, List<string> sqlList)
     {
-        public static int ExecuteListSqlCommand(this IAbpEfCoreDbContext dbContext, List<string> sqlList)
+        var retunInt = 0;
+        using (var trans = dbContext.Database.BeginTransaction())
         {
-            int retunInt = 0;
-            using (var trans = dbContext.Database.BeginTransaction())
+            try
+            {
+                sqlList.ForEach(cmd => retunInt += dbContext.Database.ExecuteSqlRaw(cmd));
+                dbContext.Database.CommitTransaction();
+
+            }
+            catch (DbException)
             {
                 try
                 {
-                    sqlList.ForEach(cmd => retunInt += dbContext.Database.ExecuteSqlRaw(cmd));
-                    dbContext.Database.CommitTransaction();
-
+                    dbContext.Database.RollbackTransaction();
                 }
-                catch (DbException ex)
+                catch (DbException)
                 {
-                    try
-                    {
-                        dbContext.Database.RollbackTransaction();
-                    }
-                    catch (DbException)
-                    {
-
-                    }
-
-                    throw ex;
+                    // Continue
                 }
+
+                throw;
             }
-            return retunInt;
         }
+        return retunInt;
     }
 }

@@ -2,13 +2,12 @@
 using Polaris.Abp.ThemeManagement.Services.Dtos;
 using static Polaris.Abp.ThemeManagement.Pages.SettingManagement.Components.ThemeSettingGroup.PolarisThemeSettingViewComponent;
 
-namespace Polaris.Abp.PluginManagement.Services
+namespace Polaris.Abp.PluginManagement.Services;
+
+public class ThemeManagementAutoMapperProfile : Profile
 {
-    public class ThemeManagementAutoMapperProfile : Profile
+    public ThemeManagementAutoMapperProfile()
     {
-        public ThemeManagementAutoMapperProfile()
-        {
-            CreateMap<BrandSettingDto, ThemeSettingViewModel>();
-        }
+        CreateMap<BrandSettingDto, ThemeSettingViewModel>();
     }
 }

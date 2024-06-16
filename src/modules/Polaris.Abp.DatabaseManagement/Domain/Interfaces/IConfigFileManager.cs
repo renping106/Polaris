@@ -1,10 +1,9 @@
-﻿namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces
+﻿namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+
+public interface IConfigFileManager
 {
-    public interface IConfigFileManager
-    {
-        string? GetDatabaseProvider();
-        string? GetConnectionString();
-        void SetDatabaseProvider(string databaseProvider);
-        void SetConnectionString(string connectionString);
-    }
+    string? GetDatabaseProvider();
+    string? GetConnectionString();
+    void SetDatabaseProvider(string databaseProvider);
+    void SetConnectionString(string connectionString);
 }

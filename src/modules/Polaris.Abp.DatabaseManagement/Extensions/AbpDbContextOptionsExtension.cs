@@ -2,17 +2,16 @@
 using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Polaris.Abp.DatabaseManagement.Extensions
+namespace Polaris.Abp.DatabaseManagement.Extensions;
+
+public static class AbpDbContextOptionsExtension
 {
-    public static class AbpDbContextOptionsExtension
+    public static void ConfigDatabase(this AbpDbContextOptions options)
     {
-        public static void ConfigDatabase(this AbpDbContextOptions options)
+        options.Configure(context =>
         {
-            options.Configure(context =>
-            {
-                var currentDatabase = context.ServiceProvider.GetRequiredService<ICurrentDatabase>();
-                currentDatabase.Provider.UseDatabase(context);
-            });
-        }
+            var currentDatabase = context.ServiceProvider.GetRequiredService<ICurrentDatabase>();
+            currentDatabase.Provider.UseDatabase(context);
+        });
     }
 }

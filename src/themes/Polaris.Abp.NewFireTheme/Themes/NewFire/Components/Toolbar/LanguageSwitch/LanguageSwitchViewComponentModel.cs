@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using Volo.Abp.Localization;
+﻿using Volo.Abp.Localization;
 
 namespace Polaris.Abp.NewFireTheme.Themes.NewFire.Components.Toolbar.LanguageSwitch;
 
 public class LanguageSwitchViewComponentModel
 {
-    public LanguageInfo CurrentLanguage { get; set; }
+    public LanguageInfo? CurrentLanguage { get; set; }
 
-    public List<LanguageInfo> OtherLanguages { get; set; }
+    public List<LanguageInfo> OtherLanguages { get; set; } = [];
 }

@@ -1,9 +1,8 @@
 ﻿using Polaris.Abp.Extension.Abstractions.Database;
 
-namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces
+namespace Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+
+public interface ICurrentDatabase
 {
-    public interface ICurrentDatabase
-    {
-        IDatabaseProvider Provider { get; }
-    }
+    IDatabaseProvider Provider { get; }
 }

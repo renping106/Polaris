@@ -2,30 +2,29 @@
 using Polaris.Abp.DatabaseManagement.Services.Interfaces;
 using Volo.Abp.DependencyInjection;
 
-namespace Ping.Polaris.Web.Filters
+namespace Ping.Polaris.Web.Filters;
+
+public class TenantUpdateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
 {
-    public class TenantUpdateAsyncPageFilter : IAsyncPageFilter, ITransientDependency
+    private readonly ITenantUpdateAppService _updateAppService;
+
+    public TenantUpdateAsyncPageFilter(ITenantUpdateAppService updateAppService)
     {
-        private readonly ITenantUpdateAppService _updateAppService;
+        _updateAppService = updateAppService;
+    }
 
-        public TenantUpdateAsyncPageFilter(ITenantUpdateAppService updateAppService)
+    public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+    {
+        if (await _updateAppService.HasUpdatesAsync())
         {
-            _updateAppService = updateAppService;
+            await _updateAppService.UpdateDatabaseAsync();
         }
+    }
 
-        public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
-        {
-            if (await _updateAppService.HasUpdatesAsync())
-            {
-                await _updateAppService.UpdateDatabaseAsync();
-            }            
-        }
-
-        public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
-                                                      PageHandlerExecutionDelegate next)
-        {
-            // Do post work.
-            await next.Invoke();
-        }
+    public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context,
+                                                  PageHandlerExecutionDelegate next)
+    {
+        // Do post work.
+        await next.Invoke();
     }
 }

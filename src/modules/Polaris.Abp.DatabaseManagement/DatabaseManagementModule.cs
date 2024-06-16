@@ -1,107 +1,105 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Ping.Polaris.Web.Filters;
 using Polaris.Abp.DatabaseManagement.Data;
 using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
 using Polaris.Abp.DatabaseManagement.Sqlite;
 using Polaris.Abp.DatabaseManagement.SqlServer;
-using Ping.Polaris.Web.Filters;
+using Polaris.Abp.Extension.Abstractions;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Guids;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using Volo.Abp.Timing;
 using Volo.Abp.Uow;
 using Volo.Abp.VirtualFileSystem;
-using Polaris.Abp.Extension.Abstractions;
-using Volo.Abp.Timing;
 
-namespace Polaris.Abp.DatabaseManagement
+namespace Polaris.Abp.DatabaseManagement;
+
+[DependsOn(
+typeof(ExtensionAbstractionModule),
+typeof(AbpTenantManagementApplicationModule),
+typeof(DatabaseManagementSqlServerModule),
+typeof(DatabaseManagementSqliteModule)
+)]
+public class DatabaseManagementModule : AbpModule
 {
-    [DependsOn(
-    typeof(ExtensionAbstractionModule),
-    typeof(AbpTenantManagementApplicationModule),
-    typeof(DatabaseManagementSqlServerModule),
-    typeof(DatabaseManagementSqliteModule)
-    )]
-    public class DatabaseManagementModule : AbpModule
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        public override void PreConfigureServices(ServiceConfigurationContext context)
+        // Register all dbcontexts
+        context.Services.AddConventionalRegistrar(new EfCoreDbConventionalRegistrar());
+
+        context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
         {
-            // Register all dbcontexts
-            context.Services.AddConventionalRegistrar(new EfCoreDbConventionalRegistrar());
+            options.AddAssemblyResource(typeof(DatabaseManagementModule), typeof(DatabaseManagementModule).Assembly);
+        });
 
-            context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
-            {
-                options.AddAssemblyResource(typeof(DatabaseManagementModule), typeof(DatabaseManagementModule).Assembly);
-            });
-
-            PreConfigure<IMvcBuilder>(mvcBuilder =>
-            {
-                mvcBuilder.AddApplicationPartIfNotExists(typeof(DatabaseManagementModule).Assembly);
-            });
-        }
-
-        public override void ConfigureServices(ServiceConfigurationContext context)
+        PreConfigure<IMvcBuilder>(mvcBuilder =>
         {
-            Configure<MvcOptions>(mvcOptions =>
-            {
-                mvcOptions.Filters.AddService(typeof(TenantStateAsyncPageFilter));
-                mvcOptions.Filters.AddService(typeof(TenantUpdateAsyncPageFilter));
-            });
+            mvcBuilder.AddApplicationPartIfNotExists(typeof(DatabaseManagementModule).Assembly);
+        });
+    }
 
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.AddEmbedded<DatabaseManagementModule>("Polaris.Abp.DatabaseManagement");
-            });
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        Configure<MvcOptions>(mvcOptions =>
+        {
+            mvcOptions.Filters.AddService(typeof(TenantStateAsyncPageFilter));
+            mvcOptions.Filters.AddService(typeof(TenantUpdateAsyncPageFilter));
+        });
 
-            context.Services.AddAutoMapperObjectMapper<DatabaseManagementModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<DatabaseManagementModule>(validate: true);
-            });
+        Configure<AbpVirtualFileSystemOptions>(options =>
+        {
+            options.FileSets.AddEmbedded<DatabaseManagementModule>("Polaris.Abp.DatabaseManagement");
+        });
 
-            context.Services.AddAbpDbContext<DatabaseManagementDbContext>(options =>
-            {
-                /* Remove "includeAllEntities: true" to create
-                 * default repositories only for aggregate roots */
-                options.AddDefaultRepositories(includeAllEntities: true);
-            });
+        context.Services.AddAutoMapperObjectMapper<DatabaseManagementModule>();
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddMaps<DatabaseManagementModule>(validate: true);
+        });
 
-            // Make AbpUnitOfWorkDefaultOptions as scoped
-            context.Services.AddScoped(provider =>
-            {
-                var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;
-                var tranOption = Options.Create(new AbpUnitOfWorkDefaultOptions());
-                tranOption.Value.TransactionBehavior = currentProvider.UnitOfWorkTransactionBehaviorOption;
-                return tranOption;
-            });
+        context.Services.AddAbpDbContext<DatabaseManagementDbContext>(options =>
+        {
+            /* Remove "includeAllEntities: true" to create
+             * default repositories only for aggregate roots */
+            options.AddDefaultRepositories(includeAllEntities: true);
+        });
 
-            // Make AbpSequentialGuidGeneratorOptions as scoped
-            context.Services.AddScoped(provider =>
-            {
-                var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;
-                var guidGeneratorOption = Options.Create(new AbpSequentialGuidGeneratorOptions());
-                guidGeneratorOption.Value.DefaultSequentialGuidType = currentProvider.SequentialGuidTypeOption;
-                return guidGeneratorOption;
-            });
+        // Make AbpUnitOfWorkDefaultOptions as scoped
+        context.Services.AddScoped(provider =>
+        {
+            var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;
+            var tranOption = Options.Create(new AbpUnitOfWorkDefaultOptions());
+            tranOption.Value.TransactionBehavior = currentProvider.UnitOfWorkTransactionBehaviorOption;
+            return tranOption;
+        });
 
-            Configure<AbpBundlingOptions>(options =>
-            {
-                options.ScriptBundles.Configure(
-                    "Volo.Abp.TenantManagement.Web.Pages.TenantManagement.Tenants.IndexModel",
-                    bundle =>
-                    {
-                        bundle.AddFiles("/Pages/TenantManagement/Tenants/index-extension.js");
-                    });
-            });
+        // Make AbpSequentialGuidGeneratorOptions as scoped
+        context.Services.AddScoped(provider =>
+        {
+            var currentProvider = provider.GetRequiredService<ICurrentDatabase>().Provider;
+            var guidGeneratorOption = Options.Create(new AbpSequentialGuidGeneratorOptions());
+            guidGeneratorOption.Value.DefaultSequentialGuidType = currentProvider.SequentialGuidTypeOption;
+            return guidGeneratorOption;
+        });
 
-            Configure<AbpClockOptions>(options =>
-            {
-                options.Kind = DateTimeKind.Utc;
-            });
-        }
+        Configure<AbpBundlingOptions>(options =>
+        {
+            options.ScriptBundles.Configure(
+                "Volo.Abp.TenantManagement.Web.Pages.TenantManagement.Tenants.IndexModel",
+                bundle =>
+                {
+                    bundle.AddFiles("/Pages/TenantManagement/Tenants/index-extension.js");
+                });
+        });
+
+        Configure<AbpClockOptions>(options =>
+        {
+            options.Kind = DateTimeKind.Utc;
+        });
     }
 }

@@ -1,10 +1,9 @@
-namespace Polaris.Abp.ThemeManagement.Pages.ThemeManagement
+namespace Polaris.Abp.ThemeManagement.Pages.ThemeManagement;
+
+public class IndexModel : ThemeManagementPageModel
 {
-    public class IndexModel : ThemeManagementPageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-            
-        }
+
     }
 }

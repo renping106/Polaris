@@ -4,7 +4,7 @@ using Serilog.Events;
 
 namespace Polaris.Abp.Host;
 
-public class Program
+public static class Program
 {
     public async static Task<int> Main(string[] args)
     {
@@ -29,7 +29,7 @@ public class Program
             {
                 var subAppBuilder = WebApplication.CreateBuilder(args);
                 subAppBuilder.Host.AddAppSettingsSecretsJson()
-                                  .UseDynamicAutofac()
+                                  .UseDynamicAutoFac()
                                   .UseSerilog();
                 return subAppBuilder;
             });
@@ -54,7 +54,7 @@ public class Program
         }
         finally
         {
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 }

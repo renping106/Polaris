@@ -5,24 +5,26 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.Toolbars;
 using Volo.Abp.Localization;
 using Volo.Abp.Users;
 
-namespace Polaris.Abp.NewFireTheme.Toolbars
+namespace Polaris.Abp.NewFireTheme.Toolbars;
+
+public class NewFireThemeMainTopToolbarContributor : IToolbarContributor
 {
-    public class NewFireThemeMainTopToolbarContributor : IToolbarContributor
+    public async Task ConfigureToolbarAsync(IToolbarConfigurationContext context)
     {
-        public async Task ConfigureToolbarAsync(IToolbarConfigurationContext context)
+        if (context.Toolbar.Name != StandardToolbars.Main)
         {
-            if (context.Toolbar.Name != StandardToolbars.Main)
-            {
-                return;
-            }
+            return;
+        }
 
-            if (!(context.Theme is PolarisNewFireTheme))
-            {
-                return;
-            }
+        if (context.Theme is not PolarisNewFireTheme)
+        {
+            return;
+        }
 
-            var languageProvider = context.ServiceProvider.GetService<ILanguageProvider>();
+        var languageProvider = context.ServiceProvider.GetService<ILanguageProvider>();
 
+        if (languageProvider != null)
+        {
             var languages = await languageProvider.GetLanguagesAsync();
             if (languages.Count > 1)
             {

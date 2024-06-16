@@ -1,10 +1,9 @@
 ﻿using Polaris.Abp.Extension.Abstractions.Plugin;
 
-namespace Polaris.Abp.PluginManagement.Domain.Interfaces
+namespace Polaris.Abp.PluginManagement.Domain.Interfaces;
+
+public interface IWebAppShell : IShellServiceProvider
 {
-    public interface IWebAppShell : IShellServiceProvider
-    {
-        WebAppShellContext GetContext();
-        ValueTask<(bool Success, string Message)> UpdateShell();
-    }
+    WebAppShellContext GetContext();
+    ValueTask<(bool Success, string Message)> UpdateShell();
 }

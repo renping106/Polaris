@@ -19,120 +19,119 @@ using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 
-namespace Polaris.Abp.PluginManagement
+namespace Polaris.Abp.PluginManagement;
+
+[DependsOn(
+    typeof(ExtensionAbstractionModule),
+    typeof(AbpAspNetCoreMvcUiThemeSharedModule),
+    typeof(AbpAutoMapperModule),
+    typeof(AbpBlobStoringFileSystemModule)
+    )]
+public class PluginManagementModule : AbpModule
 {
-    [DependsOn(
-        typeof(ExtensionAbstractionModule),
-        typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-        typeof(AbpAutoMapperModule),
-        typeof(AbpBlobStoringFileSystemModule)
-        )]
-    public class PluginManagementModule : AbpModule
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        public override void PreConfigureServices(ServiceConfigurationContext context)
+        PreConfigure<AbpAspNetCoreMvcOptions>(options =>
         {
-            PreConfigure<AbpAspNetCoreMvcOptions>(options =>
-            {
-                options
-                    .ConventionalControllers
-                    .Create(typeof(PluginManagementModule).Assembly);
-            });
+            options
+                .ConventionalControllers
+                .Create(typeof(PluginManagementModule).Assembly);
+        });
 
-            context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
-            {
-                options.AddAssemblyResource(typeof(PluginManagementResource), typeof(PluginManagementModule).Assembly);
-            });
-
-            ConfigurePlugInViews(context);
-        }
-
-        public override void ConfigureServices(ServiceConfigurationContext context)
+        context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
         {
-            Configure<AbpNavigationOptions>(options =>
-            {
-                options.MenuContributors.Add(new PluginManagementMenuContributor());
-            });
+            options.AddAssemblyResource(typeof(PluginManagementResource), typeof(PluginManagementModule).Assembly);
+        });
 
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                options.FileSets.AddEmbedded<PluginManagementModule>("Polaris.Abp.PluginManagement");
-            });
+        ConfigurePlugInViews(context);
+    }
 
-            context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddMaps<PluginManagementModule>(validate: true);
-            });
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        Configure<AbpNavigationOptions>(options =>
+        {
+            options.MenuContributors.Add(new PluginManagementMenuContributor());
+        });
 
-            Configure<AbpLocalizationOptions>(options =>
-            {
-                options.Resources
-                    .Add<PluginManagementResource>("en")
-                    .AddVirtualJson("/Localization/PluginManagement");
-            });
+        Configure<AbpVirtualFileSystemOptions>(options =>
+        {
+            options.FileSets.AddEmbedded<PluginManagementModule>("Polaris.Abp.PluginManagement");
+        });
 
-            context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
-            Configure<AbpAutoMapperOptions>(options =>
-            {
-                options.AddProfile<PluginManagementAutoMapperProfile>(validate: true);
-            });
+        context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddMaps<PluginManagementModule>(validate: true);
+        });
 
-            Configure<RazorPagesOptions>(options =>
-            {
-                //Configure authorization.
-                options.Conventions.AuthorizePage("/PluginManagement", PluginManagementPermissions.Default);
-                options.Conventions.AuthorizePage("/PluginManagement/Upload", PluginManagementPermissions.Upload);
-            });
+        Configure<AbpLocalizationOptions>(options =>
+        {
+            options.Resources
+                .Add<PluginManagementResource>("en")
+                .AddVirtualJson("/Localization/PluginManagement");
+        });
 
-            Configure<AbpPageToolbarOptions>(options =>
-            {
-                options.Configure<Polaris.Abp.PluginManagement.Pages.PluginManagement.IndexModel>(
-                    toolbar =>
-                    {
-                        toolbar.AddButton(
-                            LocalizableString.Create<PluginManagementResource>("Upload"),
-                            icon: "plus",
-                            name: "Upload",
-                            requiredPolicyName: PluginManagementPermissions.Upload
-                        );
-                    }
-                );
-            });
+        context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
+        Configure<AbpAutoMapperOptions>(options =>
+        {
+            options.AddProfile<PluginManagementAutoMapperProfile>(validate: true);
+        });
 
-            var packageFolder = Path.Combine(AppContext.BaseDirectory, "Packages");
-            Configure<AbpBlobStoringOptions>(options =>
-            {
-                options.Containers.ConfigureDefault(container =>
+        Configure<RazorPagesOptions>(options =>
+        {
+            //Configure authorization.
+            options.Conventions.AuthorizePage("/PluginManagement", PluginManagementPermissions.Default);
+            options.Conventions.AuthorizePage("/PluginManagement/Upload", PluginManagementPermissions.Upload);
+        });
+
+        Configure<AbpPageToolbarOptions>(options =>
+        {
+            options.Configure<Polaris.Abp.PluginManagement.Pages.PluginManagement.IndexModel>(
+                toolbar =>
                 {
-                    container.UseFileSystem(fileSystem =>
-                    {
-                        fileSystem.BasePath = packageFolder;
-                    });
+                    toolbar.AddButton(
+                        LocalizableString.Create<PluginManagementResource>("Upload"),
+                        icon: "plus",
+                        name: "Upload",
+                        requiredPolicyName: PluginManagementPermissions.Upload
+                    );
+                }
+            );
+        });
+
+        var packageFolder = Path.Combine(AppContext.BaseDirectory, "Packages");
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = packageFolder;
                 });
             });
-        }
+        });
+    }
 
-        private void ConfigurePlugInViews(ServiceConfigurationContext context)
+    private void ConfigurePlugInViews(ServiceConfigurationContext context)
+    {
+        var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<HostServiceProvider>();
+        var pluginManager = hostServiceProvider?.Instance.GetRequiredService<IPlugInManager>();
+
+        PreConfigure<IMvcBuilder>(mvcBuilder =>
         {
-            var hostServiceProvider = context.Services.GetSingletonInstanceOrNull<HostServiceProvider>();
-            var pluginManager = hostServiceProvider?.Instance.GetRequiredService<IPlugInManager>();
+            mvcBuilder.AddApplicationPartIfNotExists(typeof(PluginManagementModule).Assembly);
 
-            PreConfigure<IMvcBuilder>(mvcBuilder =>
+            if (pluginManager != null)
             {
-                mvcBuilder.AddApplicationPartIfNotExists(typeof(PluginManagementModule).Assembly);
-
-                if (pluginManager != null)
+                foreach (var plugin in pluginManager.GetEnabledPlugIns())
                 {
-                    foreach (var plugin in pluginManager.GetEnabledPlugIns())
+                    var parts = ((IPlugInContext)plugin.PlugInSource).CompiledRazorAssemblyParts;
+                    foreach (var part in parts)
                     {
-                        var parts = ((IPlugInContext)plugin.PlugInSource).CompiledRazorAssemblyParts;
-                        foreach (var part in parts)
-                        {
-                            mvcBuilder.PartManager.ApplicationParts.Add(part);
-                        }
+                        mvcBuilder.PartManager.ApplicationParts.Add(part);
                     }
                 }
-            });
-        }
+            }
+        });
     }
 }

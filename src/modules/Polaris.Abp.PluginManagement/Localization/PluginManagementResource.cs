@@ -1,9 +1,8 @@
 ﻿using Volo.Abp.Localization;
 
-namespace Polaris.Abp.PluginManagement.Localization
+namespace Polaris.Abp.PluginManagement.Localization;
+
+[LocalizationResourceName("PluginManagement")]
+public class PluginManagementResource
 {
-    [LocalizationResourceName("PluginManagement")]
-    public class PluginManagementResource
-    {
-    }
 }

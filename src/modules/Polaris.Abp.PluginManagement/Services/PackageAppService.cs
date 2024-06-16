@@ -7,72 +7,71 @@ using Polaris.Abp.PluginManagement.Services.Interfaces;
 using Volo.Abp;
 using Volo.Abp.BlobStoring;
 
-namespace Polaris.Abp.PluginManagement.Services
+namespace Polaris.Abp.PluginManagement.Services;
+
+[Authorize(PluginManagementPermissions.Upload)]
+public class PackageAppService : PluginManagementAppServiceBase, IPackageAppService
 {
-    [Authorize(PluginManagementPermissions.Upload)]
-    public class PackageAppService : PluginManagementAppServiceBase, IPackageAppService
+    private readonly IBlobContainer _fileContainer;
+    private readonly IPlugInManager _plugInManager;
+
+    public PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager)
     {
-        private readonly IBlobContainer _fileContainer;
-        private readonly IPlugInManager _plugInManager;
+        _fileContainer = fileContainer;
+        _plugInManager = plugInManager;
+    }
 
-        public PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager)
+    public async Task<BlobDto> GetAsync(GetBlobRequestDto input)
+    {
+        var blob = await _fileContainer.GetAllBytesAsync(input.Name);
+
+        return new BlobDto
         {
-            _fileContainer = fileContainer;
-            _plugInManager = plugInManager;
+            Name = input.Name,
+            Content = blob
+        };
+    }
+
+    public void RemovePlugIn(string pluginName)
+    {
+        PlugInPackageUtil.RemovePackage(pluginName);
+    }
+
+    public async Task UploadAsync(SaveBlobInputDto input)
+    {
+        await _fileContainer.SaveAsync(input.Name, input.Content, true);
+        await InstallPackageAsync(input.Name);
+    }
+
+    private async Task InstallPackageAsync(string packageName)
+    {
+        var content = await _fileContainer.GetAllBytesAsync(packageName);
+        var descriptor = PlugInPackageUtil.LoadPackage(content);
+
+        if (descriptor == null)
+        {
+            throw new UserFriendlyException(L["InvalidPlugin"]);
         }
 
-        public async Task<BlobDto> GetAsync(GetBlobRequestDto input)
-        {
-            var blob = await _fileContainer.GetAllBytesAsync(input.Name);
+        var installedPlugin = _plugInManager.GetAllPlugIns().FirstOrDefault(t => t.Name == descriptor.Name);
 
-            return new BlobDto
+        if (installedPlugin != null)
+        {
+            var installedVersion = new Version(installedPlugin.Version);
+            var targetVersion = new Version(descriptor.Version);
+
+            // Check version
+            if (installedVersion.CompareTo(targetVersion) >= 0)
             {
-                Name = input.Name,
-                Content = blob
-            };
-        }
-
-        public void RemovePlugIn(string pluginName)
-        {
-            PlugInPackageUtil.RemovePackage(pluginName);
-        }
-
-        public async Task UploadAsync(SaveBlobInputDto input)
-        {
-            await _fileContainer.SaveAsync(input.Name, input.Content, true);
-            await InstallPackageAsync(input.Name);
-        }
-
-        private async Task InstallPackageAsync(string packageName)
-        {
-            var content = await _fileContainer.GetAllBytesAsync(packageName);
-            var descriptor = PlugInPackageUtil.LoadPackage(content);
-
-            if (descriptor == null)
-            {
-                throw new UserFriendlyException(L["InvalidPlugin"]);
+                throw new UserFriendlyException(L["PluginExists", descriptor.Name]);
             }
+        }
 
-            var installedPlugin = _plugInManager.GetAllPlugIns().FirstOrDefault(t => t.Name == descriptor.Name);
+        PlugInPackageUtil.InstallPackage(descriptor, content);
 
-            if (installedPlugin != null)
-            {
-                var installedVersion = new Version(installedPlugin.Version);
-                var targetVersion = new Version(descriptor.Version);
-
-                // Check version
-                if (installedVersion.CompareTo(targetVersion) >= 0)
-                {
-                    throw new UserFriendlyException(L["PluginExists", descriptor.Name]);
-                }
-            }
-
-            PlugInPackageUtil.InstallPackage(descriptor, content);
-
-            if (installedPlugin != null && installedPlugin.IsEnabled)
-            {
-                await _plugInManager.RefreshPlugInAsync(installedPlugin);
-            }
+        if (installedPlugin != null && installedPlugin.IsEnabled)
+        {
+            await _plugInManager.RefreshPlugInAsync(installedPlugin);
         }
     }
 }

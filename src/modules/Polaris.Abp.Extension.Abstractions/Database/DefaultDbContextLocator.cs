@@ -2,19 +2,18 @@
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Polaris.Abp.Extension.Abstractions.Database
-{
-    public class DefaultDbContextLocator : IDbContextLocator, ITransientDependency
-    {
-        public virtual string GetLocation(IAbpEfCoreDbContext dbContext)
-        {
-            return dbContext.GetType().Assembly.Location;
-        }
+namespace Polaris.Abp.Extension.Abstractions.Database;
 
-        public virtual string GetReferenceLocation(IAbpEfCoreDbContext dbContext, AssemblyName refAssemblyName)
-        {
-            var assembly = Assembly.Load(refAssemblyName);
-            return assembly.Location;
-        }
+public class DefaultDbContextLocator : IDbContextLocator, ITransientDependency
+{
+    public virtual string GetLocation(IAbpEfCoreDbContext dbContext)
+    {
+        return dbContext.GetType().Assembly.Location;
+    }
+
+    public virtual string GetReferenceLocation(IAbpEfCoreDbContext dbContext, AssemblyName refAssemblyName)
+    {
+        var assembly = Assembly.Load(refAssemblyName);
+        return assembly.Location;
     }
 }

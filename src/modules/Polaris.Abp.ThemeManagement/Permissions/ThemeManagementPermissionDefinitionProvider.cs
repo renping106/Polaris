@@ -15,7 +15,7 @@ public class ThemeManagementPermissionDefinitionProvider : PermissionDefinitionP
     {
         var myGroup = context.AddGroup(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName));
         var permission = myGroup.AddPermission(ThemeManagementPermissions.GroupName, L("Permission:" + ThemeManagementPermissions.GroupName), multiTenancySide: MultiTenancySides.Both);
-        permission.RequireFeatures(ThemeManagementFeatures.Enable);        
+        permission.RequireFeatures(ThemeManagementFeatures.Enable);
         permission.AddChild(ThemeManagementPermissions.Edit, L("Permission:" + ThemeManagementPermissions.Edit), multiTenancySide: MultiTenancySides.Both);
 
         var settingGroup = context.GetGroup(SettingManagementPermissions.GroupName);
