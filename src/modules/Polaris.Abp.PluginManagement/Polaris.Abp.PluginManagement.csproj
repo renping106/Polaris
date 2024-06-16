@@ -23,13 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore" Version="8.1.3" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="8.1.3" />
-    <PackageReference Include="Volo.Abp.AutoMapper" Version="8.1.3" />
-    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="8.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Volo.Abp.AspNetCore" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" />
+    <PackageReference Include="Volo.Abp.AutoMapper" />
+    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" />
   </ItemGroup>
 
   <ItemGroup>
