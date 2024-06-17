@@ -6,14 +6,10 @@ using Volo.Abp.AspNetCore.Mvc;
 
 namespace Polaris.Abp.ThemeManagement.Pages.SettingManagement.Components.ThemeSettingGroup;
 
-public class PolarisThemeSettingViewComponent : AbpViewComponent
+public class PolarisThemeSettingViewComponent(IBrandSettingAppService brandSettingAppService) : AbpViewComponent
 {
-    private readonly IBrandSettingAppService _brandSettingAppService;
+    private readonly IBrandSettingAppService _brandSettingAppService = brandSettingAppService;
 
-    public PolarisThemeSettingViewComponent(IBrandSettingAppService brandSettingAppService)
-    {
-        _brandSettingAppService = brandSettingAppService;
-    }
     public virtual async Task<IViewComponentResult> InvokeAsync()
     {
         var brandSetting = await _brandSettingAppService.GetAsync();

@@ -9,7 +9,7 @@ namespace Polaris.Abp.PluginManagement.Pages.PluginManagement;
 public class UploadModel(IPackageAppService packageAppService) : PluginManagementPageModel
 {
     [BindProperty]
-    public UploadFileDto UploadFileDto { get; set; } = new UploadFileDto();
+    public UploadFileViewModel UploadFile { get; set; } = new UploadFileViewModel();
 
     private readonly IPackageAppService _packageAppService = packageAppService;
 
@@ -26,14 +26,14 @@ public class UploadModel(IPackageAppService packageAppService) : PluginManagemen
 
         using (var memoryStream = new MemoryStream())
         {
-            if (UploadFileDto.File != null)
+            if (UploadFile.File != null && UploadFile.File.ContentType!="")
             {
-                await UploadFileDto.File.CopyToAsync(memoryStream);
+                await UploadFile.File.CopyToAsync(memoryStream);
 
                 await _packageAppService.UploadAsync(
                     new SaveBlobInputDto
                     {
-                        Name = UploadFileDto.Name,
+                        Name = UploadFile.Name,
                         Content = memoryStream.ToArray()
                     }
                 );
@@ -43,10 +43,11 @@ public class UploadModel(IPackageAppService packageAppService) : PluginManagemen
     }
 }
 
-public class UploadFileDto
+public class UploadFileViewModel
 {
     [Required]
     [Display(Name = "File")]
+    [AllowedExtensions([".nupkg"])]
     public IFormFile? File { get; set; }
 
     [Required]
