@@ -35,7 +35,7 @@
                                     }
                                     else {
                                         abp.ui.clearBusy();
-                                        abp.notify.error(data.message, l('FailedToEnable'));
+                                        abp.notify.error(result.message, l('FailedToEnable'));
                                     }
                                 }).catch(function () {
                                     abp.ui.clearBusy();

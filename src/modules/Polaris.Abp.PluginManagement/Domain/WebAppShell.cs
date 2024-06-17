@@ -45,7 +45,7 @@ internal class WebAppShell(IOptions<WebShellOptions> webShellOptions, IServicePr
         }
         catch (Exception ex)
         {
-            return (false, ex.Message);
+            return (false, ex.InnerException?.Message ?? ex.Message);
         }
         return (true, string.Empty);
     }
