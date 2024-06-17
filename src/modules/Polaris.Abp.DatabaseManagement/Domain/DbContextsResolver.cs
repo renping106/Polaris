@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Polaris.Abp.DatabaseManagement.Domain.Entities;
 using Polaris.Abp.DatabaseManagement.Domain.Interfaces;
+using System.Reflection;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.MultiTenancy;
@@ -12,8 +12,6 @@ namespace Polaris.Abp.DatabaseManagement.Domain;
 internal class DbContextsResolver(ICurrentTenant currentTenant,
     IEnumerable<IAbpEfCoreDbContext> dbContexts) : IDbContextsResolver, ITransientDependency
 {
-    private readonly ICurrentTenant _currentTenant = currentTenant;
-    private readonly IEnumerable<IAbpEfCoreDbContext> _dbContexts = dbContexts;
 
     public IEnumerable<IAbpEfCoreDbContext> DbContexts {
         get {
@@ -43,5 +41,8 @@ internal class DbContextsResolver(ICurrentTenant currentTenant,
                             .FindEntityType(typeof(PolarisModelHistory)) != null ? 0 : 1);
         }
     }
+
+    private readonly ICurrentTenant _currentTenant = currentTenant;
+    private readonly IEnumerable<IAbpEfCoreDbContext> _dbContexts = dbContexts;
 
 }
