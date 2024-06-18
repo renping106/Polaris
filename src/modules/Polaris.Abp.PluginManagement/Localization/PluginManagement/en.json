@@ -14,6 +14,7 @@
     "PluginCannotRemove": "Plugin is enabled. Please disable it before removing.",
     "InvalidPlugin": "This is not a valid plugin package.",
     "FailedToUpdatePlugin": "Failed to update plugin.",
-    "PlugIn": "PlugIns"
+    "PlugIn": "PlugIns",
+    "PluginNotCompatiable": "PlugIn '{0}' is not compatiable. Current ABP Version is '{1}', PlugIn depends on '{2}'. Please upgrade ABP framework."
   }
 }

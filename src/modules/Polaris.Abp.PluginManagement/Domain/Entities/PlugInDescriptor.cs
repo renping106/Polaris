@@ -10,6 +10,7 @@ internal class PlugInDescriptor : IPlugInDescriptor
     public string Description { get; set; } = string.Empty;
     public bool IsEnabled { get; set; }
     public string Version { get; set; } = string.Empty;
+    public string? AbpVersion { get; set; }
 
     [JsonIgnore]
     public IPlugInSource PlugInSource { get; set; } = new DynamicPlugInSource("");
@@ -21,7 +22,8 @@ internal class PlugInDescriptor : IPlugInDescriptor
         {
             Name = Name,
             Version = Version,
-            PlugInSource = folderSource
+            PlugInSource = folderSource,
+            AbpVersion = AbpVersion
         };
     }
 }

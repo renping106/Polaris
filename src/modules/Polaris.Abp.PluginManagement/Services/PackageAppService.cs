@@ -44,6 +44,13 @@ public class PackageAppService(IBlobContainer fileContainer, IPlugInManager plug
     {
         var content = await _fileContainer.GetAllBytesAsync(packageName);
         var descriptor = PlugInPackageUtil.LoadPackage(content) ?? throw new UserFriendlyException(L["InvalidPlugin"]);
+
+        var abpVersion = PlugInPackageUtil.GetCurrentAbpVersion();
+        if (descriptor.AbpVersion != null && abpVersion?.CompareTo(new Version(descriptor.AbpVersion)) < 0)
+        {
+            throw new UserFriendlyException(L["PluginNotCompatiable", descriptor.Name, abpVersion.ToString(), descriptor.AbpVersion.ToString()]);
+        }
+
         var installedPlugin = _plugInManager.GetAllPlugIns().FirstOrDefault(t => t.Name == descriptor.Name);
 
         if (installedPlugin != null)

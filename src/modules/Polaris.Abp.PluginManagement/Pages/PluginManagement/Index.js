@@ -114,6 +114,10 @@
                         data: 'version',
                     },
                     {
+                        title: l("AbpVersion"),
+                        data: 'abpVersion',
+                    },
+                    {
                         title: "EnabledValue",
                         data: 'isEnabled',
                         visible: false,
@@ -124,7 +128,7 @@
                     {
                         title: l("Enabled"),
                         data: 'isEnabled',
-                        orderData: [4],
+                        orderData: [5],
                         render: function (isEnabled) {
                             return '<input type="checkbox" disabled ' + (isEnabled ? 'checked' : '') + ' />';
                         },

@@ -169,6 +169,7 @@ internal class PlugInManager : IPlugInManager
                 exist.IsEnabled = isEnabled;
                 exist.Version = plugIn.Version;
                 exist.Description = plugIn.Description;
+                exist.AbpVersion = plugIn.AbpVersion;
             }
             else
             {

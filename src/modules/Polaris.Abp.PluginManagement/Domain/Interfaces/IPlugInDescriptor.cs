@@ -8,6 +8,7 @@ public interface IPlugInDescriptor
     string Description { get; set; }
     bool IsEnabled { get; set; }
     string Version { get; set; }
+    string? AbpVersion { get; set; }
     IPlugInSource PlugInSource { get; set; }
     IPlugInDescriptor Clone();
 }
