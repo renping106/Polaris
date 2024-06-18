@@ -51,12 +51,26 @@ Polaris uses a single layer template of ABP framework to make it simple:
 * `src\host`: The main application.
 * `src\modules\`: Modules to support external features.
 * `src\themes`: Theme modules.
+* `src\samples`: You can use these packages to upload to test the plugin management.
 * `test\`: Test projects.
+
+### Features
+
+* Dynamically load/enable/disable/remove plugin
+* Dynamically migrate dbcontext for the plugin without migration assemblies
+* Dynamically switch theme for tenant
+* Setup on live for host/tenant
+* TBD
 
 ### Deploying the application
 
 * Publish the compiled dlls and exe to any Web Server that supports ASP.NET Core. 
 * Browse the deployed Url and follow the setup page to init you website.
+
+### Inspired by
+
+* [OrchardCore](https://github.com/OrchardCMS/OrchardCore)
+* [Oqtane](https://github.com/oqtane/oqtane.framework)
 
 ### Additional resources
 
