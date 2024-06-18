@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Polaris.Abp.PluginManagement.Domain;
 using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Polaris.Abp.PluginManagement.Permissions;
@@ -10,11 +11,12 @@ using Volo.Abp.BlobStoring;
 namespace Polaris.Abp.PluginManagement.Services;
 
 [Authorize(PluginManagementPermissions.Upload)]
-public class PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager) 
+public class PackageAppService(IBlobContainer fileContainer, IPlugInManager plugInManager, IWebHostEnvironment webHostEnvironment)
     : PluginManagementAppServiceBase, IPackageAppService
 {
     private readonly IBlobContainer _fileContainer = fileContainer;
     private readonly IPlugInManager _plugInManager = plugInManager;
+    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
     public async Task<BlobDto> GetAsync(GetBlobRequestDto input)
     {
@@ -56,7 +58,7 @@ public class PackageAppService(IBlobContainer fileContainer, IPlugInManager plug
             }
         }
 
-        PlugInPackageUtil.InstallPackage(descriptor, content);
+        PlugInPackageUtil.InstallPackage(descriptor, content, _webHostEnvironment.WebRootPath);
 
         if (installedPlugin != null && installedPlugin.IsEnabled)
         {
