@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Abp.CmsKit</id>
+    <version>0.2.0</version>
+    <authors>Abp</authors>
+    <description>Abp</description>
+    <repository type="git" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Volo.Abp.Core" version="8.1.3" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+	<files>
+		<file src="bin\Release\net8.0\publish\Volo.CmsKit.*.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\Magick.*.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\Markdig.Signed.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\NUglify.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\Slugify.Core.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\Unidecode.NET.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\HtmlSanitizer.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\AngleSharp.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\AngleSharp.Css.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\wwwroot\libs\**\*" target="wwwroot\libs" />
+		<file src="bin\Release\net8.0\Abp.Cms.dll" target="lib\net8.0" />
+	</files>
+</package>

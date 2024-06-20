@@ -43,11 +43,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{46D12E6A-4DB7-4FEE-B537-7E088C9969BD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "abp-cmskit", "abp-cmskit", "{D8EBADDF-431B-4863-A8F6-C275EE7536BC}"
 	ProjectSection(SolutionItems) = preProject
-		H:\Abp.CmsKit.0.2.0.nupkg = H:\Abp.CmsKit.0.2.0.nupkg
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abp.CmsKit", "src\samples\Abp.CmsKit\Abp.CmsKit.csproj", "{D41A5C02-B3FD-42B9-9363-6BE4620DA60A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +95,10 @@ Global
 		{627F61C0-196E-4721-A508-68A9A6D4C326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{627F61C0-196E-4721-A508-68A9A6D4C326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{627F61C0-196E-4721-A508-68A9A6D4C326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D41A5C02-B3FD-42B9-9363-6BE4620DA60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D41A5C02-B3FD-42B9-9363-6BE4620DA60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D41A5C02-B3FD-42B9-9363-6BE4620DA60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D41A5C02-B3FD-42B9-9363-6BE4620DA60A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,7 +118,7 @@ Global
 		{51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{627F61C0-196E-4721-A508-68A9A6D4C326} = {51D3D988-E945-4EAB-B9FC-AFA8E74D4FF6}
 		{46D12E6A-4DB7-4FEE-B537-7E088C9969BD} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
-		{D8EBADDF-431B-4863-A8F6-C275EE7536BC} = {46D12E6A-4DB7-4FEE-B537-7E088C9969BD}
+		{D41A5C02-B3FD-42B9-9363-6BE4620DA60A} = {46D12E6A-4DB7-4FEE-B537-7E088C9969BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

@@ -5,6 +5,7 @@
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
 		<PackageVersion Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.5" />
 		<PackageVersion Include="coverlet.collector" Version="6.0.0" />
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -62,5 +63,14 @@
 		<PackageVersion Include="Volo.Abp.BackgroundJobs.Abstractions" Version="8.1.3" />
 		<PackageVersion Include="Volo.Abp.Authorization" Version="8.1.3" />
 		<PackageVersion Include="Volo.Abp.TestBase" Version="8.1.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Volo.CmsKit.Application" Version="8.1.3" />
+		<PackageVersion Include="Volo.CmsKit.Domain" Version="8.1.3" />
+		<PackageVersion Include="Volo.CmsKit.Domain.Shared" Version="8.1.3" />
+		<PackageVersion Include="Volo.CmsKit.EntityFrameworkCore" Version="8.1.3" />
+		<PackageVersion Include="Volo.CmsKit.HttpApi" Version="8.1.3" />
+		<PackageVersion Include="Volo.CmsKit.Web" Version="8.1.3" />
 	</ItemGroup>
 </Project>

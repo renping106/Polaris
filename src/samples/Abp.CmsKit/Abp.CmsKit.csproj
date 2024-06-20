@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Volo.CmsKit.Application" />
+    <PackageReference Include="Volo.CmsKit.Domain" />
+    <PackageReference Include="Volo.CmsKit.Domain.Shared" />
+    <PackageReference Include="Volo.CmsKit.EntityFrameworkCore" />
+    <PackageReference Include="Volo.CmsKit.HttpApi" />
+    <PackageReference Include="Volo.CmsKit.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\libs\" />
+  </ItemGroup>
+
+</Project>
