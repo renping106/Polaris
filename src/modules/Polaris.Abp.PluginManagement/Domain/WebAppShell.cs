@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Polaris.Abp.PluginManagement.Domain.Entities;
 using Polaris.Abp.PluginManagement.Domain.Interfaces;
+using Volo.Abp.GlobalFeatures;
 using Volo.Abp.Modularity;
 using Volo.Abp.Modularity.PlugIns;
 
@@ -80,6 +81,8 @@ internal class WebAppShell(IOptions<WebShellOptions> webShellOptions, IServicePr
                 options.PlugInSources.Add(enabledPlug.PlugInSource);
             }
 
+            // Clear global features
+            GlobalFeatureManager.Instance.Modules.Clear();
         });
 
         var shellApp = shellAppBuilder.Build();

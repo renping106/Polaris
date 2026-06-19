@@ -28,6 +28,6 @@
 		<file src="bin\Release\net8.0\publish\AngleSharp.dll" target="lib\net8.0" />
 		<file src="bin\Release\net8.0\publish\AngleSharp.Css.dll" target="lib\net8.0" />
 		<file src="bin\Release\net8.0\publish\wwwroot\libs\**\*" target="wwwroot\libs" />
-		<file src="bin\Release\net8.0\Abp.Cms.dll" target="lib\net8.0" />
+		<file src="bin\Release\net8.0\publish\Abp.CmsKit.dll" target="lib\net8.0" />
 	</files>
 </package>
