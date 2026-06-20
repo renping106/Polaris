@@ -27,7 +27,7 @@
     <PackageReference Include="Serilog.Extensions.Hosting" />
     <PackageReference Include="Volo.Abp.AspNetCore" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" />
-    <PackageReference Include="Volo.Abp.AutoMapper" />
+    <PackageReference Include="Volo.Abp.Mapperly" />
     <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" />
   </ItemGroup>
 

@@ -9,7 +9,7 @@ using Polaris.Abp.DatabaseManagement.SqlServer;
 using Polaris.Abp.Extension.Abstractions;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Guids;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
@@ -56,11 +56,7 @@ public class DatabaseManagementModule : AbpModule
             options.FileSets.AddEmbedded<DatabaseManagementModule>("Polaris.Abp.DatabaseManagement");
         });
 
-        context.Services.AddAutoMapperObjectMapper<DatabaseManagementModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<DatabaseManagementModule>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<DatabaseManagementModule>();
 
         context.Services.AddAbpDbContext<DatabaseManagementDbContext>(options =>
         {

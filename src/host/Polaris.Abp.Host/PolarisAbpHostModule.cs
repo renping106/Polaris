@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using OpenIddict.Validation.AspNetCore;
 using Polaris.Abp.DatabaseManagement;
 using Polaris.Abp.DatabaseManagement.Extensions;
@@ -22,7 +22,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Autofac;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Emailing;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.FeatureManagement;
@@ -60,7 +60,7 @@ namespace Polaris.Abp.Host;
     // ABP Framework packages
     typeof(AbpAspNetCoreMvcModule),
     typeof(AbpAutofacModule),
-    typeof(AbpAutoMapperModule),
+    typeof(AbpMapperlyModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiBasicThemeModule),
@@ -277,15 +277,7 @@ public class PolarisAbpHostModule : AbpModule
 
     private void ConfigureAutoMapper(ServiceConfigurationContext context)
     {
-        context.Services.AddAutoMapperObjectMapper<PolarisAbpHostModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            /* Uncomment `validate: true` if you want to enable the Configuration Validation feature.
-             * See AutoMapper's documentation to learn what it is:
-             * https://docs.automapper.org/en/stable/Configuration-validation.html
-             */
-            options.AddMaps<PolarisAbpHostModule>(/* validate: true */);
-        });
+        context.Services.AddMapperlyObjectMapper<PolarisAbpHostModule>();
     }
 
     private void ConfigureEfCore(ServiceConfigurationContext context)

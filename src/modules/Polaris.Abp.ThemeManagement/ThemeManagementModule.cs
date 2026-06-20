@@ -8,7 +8,7 @@ using Polaris.Abp.ThemeManagement.Permissions;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.SettingManagement.Web.Pages.SettingManagement;
@@ -19,7 +19,7 @@ namespace Polaris.Abp.PluginManagement;
 
 [DependsOn(
     typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-    typeof(AbpAutoMapperModule)
+    typeof(AbpMapperlyModule)
     )]
 public class ThemeManagementModule : AbpModule
 {
@@ -55,11 +55,7 @@ public class ThemeManagementModule : AbpModule
             options.FileSets.AddEmbedded<ThemeManagementModule>("Polaris.Abp.ThemeManagement");
         });
 
-        context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<ThemeManagementModule>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<ThemeManagementModule>();
 
         Configure<AbpLocalizationOptions>(options =>
         {
@@ -68,11 +64,7 @@ public class ThemeManagementModule : AbpModule
                 .AddVirtualJson("/Localization/ThemeManagement");
         });
 
-        context.Services.AddAutoMapperObjectMapper<ThemeManagementModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddProfile<ThemeManagementAutoMapperProfile>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<ThemeManagementModule>();
 
         Configure<RazorPagesOptions>(options =>
         {

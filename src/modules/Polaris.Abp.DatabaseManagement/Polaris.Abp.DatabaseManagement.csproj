@@ -26,15 +26,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" >
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+	</PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+    </PackageReference>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" />
-    <PackageReference Include="Volo.Abp.AutoMapper" />
+    <PackageReference Include="Volo.Abp.Mapperly" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" />

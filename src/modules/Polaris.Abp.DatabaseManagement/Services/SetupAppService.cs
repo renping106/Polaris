@@ -38,7 +38,7 @@ public class SetupAppService(IDatabaseProviderFactory databaseProviderFactory,
     public IReadOnlyList<DatabaseProviderDto> GetSupportedDatabaseProviders()
     {
         var providers = _databaseProviderFactory.GetDatabaseProviders();
-        return ObjectMapper.Map<IReadOnlyList<IDatabaseProvider>, IReadOnlyList<DatabaseProviderDto>>(providers);
+        return ObjectMapper.Map<List<IDatabaseProvider>, List<DatabaseProviderDto>>(providers.ToList());
     }
 
     public async Task InstallAsync(SetupInputDto input, Guid? tenantId)

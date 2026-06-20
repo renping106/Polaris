@@ -1,13 +1,14 @@
-﻿using AutoMapper;
-using Polaris.Abp.PluginManagement.Domain.Interfaces;
+﻿using Polaris.Abp.PluginManagement.Domain.Interfaces;
 using Polaris.Abp.PluginManagement.Services.Dtos;
+using Riok.Mapperly.Abstractions;
+using Volo.Abp.Mapperly;
 
 namespace Polaris.Abp.PluginManagement.Services;
 
-public class PluginManagementAutoMapperProfile : Profile
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class  PlugInDescriptorToPlugInDescriptorDtoMapper : MapperBase<IPlugInDescriptor, PlugInDescriptorDto>
 {
-    public PluginManagementAutoMapperProfile()
-    {
-        CreateMap<IPlugInDescriptor, PlugInDescriptorDto>();
-    }
+    public override partial PlugInDescriptorDto Map(IPlugInDescriptor source);
+
+    public override partial void Map(IPlugInDescriptor source, PlugInDescriptorDto destination);
 }

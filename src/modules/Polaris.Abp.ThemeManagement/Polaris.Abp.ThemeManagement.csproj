@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" />
-    <PackageReference Include="Volo.Abp.AutoMapper" />
+    <PackageReference Include="Volo.Abp.Mapperly" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" />
     <PackageReference Include="Volo.Abp.SettingManagement.Web" />
   </ItemGroup>

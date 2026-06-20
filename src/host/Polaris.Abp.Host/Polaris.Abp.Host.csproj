@@ -21,7 +21,7 @@
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" />
     <PackageReference Include="Volo.Abp.Autofac" />
-    <PackageReference Include="Volo.Abp.AutoMapper" />
+    <PackageReference Include="Volo.Abp.Mapperly" />
     <PackageReference Include="Volo.Abp.Swashbuckle" />
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" />
@@ -117,6 +117,10 @@
     <ProjectReference Include="..\..\modules\Polaris.Abp.PluginManagement\Polaris.Abp.PluginManagement.csproj" />
     <ProjectReference Include="..\..\modules\Polaris.Abp.ThemeManagement\Polaris.Abp.ThemeManagement.csproj" />
     <ProjectReference Include="..\..\themes\Polaris.Abp.NewFireTheme\Polaris.Abp.NewFireTheme.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ObjectMapping\" />
   </ItemGroup>
 
 </Project>

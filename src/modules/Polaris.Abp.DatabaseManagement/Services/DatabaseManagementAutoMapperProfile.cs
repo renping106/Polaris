@@ -1,34 +1,43 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Identity;
 using Polaris.Abp.DatabaseManagement.Pages.Setup;
 using Polaris.Abp.DatabaseManagement.Services.Dtos;
 using Polaris.Abp.Extension.Abstractions.Database;
+using Riok.Mapperly.Abstractions;
+using Volo.Abp.Mapperly;
 using Volo.Abp.TenantManagement;
 using static Polaris.Abp.DatabaseManagement.Pages.TenantManagement.Tenants.CreateModalModel;
 
 namespace Polaris.Abp.DatabaseManagement.Services;
 
-internal class DatabaseManagementAutoMapperProfile : Profile
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class DatabaseProviderToDatabaseProviderDtoMapper : MapperBase<IDatabaseProvider, DatabaseProviderDto>
 {
-    public DatabaseManagementAutoMapperProfile()
-    {
-        CreateMap<IDatabaseProvider, DatabaseProviderDto>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.HasConnectionString, opt => opt.MapFrom(src => src.HasConnectionString))
-            .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Key))
-            .ForMember(dest => dest.SampleConnectionString, opt => opt.MapFrom(src => src.SampleConnectionString));
+    [MapProperty(nameof(IDatabaseProvider.Key), nameof(DatabaseProviderDto.Value))]
+    public override partial DatabaseProviderDto Map(IDatabaseProvider source);
 
-        CreateMap<SetupViewModel, SetupInputDto>()
-            .ForMember(dest => dest.SiteName, opt => opt.MapFrom(src => src.SiteName))
-            .ForMember(dest => dest.DatabaseProvider, opt => opt.MapFrom(src => src.DatabaseProvider))
-            .ForMember(dest => dest.ConnectionString, opt => opt.MapFrom(src => src.ConnectionString))
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
-            .ForMember(dest => dest.UseHostSetting, opt => opt.MapFrom(src => src.UseHostSetting))
-            .ForMember(dest => dest.TimeZone, opt => opt.MapFrom(src => src.Timezone));
-
-        CreateMap<TenantInfoModel, TenantCreateDto>()
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.AdminEmailAddress, opt => opt.MapFrom(src => "empty@empty.com"))
-            .ForMember(dest => dest.AdminPassword, opt => opt.MapFrom(src => "empty"));
-    }
+    [MapProperty(nameof(IDatabaseProvider.Key), nameof(DatabaseProviderDto.Value))]
+    public override partial void Map(IDatabaseProvider source, DatabaseProviderDto destination);
 }
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class SetupViewModelToSetupInputDtoMapper : MapperBase<SetupViewModel, SetupInputDto>
+{
+    [MapProperty(nameof(SetupViewModel.Timezone), nameof(SetupInputDto.TimeZone))]
+    public override partial SetupInputDto Map(SetupViewModel source);
+
+    [MapProperty(nameof(SetupViewModel.Timezone), nameof(SetupInputDto.TimeZone))]
+    public override partial void Map(SetupViewModel source, SetupInputDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class TenantInfoModelToTenantCreateDtoMapper : MapperBase<TenantInfoModel, TenantCreateDto>
+{
+    [MapValue(nameof(TenantCreateDto.AdminEmailAddress), "empty@empty.com")]
+    [MapValue(nameof(TenantCreateDto.AdminPassword), "empty")]
+    public override partial TenantCreateDto Map(TenantInfoModel source);
+
+    [MapValue(nameof(TenantCreateDto.AdminEmailAddress), "empty@empty.com")]
+    [MapValue(nameof(TenantCreateDto.AdminPassword), "empty")]
+    public override partial void Map(TenantInfoModel source, TenantCreateDto destination);
+}
+
