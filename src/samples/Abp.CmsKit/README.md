@@ -15,6 +15,6 @@ dotnet publish -c Release
 Pack the dlls to a NuGet package by using the following command:
 
 ```bash
- dotnet pack -c Release -p:NuspecFile=Abp.CmsKit.nuspec;
+ dotnet pack -c Release -p:NuspecFile=Abp.CmsKit.nuspec
 ```
 
