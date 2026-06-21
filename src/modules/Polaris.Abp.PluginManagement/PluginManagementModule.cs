@@ -11,7 +11,7 @@ using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared.PageToolbars;
-using Volo.Abp.AutoMapper;
+using Volo.Abp.Mapperly;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.Localization;
@@ -24,7 +24,7 @@ namespace Polaris.Abp.PluginManagement;
 [DependsOn(
     typeof(ExtensionAbstractionModule),
     typeof(AbpAspNetCoreMvcUiThemeSharedModule),
-    typeof(AbpAutoMapperModule),
+    typeof(AbpMapperlyModule),
     typeof(AbpBlobStoringFileSystemModule)
     )]
 public class PluginManagementModule : AbpModule
@@ -58,11 +58,7 @@ public class PluginManagementModule : AbpModule
             options.FileSets.AddEmbedded<PluginManagementModule>("Polaris.Abp.PluginManagement");
         });
 
-        context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<PluginManagementModule>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<PluginManagementModule>();
 
         Configure<AbpLocalizationOptions>(options =>
         {
@@ -71,11 +67,7 @@ public class PluginManagementModule : AbpModule
                 .AddVirtualJson("/Localization/PluginManagement");
         });
 
-        context.Services.AddAutoMapperObjectMapper<PluginManagementModule>();
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddProfile<PluginManagementAutoMapperProfile>(validate: true);
-        });
+        context.Services.AddMapperlyObjectMapper<PluginManagementModule>();
 
         Configure<RazorPagesOptions>(options =>
         {

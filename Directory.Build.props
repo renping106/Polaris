@@ -2,6 +2,8 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<!-- Exclude NuGet vulnerability warnings (NU19xx) from error elevation. These are managed separately. -->
+		<WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
